@@ -1,0 +1,248 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
+
+
+group 'StargazerCloudSystem'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    flatDir {  dirs '/Users/Felixerio/IdeaProjects/StargazerCloudSystem/Lib' }
+}
+dependencies {
+
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude(module: 'spring-boot-starter-tomcat')
+}
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+
+
+    compile group: 'junit', name: 'junit', version:'4.12'
+    compile group: 'com.google.guava', name: 'guava', version:'19.0'
+    compile group: 'log4j', name: 'log4j', version:'1.2.17'
+    compile group: 'org.mongodb', name: 'mongo-java-driver', version:'2.9.3'
+    compile group: 'io.netty', name: 'netty-all', version:'5.0.0.Alpha2'
+    compile group: 'com.lmax', name: 'disruptor', version:'3.3.4'
+    compile(group: 'org.apache.httpcomponents', name: 'httpclient', version:'4.5.3') {
+        exclude(module: 'commons-logging')
+    }
+    compile group: 'org.apache.httpcomponents', name: 'httpclient-cache', version:'4.1.2'
+    compile group: 'commons-io', name: 'commons-io', version:'2.4'
+    compile group: 'io.protostuff', name: 'protostuff-core', version:'1.3.5'
+    compile group: 'io.protostuff', name: 'protostuff-runtime', version:'1.3.5'
+    compile(group: 'org.apache.zookeeper', name: 'zookeeper', version:'3.4.9') {
+        exclude(module: 'slf4j-log4j12')
+        exclude(module: 'log4j')
+    }
+    compile group: 'org.apache.curator', name: 'curator-x-discovery-server', version:'2.11.0'
+    compile(group: 'org.apache.curator', name: 'curator-recipes', version:'2.11.0') {
+        exclude(module: 'log4j')
+        exclude(module: 'netty')
+    }
+    compile(group: 'org.apache.curator', name: 'curator-framework', version:'2.11.0') {
+        exclude(module: 'log4j')
+        exclude(module: 'netty')
+    }
+    compile group: 'aopalliance', name: 'aopalliance', version:'1.0'
+    compile group: 'commons-pool', name: 'commons-pool', version:'1.6'
+    compile group: 'org.aspectj', name: 'aspectjweaver', version:'1.8.2'
+    compile group: 'org.testng', name: 'testng', version:'6.8.8'
+    compile(group: 'org.apache.kafka', name: 'kafka_2.10', version:'0.10.2.0') {
+        exclude(module: 'slf4j-log4j12')
+        exclude(module: 'log4j')
+    }
+    compile group: 'org.scala-lang', name: 'scala-library', version:'2.10.4'
+    compile group: 'org.scala-lang', name: 'scala-compiler', version:'2.10.4'
+    compile group: 'org.scala-lang', name: 'scala-reflect', version:'2.10.4'
+    compile group: 'org.slf4j', name: 'slf4j-api', version:'1.7.25'
+    compile(group: 'com.netflix.hystrix', name: 'hystrix-core', version:'1.5.11') {
+        exclude(module: 'annotations')
+    }
+    compile(group: 'com.netflix.hystrix', name: 'hystrix-metrics-event-stream', version:'1.5.11') {
+        exclude(module: 'servlet-api')
+    }
+    compile group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version:'3.1.3'
+    compile(group: 'com.netflix.hystrix', name: 'hystrix-javanica', version:'1.4.22') {
+        exclude(module: 'jsr305')
+        exclude(module: 'annotations')
+        exclude(module: 'aspectjrt')
+    }
+    compile group: 'org.hibernate', name: 'hibernate-validator', version:'5.0.2.Final'
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version:'2.9.1'
+    compile group: 'com.thoughtworks.xstream', name: 'xstream', version:'1.4.10'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version:'2.9.1'
+
+    compile fileTree(dir:'lib',includes:['*jar'])
+
+    compile fileTree(dir:'src',includes:['*'])
+
+}
+
+
+sourceSets {
+    main {
+        resources {
+            srcDir 'ResourcesFile' //资源目录
+            srcDir 'ResourcesFile/userinterface' //资源目录
+        }
+        java {
+            srcDir 'src'
+            srcDir 'Analysis'
+            srcDir 'AnalysisConfiguration'
+            srcDir 'AnalysisImpl'
+            srcDir 'AnalysisResources'
+            srcDir 'AnalysisServer'
+            srcDir 'AnalysisTest'
+            srcDir 'Annotation'
+            srcDir 'AnnotationConfiguration'
+            srcDir 'AnnotationImpl'
+            srcDir 'AnnotationResources'
+            srcDir 'AnnotationServer'
+            srcDir 'AnnotationTest'
+            srcDir 'Arithmetic'
+            srcDir 'ArithmeticConfiguration'
+            srcDir 'ArithmeticImpl'
+            srcDir 'ArithmeticResources'
+            srcDir 'ArithmeticServer'
+            srcDir 'ArithmeticTest'
+            srcDir 'CellInjectMethod'
+            srcDir 'Information'
+            srcDir 'MesasageQueueImpl'
+            srcDir 'LogTest'
+            srcDir 'NegotiateResources'
+            srcDir 'CellTest'
+            srcDir 'Cell'
+            srcDir 'Disruptor'
+            srcDir 'main'
+            srcDir 'MesasageQueueTest'
+            srcDir 'CellImpl'
+            srcDir 'CheckImpl'
+            srcDir 'CacheServer'
+            srcDir 'Check'
+            srcDir 'Negotiate'
+            srcDir 'NegotiateConfiguration'
+            srcDir 'InjectServer'
+            srcDir 'Log'
+            srcDir 'CacheResources'
+            srcDir 'BusTest'
+            srcDir 'LogServer'
+            srcDir 'KernelResources'
+            srcDir 'KernelServer'
+            srcDir 'LogResources'
+            srcDir 'InformationServer'
+            srcDir 'CacheConfiguration'
+            srcDir 'CellsConfiguration'
+            srcDir 'NegotiateServer'
+            srcDir 'Bus'
+            srcDir 'InformationImpl'
+            srcDir 'BusResources'
+            srcDir 'InjectResources'
+            srcDir 'CacheImpl'
+            srcDir 'BusServer'
+            srcDir 'MesasageQueueResources'
+            srcDir 'InjectConfiguration'
+            srcDir 'CheckConfiguration'
+            srcDir 'InformationResources'
+            srcDir 'BusConfiguration'
+            srcDir 'CheckServer'
+            srcDir 'NegotiateTest'
+            srcDir 'InformationConfiguration'
+            srcDir 'KernelTest'
+            srcDir 'CellServer'
+            srcDir 'CacheTest'
+            srcDir 'KernelConfiguration'
+            srcDir 'MessageQueueServer'
+            srcDir 'Container'
+            srcDir 'Inject'
+            srcDir 'NegotiateImpl'
+            srcDir 'LogConfiguration'
+            srcDir 'KernelImpl'
+            srcDir 'MesasageQueue'
+            srcDir 'LogImpl'
+            srcDir 'CheckResources'
+            srcDir 'InformationTest'
+            srcDir 'BusImpl'
+            srcDir 'MesasageQueueConfiguration'
+            srcDir 'CellResources'
+            srcDir 'InjectTest'
+            srcDir 'InjectImpl'
+            srcDir 'CheckTest'
+            srcDir 'Kernel'
+            srcDir 'Queue'
+            srcDir 'QueueConfiguration'
+            srcDir 'QueueImpl'
+            srcDir 'QueueResources'
+            srcDir 'QueueServer'
+            srcDir 'QueueTest'
+            srcDir 'Resources'
+            srcDir 'ResourcesConfiguration'
+            srcDir 'ResourcesImpl'
+            srcDir 'ResourcesResources'
+            srcDir 'ResourcesServer'
+            srcDir 'ResourcesTest'
+            srcDir 'Segmentation'
+            srcDir 'SegmentationConfiguration'
+            srcDir 'SegmentationImpl'
+            srcDir 'SegmentationResources'
+            srcDir 'SegmentationServer'
+            srcDir 'SegmentationTest'
+            srcDir 'Sequence'
+            srcDir 'SequenceConfiguration'
+            srcDir 'SequenceImpl'
+            srcDir 'SequenceResources'
+            srcDir 'SequenceServer'
+            srcDir 'SequenceTest'
+            srcDir 'Serializable'
+            srcDir 'SerializableConfiguration'
+            srcDir 'SerializableImpl'
+            srcDir 'SerializableResources'
+            srcDir 'SerializableServer'
+            srcDir 'SerializableTest'
+            srcDir 'ServerImpl'
+            srcDir 'ServerTest'
+            srcDir 'Service'
+            srcDir 'ServiceConfiguration'
+            srcDir 'ServiceResources'
+            srcDir 'Shell'
+            srcDir 'SpringTest'
+            srcDir 'StargazerTest'
+            srcDir 'StargazerUIAssaultLilys'
+            srcDir 'Transaction'
+            srcDir 'TransactionConfiguration'
+            srcDir 'TransactionImpl'
+            srcDir 'TransactionResources'
+            srcDir 'TransactionTest'
+            srcDir 'UIShow'
+            srcDir 'UserInterface'
+            srcDir 'UserInterfaceConfiguration'
+            srcDir 'UserInterfaceImpl'
+            srcDir 'UserInterfaceResources'
+            srcDir 'UserInterfaceServer'
+            srcDir 'UserInterfaceTest'
+            srcDir 'Validation'
+            srcDir 'ValidationConfiguration'
+            srcDir 'ValidationImpl'
+            srcDir 'ValidationResources'
+            srcDir 'ValidationServer'
+            srcDir 'ValidationTest'
+            srcDir 'Cache'
+
+        }
+    }
+}
