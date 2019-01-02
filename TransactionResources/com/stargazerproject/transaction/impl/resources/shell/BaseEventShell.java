@@ -1,11 +1,5 @@
 package com.stargazerproject.transaction.impl.resources.shell;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventAssembleAnalysis;
@@ -20,6 +14,11 @@ import com.stargazerproject.transaction.EventState;
 import com.stargazerproject.transaction.Result;
 import com.stargazerproject.transaction.base.impl.ID;
 import com.stargazerproject.util.CloneUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /** 
  *  @name 事件（BaseEvent）实现

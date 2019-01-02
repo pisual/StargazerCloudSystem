@@ -1,8 +1,9 @@
 package com.stargazerproject.analysis;
 
 import com.google.common.base.Optional;
+import com.stargazerproject.analysis.resources.handle.EventExecuteAnalysisHandleResources;
 import com.stargazerproject.cache.Cache;
-import com.stargazerproject.transaction.ResultRecord;
+import com.stargazerproject.transaction.Result;
 
 /** 
  *  @name 事件运行器接口
@@ -14,6 +15,6 @@ import com.stargazerproject.transaction.ResultRecord;
  *  **/
 public interface EventExecuteAnalysis {
 	
-	public Optional<Boolean> analysis(Optional<Cache<String, String>> interactionCache, Optional<ResultRecord> result);
+	public Optional<EventExecuteAnalysisHandleResources> analysis(Optional<Cache<String, String>> interactionCache, Optional<Result> result);
 	
 }

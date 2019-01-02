@@ -1,6 +1,7 @@
 package com.stargazerproject.analysis;
 
 import com.google.common.base.Optional;
+import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 
 /** 
@@ -11,8 +12,6 @@ import com.stargazerproject.cache.Cache;
  *  **/
 public interface EventAssembleAnalysis {
 	
-	public Optional<Boolean> analysis(Optional<Cache<String, String>> interactionCache);
-	
-	public void injectEventParameter(Optional<String> Key, Optional<String> value);
-	
+	public Optional<EventAssembleAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache);
+
 }

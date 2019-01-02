@@ -1,12 +1,12 @@
 package com.stargazerproject.spring.context.initialization.test;
 
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.PropertySource;
-
 import com.stargazer.segmentation.impl.EventSegmentation;
+import com.stargazerproject.analysis.impl.EventAssembleAnalysisImpl;
 import com.stargazerproject.analysis.impl.EventExecuteAnalysisImpl;
 import com.stargazerproject.analysis.impl.EventResultAnalysisImpl;
 import com.stargazerproject.analysis.impl.LogAnalysisImpl;
+import com.stargazerproject.analysis.resources.shell.EventAssembleAnalysisShell;
+import com.stargazerproject.analysis.resources.shell.EventExecuteAnalysisShell;
 import com.stargazerproject.annotation.impl.AnnotationsImpl;
 import com.stargazerproject.annotation.resources.AnnotationsScannerResourcesCharacteristic;
 import com.stargazerproject.annotation.resources.shell.AnnotationsShell;
@@ -14,24 +14,11 @@ import com.stargazerproject.annotations.server.impl.AnnotationsServer;
 import com.stargazerproject.annotations.server.listener.impl.AnnotationsServerListener;
 import com.stargazerproject.annotations.server.manage.AnnotationsServerManage;
 import com.stargazerproject.cache.aop.configuration.ParametersInjectAOPConfiguration;
-import com.stargazerproject.cache.datastructure.impl.BigCacheIndexCahce;
-import com.stargazerproject.cache.datastructure.impl.InterProcessSemaphoreMutexCache;
-import com.stargazerproject.cache.datastructure.impl.LeaderLatchParameterCache;
-import com.stargazerproject.cache.datastructure.impl.ObjectParameterCache;
-import com.stargazerproject.cache.datastructure.impl.ServerCache;
-import com.stargazerproject.cache.datastructure.impl.ServerListCache;
-import com.stargazerproject.cache.datastructure.impl.SocketChannelCache;
-import com.stargazerproject.cache.datastructure.impl.TreeCacheCache;
+import com.stargazerproject.cache.datastructure.impl.*;
 import com.stargazerproject.cache.impl.ByteArrayCache;
 import com.stargazerproject.cache.impl.SystemParameterCahce;
 import com.stargazerproject.cache.impl.TransactionCache;
-import com.stargazerproject.cache.impl.resources.ByteArrayCacheCacheConfigurationCharacteristic;
-import com.stargazerproject.cache.impl.resources.ByteArrayCacheCacheManagerCharacteristic;
-import com.stargazerproject.cache.impl.resources.ByteArrayCacheConfigurationCharacteristic;
-import com.stargazerproject.cache.impl.resources.SystemParameterCahceCharacteristic;
-import com.stargazerproject.cache.impl.resources.TransactionCacheCacheLoaderCharacteristic;
-import com.stargazerproject.cache.impl.resources.TransactionCacheLoadingCacheCharacteristic;
-import com.stargazerproject.cache.impl.resources.TransactionCacheRemovalListenerCharacteristic;
+import com.stargazerproject.cache.impl.resources.*;
 import com.stargazerproject.cache.impl.resources.shell.ByteArrayCacheShell;
 import com.stargazerproject.cache.impl.resources.shell.SystemParameterCahceShell;
 import com.stargazerproject.cache.impl.resources.shell.TransactionCahceShell;
@@ -65,15 +52,7 @@ import com.stargazerproject.messagequeue.server.listener.impl.TransactionMessage
 import com.stargazerproject.messagequeue.server.manage.TransactionMessageQueueServerManage;
 import com.stargazerproject.negotiate.impl.NodenNegotiateImpl;
 import com.stargazerproject.negotiate.impl.ZoneNegotiateImpl;
-import com.stargazerproject.negotiate.resources.NegotiateConnectionStateListenerCharacteristic;
-import com.stargazerproject.negotiate.resources.NegotiateControlCharacteristic;
-import com.stargazerproject.negotiate.resources.NegotiateCuratorFrameworkCharacteristic;
-import com.stargazerproject.negotiate.resources.NegotiateLeaderLeaderLatchListenerCharacteristic;
-import com.stargazerproject.negotiate.resources.NegotiateLeaderMethodCharacteristic;
-import com.stargazerproject.negotiate.resources.NegotiateNodeCuratorListenerCharacteristic;
-import com.stargazerproject.negotiate.resources.NegotiateNodeMethodCharacteristic;
-import com.stargazerproject.negotiate.resources.NegotiateRegisteredWatcherCharacteristic;
-import com.stargazerproject.negotiate.resources.NegotiateRetryPolicyCharacteristic;
+import com.stargazerproject.negotiate.resources.*;
 import com.stargazerproject.negotiate.resources.impl.NegotiateInjectParameterMonitorListenerCharacteristic;
 import com.stargazerproject.negotiate.resources.impl.NegotiateParametersInjectInitializationListenerCharacteristic;
 import com.stargazerproject.negotiate.resources.shell.NodenNegotiateShell;
@@ -84,20 +63,7 @@ import com.stargazerproject.queue.impl.EventBusQueue;
 import com.stargazerproject.queue.impl.EventQueue;
 import com.stargazerproject.queue.impl.LogQueue;
 import com.stargazerproject.queue.impl.TransactionExportQueue;
-import com.stargazerproject.queue.resources.impl.CleanEventHandler;
-import com.stargazerproject.queue.resources.impl.CleanLogHandler;
-import com.stargazerproject.queue.resources.impl.CleanTransactionExportEventHandler;
-import com.stargazerproject.queue.resources.impl.EventBusHandler;
-import com.stargazerproject.queue.resources.impl.EventFactory;
-import com.stargazerproject.queue.resources.impl.EventHandler;
-import com.stargazerproject.queue.resources.impl.EventQueueThreadFactory;
-import com.stargazerproject.queue.resources.impl.EventResultMergeHandler;
-import com.stargazerproject.queue.resources.impl.LogEventFactory;
-import com.stargazerproject.queue.resources.impl.LogHandler;
-import com.stargazerproject.queue.resources.impl.LogQueueThreadFactory;
-import com.stargazerproject.queue.resources.impl.TransactionExportEventFactory;
-import com.stargazerproject.queue.resources.impl.TransactionExportEventHandler;
-import com.stargazerproject.queue.resources.impl.TransactionExportEventThreadFactory;
+import com.stargazerproject.queue.resources.impl.*;
 import com.stargazerproject.queue.resources.shell.EventBusDisruptorShell;
 import com.stargazerproject.queue.resources.shell.EventDisruptorShell;
 import com.stargazerproject.queue.resources.shell.LogDisruptorShell;
@@ -114,14 +80,7 @@ import com.stargazerproject.queue.server.manage.EventBusQueueServerManage;
 import com.stargazerproject.queue.server.manage.EventQueueServerManage;
 import com.stargazerproject.queue.server.manage.LogQueueServerManage;
 import com.stargazerproject.queue.server.manage.TransactionExportEventQueueServerManage;
-import com.stargazerproject.resources.parameter.CacheParameters;
-import com.stargazerproject.resources.parameter.InformationParameter;
-import com.stargazerproject.resources.parameter.InjectParameters;
-import com.stargazerproject.resources.parameter.NegotiateParameters;
-import com.stargazerproject.resources.parameter.QueueParameters;
-import com.stargazerproject.resources.parameter.SequenceParameters;
-import com.stargazerproject.resources.parameter.SystemParameters;
-import com.stargazerproject.resources.parameter.UIParameters;
+import com.stargazerproject.resources.parameter.*;
 import com.stargazerproject.resources.service.SystemServiceParameterList;
 import com.stargazerproject.serializable.impl.NetworkTransmissionSerializables;
 import com.stargazerproject.serializable.server.impl.SerializableServer;
@@ -135,31 +94,15 @@ import com.stargazerproject.service.resources.ServiceInitializationCharacteristi
 import com.stargazerproject.service.resources.shell.ServerShell;
 import com.stargazerproject.spring.context.impl.GlobalAnnotationApplicationContext;
 import com.stargazerproject.userinterface.impl.UserInterfaceImpl;
-import com.stargazerproject.userinterface.resources.LoadingBaseFrameJDialogCharacteristic;
-import com.stargazerproject.userinterface.resources.LoadingFrameBackgroundJlabelCharacteristic;
-import com.stargazerproject.userinterface.resources.LoadingFrameLayoutCharacteristic;
-import com.stargazerproject.userinterface.resources.LoadingJProgressBarCharacteristic;
-import com.stargazerproject.userinterface.resources.LoadingJProgressBarUI;
-import com.stargazerproject.userinterface.resources.LoadingProgressInfoCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFrameBackgroundJlabelCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFrameConsoleTextPaneCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFrameJFrameCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFrameJScrollPaneCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFrameLayoutCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFrameLogoClickListenerCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFrameLogoJlabelCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFrameMouseAdapterListenerCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFrameMouseMotionAdapterListenerCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFramePointCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFrameRightConsoleTextPaneCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFrameRightJScrollPaneCharacteristic;
-import com.stargazerproject.userinterface.resources.MainFrameStructureTopologyJlabelCharacteristic;
+import com.stargazerproject.userinterface.resources.*;
 import com.stargazerproject.userinterface.resources.shall.FrameShell;
 import com.stargazerproject.userinterface.resources.shall.LoadingFrameShell;
 import com.stargazerproject.userinterface.resources.shall.MainFrameShell;
 import com.stargazerproject.userinterface.server.impl.FrameUserInterfaceServer;
 import com.stargazerproject.userinterface.server.listener.impl.FrameUserInterfaceListener;
 import com.stargazerproject.userinterface.server.manage.FrameUserInterfaceServerManage;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.PropertySource;
 
 @SpringBootApplication
 @PropertySource(value="Spring.properties")
@@ -438,8 +381,13 @@ public class GlobalAnnotationApplicationContextInitialization {
 		NetworkTransmissionSerializablesShell.class,
 		SerializableServer.class,
 		SerializableServerListener.class,
-		SerializableServerManage.class
-		
+		SerializableServerManage.class,
+
+		/**Depend Analysis**/
+		EventAssembleAnalysisImpl.class,
+		EventExecuteAnalysisImpl.class,
+		EventAssembleAnalysisShell.class,
+		EventExecuteAnalysisShell.class
 		);
 	} 
 	
