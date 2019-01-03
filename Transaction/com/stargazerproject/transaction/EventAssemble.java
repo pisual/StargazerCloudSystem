@@ -2,6 +2,7 @@ package com.stargazerproject.transaction;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventAssembleAnalysis;
+import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
 import com.stargazerproject.annotation.description.ThreadSafeLevel;
 import com.stargazerproject.annotation.description.ThreadSafeMethodsLevel;
 
@@ -18,6 +19,6 @@ public interface EventAssemble {
 	 *  	@ThreadSafeMethodsLevel eventAssemble的线程安全级别为ThreadSafeLevel.ThreadCompatible，非线程安全，只能单线程单次使用
 	 * **/
 	@ThreadSafeMethodsLevel(threadSafeLevel = ThreadSafeLevel.ThreadCompatible)
-	public void eventAssemble(Optional<EventAssembleAnalysis> eventAssembleAnalysis);
-	
+	public Optional<EventAssembleAnalysisHandle> eventAssemble(Optional<EventAssembleAnalysis> eventAssembleAnalysis);
+
 }

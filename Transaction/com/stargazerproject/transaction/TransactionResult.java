@@ -2,6 +2,7 @@ package com.stargazerproject.transaction;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.TransactionResultAnalysis;
+import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.annotation.description.ThreadSafeLevel;
 import com.stargazerproject.annotation.description.ThreadSafeMethodsLevel;
 
@@ -14,10 +15,10 @@ import com.stargazerproject.annotation.description.ThreadSafeMethodsLevel;
 public interface TransactionResult {
 
 	/** @illustrate 分析事务结果，分析者调用
-	 *  @param      Optional<TransactionResultAnalysis> transactionResultAnalysis : 事务结果分析器接口，不允许空值
+	 *  @param     :TransactionResultAnalysis transactionResultAnalysis : 事务结果分析器接口，不允许空值
 	 *  @ThreadSafeMethodsLevel transactionResult的线程安全级别为ThreadSafeLevel.ThreadCompatible，非线程安全，只能单线程单次使用
 	 * **/
 	@ThreadSafeMethodsLevel(threadSafeLevel = ThreadSafeLevel.ThreadCompatible)
-	public void transactionResult(Optional<TransactionResultAnalysis> transactionResultAnalysis);
+	public Optional<TransactionResultAnalysisHandle> transactionResult(Optional<TransactionResultAnalysis> transactionResultAnalysis);
 	
 }

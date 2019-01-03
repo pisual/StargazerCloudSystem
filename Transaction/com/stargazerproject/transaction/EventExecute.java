@@ -2,6 +2,7 @@ package com.stargazerproject.transaction;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventExecuteAnalysis;
+import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.annotation.description.ThreadSafeLevel;
 import com.stargazerproject.annotation.description.ThreadSafeMethodsLevel;
 
@@ -18,7 +19,7 @@ public interface EventExecute {
 	 * 	@ThreadSafeMethodsLevel eventExecute的线程安全级别为ThreadSafeLevel.ThreadCompatible，非线程安全，只能单线程单次使用
 	 * **/
 	@ThreadSafeMethodsLevel(threadSafeLevel = ThreadSafeLevel.ThreadCompatible)
-	public void eventExecute(Optional<EventExecuteAnalysis> eventAnalysis);
+	public Optional<EventExecuteAnalysisHandle> eventExecute(Optional<EventExecuteAnalysis> eventAnalysis);
 	
 	/** @illustrate  跳过此事件
 	 *  @ThreadSafeMethodsLevel skipEvent的线程安全级别为ThreadSafeLevel.ThreadCompatible，非线程安全，只能单线程单次使用

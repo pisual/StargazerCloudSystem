@@ -1,9 +1,12 @@
 package com.stargazerproject.transaction.base.impl;
 
 import com.google.common.base.Optional;
-import com.stargazerproject.analysis.EventExecuteAnalysis;
 import com.stargazerproject.analysis.EventAssembleAnalysis;
+import com.stargazerproject.analysis.EventExecuteAnalysis;
 import com.stargazerproject.analysis.EventResultAnalysis;
+import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.transaction.Event;
 import com.stargazerproject.transaction.EventState;
 
@@ -22,8 +25,18 @@ public class BaseEvent extends ID implements Event{
 	protected BaseEvent() {}
 
 	@Override
-	public void eventExecute(Optional<EventExecuteAnalysis> eventAnalysis) {
-		event.eventExecute(eventAnalysis);
+	public Optional<EventAssembleAnalysisHandle> eventAssemble(Optional<EventAssembleAnalysis> eventAssembleAnalysis) {
+		return event.eventAssemble(eventAssembleAnalysis);
+	}
+
+	@Override
+	public Optional<EventExecuteAnalysisHandle> eventExecute(Optional<EventExecuteAnalysis> eventAnalysis) {
+		return event.eventExecute(eventAnalysis);
+	}
+
+	@Override
+	public Optional<EventResultAnalysisHandle> eventResult(Optional<EventResultAnalysis> eventResultAnalysis) {
+		return event.eventResult(eventResultAnalysis);
 	}
 
 	@Override
@@ -32,18 +45,8 @@ public class BaseEvent extends ID implements Event{
 	}
 
 	@Override
-	public void eventResult(Optional<EventResultAnalysis> eventResultAnalysis) {
-		event.eventResult(eventResultAnalysis);
-	}
-
-	@Override
 	public Optional<EventState> eventState() {
 		return event.eventState();
-	}
-
-	@Override
-	public void eventAssemble(Optional<EventAssembleAnalysis> eventAssembleAnalysis) {
-		event.eventAssemble(eventAssembleAnalysis);
 	}
 	
 }

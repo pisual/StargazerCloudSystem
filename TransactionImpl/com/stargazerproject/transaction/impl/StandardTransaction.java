@@ -21,6 +21,7 @@ public class StandardTransaction extends BaseTransaction implements StanderChara
 	public void initialize(Optional<Transaction> transactionArg) {
 		transaction = transactionArg.get();
 	}
-	
+
+
 
 }

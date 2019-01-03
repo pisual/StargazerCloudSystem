@@ -4,6 +4,8 @@ import com.google.common.base.Optional;
 import com.stargazerproject.analysis.TransactionAssembleAnalysis;
 import com.stargazerproject.analysis.TransactionExecuteAnalysis;
 import com.stargazerproject.analysis.TransactionResultAnalysis;
+import com.stargazerproject.analysis.handle.TransactionAssembleAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.transaction.Transaction;
 import com.stargazerproject.transaction.exception.TransactionException;
 
@@ -14,13 +16,13 @@ public class BaseTransaction extends ID implements Transaction{
 	protected Transaction transaction;
 
 	@Override
-	public void transactionAssemble(Optional<TransactionAssembleAnalysis> transactionAssembleAnalysis) {
-		transaction.transactionAssemble(transactionAssembleAnalysis);
+	public Optional<TransactionAssembleAnalysisHandle> transactionAssemble(Optional<TransactionAssembleAnalysis> transactionAssembleAnalysis) {
+		return transaction.transactionAssemble(transactionAssembleAnalysis);
 	}
 
 	@Override
-	public synchronized void transactionResult(Optional<TransactionResultAnalysis> transactionResultAnalysis) {
-		transaction.transactionResult(transactionResultAnalysis);
+	public Optional<TransactionResultAnalysisHandle> transactionResult(Optional<TransactionResultAnalysis> transactionResultAnalysis) {
+		return transaction.transactionResult(transactionResultAnalysis);
 	}
 
 	@Override

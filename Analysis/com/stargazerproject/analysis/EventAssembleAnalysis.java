@@ -11,7 +11,7 @@ import com.stargazerproject.cache.Cache;
  *  @version 1.0.0
  *  **/
 public interface EventAssembleAnalysis {
-	
+
 	public Optional<EventAssembleAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache);
 
 }

@@ -1,17 +1,16 @@
 package com.stargazerproject.service.resources;
 
-import java.util.Map;
-
+import com.google.common.base.Optional;
+import com.google.common.collect.Table;
+import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
+import com.stargazerproject.service.ServiceInitialization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Table;
-import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
-import com.stargazerproject.service.ServiceInitialization;
+import java.util.Map;
 
 @Component(value="serviceInitializationCharacteristic")
 @Qualifier("serviceInitializationCharacteristic")

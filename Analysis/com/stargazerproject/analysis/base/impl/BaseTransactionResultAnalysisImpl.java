@@ -1,18 +1,19 @@
 package com.stargazerproject.analysis.base.impl;
 
-import java.util.List;
-
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.TransactionResultAnalysis;
+import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.transaction.EventResult;
 import com.stargazerproject.transaction.ResultState;
+
+import java.util.List;
 
 public abstract class BaseTransactionResultAnalysisImpl implements TransactionResultAnalysis{
 	
 	protected TransactionResultAnalysis transactionResultAnalysis;
 
 	@Override
-	public Optional<Boolean> analysis(Optional<List<EventResult>> events) {
+	public Optional<TransactionResultAnalysisHandle> analysis(Optional<List<EventResult>> events) {
 		return transactionResultAnalysis.analysis(events);
 	}
 

@@ -1,26 +1,26 @@
 package com.stargazerproject.transaction.impl.resources.shell;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.TransactionAssembleAnalysis;
 import com.stargazerproject.analysis.TransactionExecuteAnalysis;
 import com.stargazerproject.analysis.TransactionResultAnalysis;
+import com.stargazerproject.analysis.handle.TransactionAssembleAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Event;
-import com.stargazerproject.transaction.EventAssemble;
 import com.stargazerproject.transaction.EventResult;
 import com.stargazerproject.transaction.Transaction;
 import com.stargazerproject.transaction.base.impl.ID;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /** 
  *  @name 事务（baseTransaction）实现
@@ -47,29 +47,28 @@ private static final long serialVersionUID = 5579247376914613210L;
 	/**
 	* @name 事件生产，生产者调用
 	* @illustrate 事件生产，生产者调用
-	* @param Optional<TransactionAssembleAnalysis> 事务生产分析接口
+	* @param transactionAssembleAnalysis 事务生产分析接口
 	* **/
 	@Override
-	public void transactionAssemble(Optional<TransactionAssembleAnalysis> transactionAssembleAnalysis){
-		List<EventAssemble> eventAssembleList = eventsList.stream().map(x -> (EventAssemble)x).collect(Collectors.toList());
-		transactionAssembleAnalysis.get().analysis(Optional.of(eventAssembleList));
+	public Optional<TransactionAssembleAnalysisHandle> transactionAssemble(Optional<TransactionAssembleAnalysis> transactionAssembleAnalysis){
+		return transactionAssembleAnalysis.get().analysis(Optional.of(eventsList));
 	}
 	
 	/**
 	* @name 事务结果分析，分析者接口
 	* @illustrate 事务结果分析，分析者接口
-	* @param Optional<TransactionResultAnalysis> 事务结果分析接口
+	* @param transactionResultAnalysisArg 事务结果分析接口
 	* **/
 	@Override
-	public void transactionResult(Optional<TransactionResultAnalysis> transactionResultAnalysisArg){
+	public Optional<TransactionResultAnalysisHandle> transactionResult(Optional<TransactionResultAnalysis> transactionResultAnalysisArg){
 		List<EventResult> eventAnalyzeList = eventsList.stream().map(x -> (EventResult)x).collect(Collectors.toList());
-		transactionResultAnalysisArg.get().analysis(Optional.of(eventAnalyzeList));
+		return transactionResultAnalysisArg.get().analysis(Optional.of(eventAnalyzeList));
 	}
 	
 	/**
 	* @name 启动事务，运行者接口
 	* @illustrate 启动事务，运行者接口
-	* @param Optional<TransactionExecuteAnalysis> 事务运行分析接口
+	* @param transactionExecuteAnalysis 事务运行分析接口
 	* **/
 	@Override
 	public void transactionExecute(Optional<TransactionExecuteAnalysis> transactionExecuteAnalysis) {
@@ -80,7 +79,6 @@ private static final long serialVersionUID = 5579247376914613210L;
 	/**
 	* @name 跳过此事务，通过调用其名下的Event的skipEvent方法来主动放弃Event的执行
 	* @illustrate 跳过此事务，通过调用其名下的Event的skipEvent方法来主动放弃Event的执行
-	* @param Optional<TransactionExecuteAnalysis> 事务运行分析接口
 	* **/
 	@Override
 	public void skipTransaction() {

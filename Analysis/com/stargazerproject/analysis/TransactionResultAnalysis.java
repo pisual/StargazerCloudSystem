@@ -1,9 +1,10 @@
 package com.stargazerproject.analysis;
 
-import java.util.List;
-
+import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.transaction.EventResult;
 
-public interface TransactionResultAnalysis extends ResultResultAnalysis<List<EventResult>> {
+import java.util.List;
+
+public interface TransactionResultAnalysis extends ResultResultAnalysis<List<EventResult>, TransactionResultAnalysisHandle> {
 	
 }

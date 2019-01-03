@@ -5,6 +5,9 @@ import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventAssembleAnalysis;
 import com.stargazerproject.analysis.EventExecuteAnalysis;
 import com.stargazerproject.analysis.EventResultAnalysis;
+import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.annotation.description.NoSpringDepend;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
@@ -89,29 +92,28 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	}
 	
 	/** @illustrate 事件生产，生产者调用
-	 *  @param      Optional<EventAssembleAnalysis> eventAssembleAnalysis : 事件生产分析器接口
+	 *  @param      :EventAssembleAnalysis eventAssembleAnalysis : 事件生产分析器接口
 	 * **/
 	@Override
-	public void eventAssemble(Optional<EventAssembleAnalysis> eventAssembleAnalysis){
+	public Optional<EventAssembleAnalysisHandle> eventAssemble(Optional<EventAssembleAnalysis> eventAssembleAnalysis){
 		if(eventState != EventState.INIT){
 			logMethod.ERROR(this, "Evenr无法构建，因为Event状态不为Init（初始状态），现在Event的状态为：" + eventState);
 			throw new IllegalStateException("Evenr无法构建，因为Event状态不为Init（初始状态），现在Event的状态为：" + eventState);
 		}
 		else{
-			eventAssembleAnalysis.get().analysis(Optional.of(interactionCache));
 			eventState = EventState.WAIT;
 		}
+		return eventAssembleAnalysis.get().analysis(Optional.of(interactionCache));
 	}
 
 	/** @illustrate 开始执行事件, 执行者调用 执行者只有在Event处于EventState.WAIT的状态下才会启动事件运行分析接口，<P>
 	 *              如果Event处于EventState.PASS，将快速失败此事务
-	 * 	@param      Optional<EventExecuteAnalysis> eventAnalysis : 事件运行器接口
+	 * 	@param      :EventExecuteAnalysis eventAnalysis : 事件运行器接口
 	 * **/
 	@Override
-	public void eventExecute(Optional<EventExecuteAnalysis> eventAnalysis) {
+	public Optional<EventExecuteAnalysisHandle> eventExecute(Optional<EventExecuteAnalysis> eventAnalysis) {
 		if(EventState.WAIT == eventState){
 			eventState = EventState.RUN;
-			eventAnalysis.get().analysis(Optional.of(interactionCache), Optional.of(result));
 			eventState = EventState.COMPLETE;
 		}
 		else if(EventState.PASS == eventState){
@@ -122,19 +124,20 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 			logMethod.ERROR(this, "Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState);
 			throw new IllegalStateException("Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState);
 		}
+		return eventAnalysis.get().analysis(Optional.of(interactionCache), Optional.of(result));
 	}
 	
 	/** @illustrate 分析事件结果，分析者调用
 	 *              分析者不受EventState状态的约束
-	 *  @param      Optional<EventResultAnalysis> eventResultAnalysis : 事件结果分析器接口
+	 *  @param      eventResultAnalysis eventResultAnalysis : 事件结果分析器接口
 	 * **/
 	@Override
-	public void eventResult(Optional<EventResultAnalysis> eventResultAnalysis){
-		result.resultResult(eventResultAnalysis.get());
+	public Optional<EventResultAnalysisHandle> eventResult(Optional<EventResultAnalysis> eventResultAnalysis){
+		return result.resultResult(eventResultAnalysis.get());
 	}
 	
 	/** @illustrate  跳过此事件
-	 *  @exception 如果Event状态不为Wait（等待执行状态），将抛出IllegalStateException异常，并报告现在的Event状态  
+	 *  @exception : 如果Event状态不为Wait（等待执行状态），将抛出IllegalStateException异常，并报告现在的Event状态
 	 * **/
 	@Override
 	public void skipEvent(){

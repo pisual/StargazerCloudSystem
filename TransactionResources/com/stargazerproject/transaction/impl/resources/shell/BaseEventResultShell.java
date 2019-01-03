@@ -1,19 +1,19 @@
 package com.stargazerproject.transaction.impl.resources.shell;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventResultAnalysis;
+import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Result;
 import com.stargazerproject.transaction.ResultRecord;
 import com.stargazerproject.transaction.ResultState;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /** 
  *  @name 事件结果（BaseEventResult）实现
@@ -25,7 +25,7 @@ import com.stargazerproject.transaction.ResultState;
 @Component(value="baseEventResultShell")
 @Qualifier("baseEventResultShell")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class BaseEventResultShell implements Result, BaseCharacteristic<Result>{
+public class BaseEventResultShell implements Result<EventResultAnalysisHandle>, BaseCharacteristic<Result>{
 
 	private static final long serialVersionUID = -4726816340050497590L;
 
@@ -73,8 +73,8 @@ public class BaseEventResultShell implements Result, BaseCharacteristic<Result>{
 
 	/** @illustrate 事件结果内容分析器*/
 	@Override
-	public void resultResult(EventResultAnalysis eventResultAnalysis) {
-		eventResultAnalysis.analysis(Optional.of(executionResultCache));
+	public Optional<EventResultAnalysisHandle> resultResult(EventResultAnalysis eventResultAnalysis) {
+		return eventResultAnalysis.analysis(Optional.of(executionResultCache));
 	}
 
 	/** @illustrate 设置事件结果标志为完成状态，**/

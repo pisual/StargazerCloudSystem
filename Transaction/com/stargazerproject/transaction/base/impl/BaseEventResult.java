@@ -2,6 +2,7 @@ package com.stargazerproject.transaction.base.impl;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventResultAnalysis;
+import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.transaction.Result;
 import com.stargazerproject.transaction.ResultRecord;
 import com.stargazerproject.transaction.ResultState;
@@ -15,7 +16,7 @@ import com.stargazerproject.transaction.ResultState;
  *  @author Felixerio
  *  @version 1.0.0
  *  **/
-public class BaseEventResult implements Result{
+public class BaseEventResult implements Result<EventResultAnalysisHandle>{
 
 	private static final long serialVersionUID = -8725503398105907243L;
 	
@@ -24,8 +25,8 @@ public class BaseEventResult implements Result{
 	protected BaseEventResult() {}
 	
 	@Override
-	public void resultResult(EventResultAnalysis eventResultAnalysis) {
-		result.resultResult(eventResultAnalysis);
+	public Optional<EventResultAnalysisHandle> resultResult(EventResultAnalysis eventResultAnalysis) {
+		return result.resultResult(eventResultAnalysis);
 	}
 
 	@Override
