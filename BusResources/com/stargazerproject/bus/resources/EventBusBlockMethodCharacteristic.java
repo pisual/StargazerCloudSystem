@@ -1,15 +1,8 @@
 package com.stargazerproject.bus.resources;
 
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventResultAnalysis;
+import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.bus.BusBlockMethod;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
@@ -17,6 +10,13 @@ import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.queue.Queue;
 import com.stargazerproject.transaction.Event;
 import com.stargazerproject.transaction.ResultState;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
 
 @Component(value="eventBusBlockMethodCharacteristic")
 @Qualifier("eventBusBlockMethodCharacteristic")
@@ -51,9 +51,9 @@ public class EventBusBlockMethodCharacteristic implements BusBlockMethod<Event>,
 	@Override
 	public Optional<Event> push(Optional<Event> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException {
 		event.producer(busEvent);
-		busEvent.get().eventResult(Optional.of(eventResultAnalysis));
+		EventResultAnalysisHandle eventResultAnalysisHandle = busEvent.get().eventResult(Optional.of(eventResultAnalysis)).get();
 		for(int i=0; i<timeout.get(); i++){
-			if(eventResultAnalysis.resultState().get() == ResultState.WAIT){
+			if(eventResultAnalysisHandle.resultState().get() == ResultState.WAIT){
 				sleep(timeUnit.get());
 				continue;
 			}

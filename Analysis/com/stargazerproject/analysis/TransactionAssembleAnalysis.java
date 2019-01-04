@@ -14,6 +14,6 @@ import java.util.Collection;
  *  **/
 public interface TransactionAssembleAnalysis {
 	
-	public Optional<TransactionAssembleAnalysisHandle> analysis(Optional<Collection<Event>> eventsList);
+	public Optional<TransactionAssembleAnalysisHandle> analysis(Optional<Collection<Event>> eventList);
 
 }

@@ -7,9 +7,11 @@ import com.stargazerproject.analysis.TransactionAssembleAnalysis;
 import com.stargazerproject.analysis.TransactionExecuteAnalysis;
 import com.stargazerproject.analysis.TransactionResultAnalysis;
 import com.stargazerproject.analysis.handle.TransactionAssembleAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Event;
+import com.stargazerproject.transaction.EventExecute;
 import com.stargazerproject.transaction.EventResult;
 import com.stargazerproject.transaction.Transaction;
 import com.stargazerproject.transaction.base.impl.ID;
@@ -71,9 +73,9 @@ private static final long serialVersionUID = 5579247376914613210L;
 	* @param transactionExecuteAnalysis 事务运行分析接口
 	* **/
 	@Override
-	public void transactionExecute(Optional<TransactionExecuteAnalysis> transactionExecuteAnalysis) {
-		List<Event> eventExecuteList = eventsList.stream().map(x -> (Event)x).collect(Collectors.toList());
-		transactionExecuteAnalysis.get().analysis(Optional.of(eventExecuteList));
+	public Optional<TransactionExecuteAnalysisHandle> transactionExecute(Optional<TransactionExecuteAnalysis> transactionExecuteAnalysis) {
+		List<EventExecute> eventExecuteList = eventsList.stream().map(x -> (EventExecute)x).collect(Collectors.toList());
+		return transactionExecuteAnalysis.get().analysis(Optional.of(eventExecuteList));
 	}
 	
 	/**

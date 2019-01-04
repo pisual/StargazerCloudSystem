@@ -1,5 +1,6 @@
 package com.stargazerproject.bus.resources.shell;
 
+import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -32,8 +33,8 @@ public class EventBusObserverShell implements BusObserver<Event> ,BaseCharacteri
 
 	@Override
 	public Optional<Boolean> isComplete() {
-		event.eventResult(Optional.of(eventResultAnalysis));
-		ResultState resultState = eventResultAnalysis.resultState().get();
+		EventResultAnalysisHandle eventResultAnalysisHandle = event.eventResult(Optional.of(eventResultAnalysis)).get();
+		ResultState resultState = eventResultAnalysisHandle.resultState().get();
 		return (resultState == ResultState.SUCCESS) ? Optional.of(Boolean.TRUE) : Optional.of(Boolean.FALSE);
 	}
 

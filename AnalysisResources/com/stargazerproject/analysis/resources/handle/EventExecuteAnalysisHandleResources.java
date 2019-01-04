@@ -19,6 +19,8 @@ public class EventExecuteAnalysisHandleResources implements EventExecuteAnalysis
     @Override
     public void run() {
 
+        // TODO Event运行代码
+
     }
 
 }

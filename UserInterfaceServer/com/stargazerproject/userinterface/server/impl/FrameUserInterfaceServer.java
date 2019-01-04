@@ -1,18 +1,17 @@
 package com.stargazerproject.userinterface.server.impl;
 
-import java.util.concurrent.TimeUnit;
-
+import com.google.common.base.Optional;
+import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
+import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
+import com.stargazerproject.service.baseinterface.StanderServiceShell;
+import com.stargazerproject.userinterface.UserInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.common.base.Optional;
-import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
-import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
-import com.stargazerproject.service.baseinterface.StanderServiceShell;
-import com.stargazerproject.userinterface.UserInterface;
+import java.util.concurrent.TimeUnit;
 
 /** 
  *  @name frameUserInterface服务的实现
@@ -52,6 +51,7 @@ public class FrameUserInterfaceServer implements StanderServiceShell{
 			TimeUnit.MILLISECONDS.sleep(10);
 			userInterfaceframe.increaseProgressBar(Optional.of(i+""), Optional.of(i));
 		}
+			TimeUnit.MILLISECONDS.sleep(500);
 			userInterfaceframe.startMain();
 			userInterfaceframe.endLoading();
 
