@@ -1,18 +1,17 @@
 package com.stargazerproject.userinterface.server.manage;
 
-import javax.annotation.PostConstruct;
-
+import com.google.common.util.concurrent.AbstractIdleService;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.stargazerproject.service.annotation.ServiceZone;
+import com.stargazerproject.service.annotation.Services;
+import com.stargazerproject.service.baseinterface.StanderServiceShell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.common.util.concurrent.AbstractIdleService;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.stargazerproject.service.annotation.ServiceZone;
-import com.stargazerproject.service.annotation.Services;
-import com.stargazerproject.service.baseinterface.StanderServiceShell;
+import javax.annotation.PostConstruct;
 
 /** 
  *  @name frameUserInterfaceManage服务集中托管
@@ -22,7 +21,7 @@ import com.stargazerproject.service.baseinterface.StanderServiceShell;
 @Component(value="frameUserInterfaceServerManage")
 @Qualifier("frameUserInterfaceServerManage")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Services(name="frameUserInterfaceServerManage", serviceZone = ServiceZone.System, layer = 12)
+@Services(name="frameUserInterfaceServerManage", serviceZone = ServiceZone.System, layer = 3)
 public class FrameUserInterfaceServerManage extends AbstractIdleService{
 	
 	/** @illustrate orderCacheServer的ServiceShell接口 **/

@@ -1,106 +1,97 @@
 package com.stargazerproject.sequence.resources.shell;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
-
 import com.google.common.base.Optional;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
+import com.stargazerproject.bus.exception.EventException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.sequence.ParallelSequenceTransaction;
 import com.stargazerproject.sequence.Sequence;
 import com.stargazerproject.sequence.SequenceObserver;
 import com.stargazerproject.sequence.SequenceTransaction;
+import com.stargazerproject.transaction.Event;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @Component(value="sequenceResourcesShell")
 @Qualifier("sequenceResourcesShell")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class SequenceResourcesShell implements Sequence<Order>, BaseCharacteristic<Sequence<Order>>{
+public class SequenceResourcesShell implements Sequence<Event>, BaseCharacteristic<Sequence<Event>>{
+
+	@Autowired
+	@Qualifier("sequenceTransactionCharacteristic")
+	private BaseCharacteristic<SequenceTransaction<Event>> sequenceTransactionCharacteristic;
+
+	private SequenceTransaction<Event> sequenceTransaction;
+
+	@Autowired
+	@Qualifier("parallelSequenceTransactionCharacteristic")
+	private BaseCharacteristic<ParallelSequenceTransaction<Event>> parallelSequenceTransactionCharacteristic;
+
+	private ParallelSequenceTransaction<Event> parallelSequenceTransaction;
 
 	@Override
-	public Optional<ParallelSequenceTransaction<Order>> creatParallelSequence() {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<Sequence<Event>> characteristic() {
+		sequenceTransaction = sequenceTransactionCharacteristic.characteristic().get();
+		parallelSequenceTransaction = parallelSequenceTransactionCharacteristic.characteristic().get();
+		return Optional.of(this);
 	}
 
 	@Override
-	public void addParallelSequence(Optional<Order> transaction) {
-		// TODO Auto-generated method stub
-		
+	public Optional<ParallelSequenceTransaction<Event>> creatParallelSequence() {
+		return parallelSequenceTransaction.creatParallelSequence();
 	}
 
 	@Override
-	public void clearParallelSequence(Optional<String> transactionID) {
-		// TODO Auto-generated method stub
-		
+	public void addParallelSequence(Optional<Event> event) {
+		parallelSequenceTransaction.addParallelSequence(event);
 	}
 
 	@Override
 	public void clearParallelSequence() {
-		// TODO Auto-generated method stub
-		
+		parallelSequenceTransaction.clearParallelSequence();
 	}
 
 	@Override
-	public Optional<SequenceObserver<Order>> startBlockParallelSequence() throws BusEventTimeoutException {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<SequenceObserver<Event>> startBlockParallelSequence() throws BusEventTimeoutException {
+		return parallelSequenceTransaction.startBlockParallelSequence();
 	}
 
 	@Override
-	public Optional<SequenceObserver<Order>> startParallelSequence() {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<SequenceObserver<Event>> startParallelSequence() {
+		return parallelSequenceTransaction.startParallelSequence();
 	}
 
 	@Override
-	public Optional<SequenceObserver<Order>> shutDownParallelSequence() {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<SequenceObserver<Event>> shutDownParallelSequence() {
+		return parallelSequenceTransaction.shutDownParallelSequence();
 	}
 
 	@Override
-	public Optional<SequenceTransaction<Order>> creatSequence() {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<SequenceTransaction<Event>> creatSequence() {
+		return sequenceTransaction.creatSequence();
 	}
 
 	@Override
-	public void addSequence(Optional<Order> transaction) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void clearSequence(Optional<String> transactionID) {
-		// TODO Auto-generated method stub
-		
+	public void addSequence(Optional<Event> event) {
+		sequenceTransaction.addSequence(event);
 	}
 
 	@Override
 	public void clearSequence() {
-		// TODO Auto-generated method stub
-		
+		sequenceTransaction.clearSequence();
 	}
 
 	@Override
-	public Optional<SequenceObserver<Order>> startBlockSequence() throws BusEventTimeoutException {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<SequenceObserver<Event>> startBlockSequence() throws BusEventTimeoutException, EventException {
+		return sequenceTransaction.startBlockSequence();
 	}
 
 	@Override
-	public Optional<SequenceObserver<Order>> startSequence() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Optional<Sequence<Order>> characteristic() {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<SequenceObserver<Event>> startSequence() {
+		return sequenceTransaction.startSequence();
 	}
 	
 }

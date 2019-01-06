@@ -1,16 +1,18 @@
 package com.stargazerproject.sequence.base.impl;
 
-import java.util.List;
-
 import com.google.common.base.Optional;
+import com.google.common.collect.Multimap;
+import com.stargazerproject.analysis.SequenceTransactionResultAnalysis;
 import com.stargazerproject.sequence.SequenceObserver;
 
-public class SequenceObserverImpl<K, RA> implements SequenceObserver<K>{
+public class SequenceObserverImpl<K> implements SequenceObserver<K>{
 	
-	private RA resultAnalysis;
+	private SequenceTransactionResultAnalysis resultAnalysis;
+
+	private Multimap<String, K> cache;
 	
-	public SequenceObserverImpl(Optional<RA> resultAnalysisArg, Optional<List<K>> transactionList) {
-		resultAnalysis = resultAnalysisArg.get();
+	public SequenceObserverImpl(Optional<SequenceTransactionResultAnalysis> sequenceTransactionResultAnalysisArg, Optional<Multimap<String, K>> eventList) {
+		resultAnalysis = sequenceTransactionResultAnalysisArg.get();
 	}
 
 	@Override

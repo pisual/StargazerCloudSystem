@@ -2,6 +2,7 @@ package com.stargazerproject.sequence;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
+import com.stargazerproject.bus.exception.EventException;
 
 /** 
  *  @name 顺序序列（单向序列）的事务接口
@@ -45,13 +46,6 @@ public interface SequenceTransaction<K>{
 	public void addSequence(Optional<K> transaction);
 	
 	/**
-	* @name 清除Sequence序列中指定的事务组
-	* @illustrate 清除Sequence序列的指定事务组
-	* @param Optional<String> OrderID 需要清除的事务组的ID
-	* **/
-	public void clearSequence(Optional<String> transactionID);
-	
-	/**
 	* @name 清除Sequence队列
 	* @illustrate 清除Sequence序列已经添加的的全部事务组
 	* **/
@@ -59,10 +53,10 @@ public interface SequenceTransaction<K>{
 	
 	/**
 	* @name 启动顺序序列
-	* @illustrate 启动指定的Sequence队列，并阻塞，直到序列全部完成后返回SequenceResult结果
+	* @illustrate 启动指定的Sequence队列，并阻塞，直到序列全部完成后返回SequenceObserver结果
 	* @exception BusEventTimeoutException : 超时会抛出BusEventTimeoutException异常
 	* **/
-	public Optional<SequenceObserver<K>> startBlockSequence() throws BusEventTimeoutException;
+	public Optional<SequenceObserver<K>> startBlockSequence() throws BusEventTimeoutException, EventException;
 	
 	/**
 	* @name 启动顺序序列

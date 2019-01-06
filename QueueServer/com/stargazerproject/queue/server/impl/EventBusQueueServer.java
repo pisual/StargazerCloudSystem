@@ -1,19 +1,18 @@
 package com.stargazerproject.queue.server.impl;
 
-import java.util.Optional;
-
+import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
+import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
+import com.stargazerproject.queue.Queue;
+import com.stargazerproject.queue.QueueControl;
+import com.stargazerproject.service.baseinterface.StanderServiceShell;
+import com.stargazerproject.transaction.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
-import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
-import com.stargazerproject.queue.Queue;
-import com.stargazerproject.queue.QueueControl;
-import com.stargazerproject.service.baseinterface.StanderServiceShell;
-import com.stargazerproject.transaction.base.impl.BaseEvent;
+import java.util.Optional;
 
 @Component(value="eventBusQueueServer")
 @Qualifier("eventBusQueueServer")
@@ -22,15 +21,15 @@ public class EventBusQueueServer implements StanderServiceShell{
 
 	@Autowired
 	@Qualifier("eventBusDisruptorShell")
-	private BaseCharacteristic<Queue<BaseEvent>> eventBusDisruptorShell;
+	private BaseCharacteristic<Queue<Event>> eventBusDisruptorShell;
 	
 	@Autowired
 	@Qualifier("eventBusQueue")
-	private StanderCharacteristicShell<Queue<BaseEvent>> eventQueue;
+	private StanderCharacteristicShell<Queue<Event>> eventQueue;
 	
 	@Autowired
 	@Qualifier("eventBusQueue")
-	private QueueControl<BaseEvent> eventQueueControl;
+	private QueueControl<Event> eventQueueControl;
 	
 	/**
 	* @name Springs使用的初始化构造
@@ -45,7 +44,7 @@ public class EventBusQueueServer implements StanderServiceShell{
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
 	* **/
-	public EventBusQueueServer(Optional<BaseCharacteristic<Queue<BaseEvent>>> eventBusDisruptorShellArg, Optional<StanderCharacteristicShell<Queue<BaseEvent>>> eventQueueArg, Optional<QueueControl<BaseEvent>> eventQueueControlArg){
+	public EventBusQueueServer(Optional<BaseCharacteristic<Queue<Event>>> eventBusDisruptorShellArg, Optional<StanderCharacteristicShell<Queue<Event>>> eventQueueArg, Optional<QueueControl<Event>> eventQueueControlArg){
 		eventBusDisruptorShell = eventBusDisruptorShellArg.get();
 		eventQueueControl = eventQueueControlArg.get();
 		eventQueue = eventQueueArg.get();

@@ -1,10 +1,7 @@
 package com.stargazerproject.spring.context.initialization.test;
 
 import com.stargazer.segmentation.impl.EventSegmentation;
-import com.stargazerproject.analysis.impl.EventAssembleAnalysisImpl;
-import com.stargazerproject.analysis.impl.EventExecuteAnalysisImpl;
-import com.stargazerproject.analysis.impl.EventResultAnalysisImpl;
-import com.stargazerproject.analysis.impl.LogAnalysisImpl;
+import com.stargazerproject.analysis.impl.*;
 import com.stargazerproject.analysis.resources.shell.EventAssembleAnalysisShell;
 import com.stargazerproject.analysis.resources.shell.EventExecuteAnalysisShell;
 import com.stargazerproject.annotation.impl.AnnotationsImpl;
@@ -13,6 +10,15 @@ import com.stargazerproject.annotation.resources.shell.AnnotationsShell;
 import com.stargazerproject.annotations.server.impl.AnnotationsServer;
 import com.stargazerproject.annotations.server.listener.impl.AnnotationsServerListener;
 import com.stargazerproject.annotations.server.manage.AnnotationsServerManage;
+import com.stargazerproject.bus.impl.EventBus;
+import com.stargazerproject.bus.impl.EventBusObserver;
+import com.stargazerproject.bus.resources.EventBusBlockMethodCharacteristic;
+import com.stargazerproject.bus.resources.EventBusNoBlockMethodCharacteristic;
+import com.stargazerproject.bus.resources.shell.EventBusObserverShell;
+import com.stargazerproject.bus.resources.shell.EventBusResourcesShell;
+import com.stargazerproject.bus.server.impl.EventBusServer;
+import com.stargazerproject.bus.server.listener.impl.EventBusServerListener;
+import com.stargazerproject.bus.server.manage.EventBusServerManage;
 import com.stargazerproject.cache.aop.configuration.ParametersInjectAOPConfiguration;
 import com.stargazerproject.cache.datastructure.impl.*;
 import com.stargazerproject.cache.impl.ByteArrayCache;
@@ -33,6 +39,7 @@ import com.stargazerproject.cache.server.manage.SystemParameterCacheServerManage
 import com.stargazerproject.cache.server.manage.TransactionCacheServerManage;
 import com.stargazerproject.consumer.impl.EventBusConsumer;
 import com.stargazerproject.consumer.impl.EventConsumer;
+import com.stargazerproject.consumer.impl.EventExecuteConsumer;
 import com.stargazerproject.inject.impl.InjectImpl;
 import com.stargazerproject.inject.resources.InjectClassMethodCharacteristic;
 import com.stargazerproject.inject.resources.InjectSearchMethodCharacteristic;
@@ -82,6 +89,17 @@ import com.stargazerproject.queue.server.manage.LogQueueServerManage;
 import com.stargazerproject.queue.server.manage.TransactionExportEventQueueServerManage;
 import com.stargazerproject.resources.parameter.*;
 import com.stargazerproject.resources.service.SystemServiceParameterList;
+import com.stargazerproject.sequence.impl.BootInitializationSequenceImpl;
+import com.stargazerproject.sequence.impl.StandardSequenceImpl;
+import com.stargazerproject.sequence.resources.ParallelSequenceTransactionCharacteristic;
+import com.stargazerproject.sequence.resources.SequenceTransactionCharacteristic;
+import com.stargazerproject.sequence.resources.shell.SequenceResourcesShell;
+import com.stargazerproject.sequence.server.impl.BootInitializationSequenceServer;
+import com.stargazerproject.sequence.server.impl.StandardSequenceServer;
+import com.stargazerproject.sequence.server.listener.impl.BootInitializationServerListener;
+import com.stargazerproject.sequence.server.listener.impl.StandardServerListener;
+import com.stargazerproject.sequence.server.manage.BootInitializationServerManage;
+import com.stargazerproject.sequence.server.manage.StandardServerManage;
 import com.stargazerproject.serializable.impl.NetworkTransmissionSerializables;
 import com.stargazerproject.serializable.server.impl.SerializableServer;
 import com.stargazerproject.serializable.server.listener.impl.SerializableServerListener;
@@ -304,18 +322,19 @@ public class GlobalAnnotationApplicationContextInitialization {
 		LoadingJProgressBarUI.class,
 		FrameShell.class,
 		
-//		/**Depend Sequence*/
-//		BootInitializationSequenceImpl.class,
-//		BootInitializationSequenceServer.class,
-//		BootInitializationServerListener.class,
-//		BootInitializationServerManage.class,
-//		StandardSequenceImpl.class,
-//		StandardSequenceServer.class,
-//		StandardServerListener.class,
-//		StandardServerManage.class,
-//		BaseSequenceAOPConfiguration.class,
-//		RegisterSequenceBeanModel.class,
-//		SequenceResourcesShell.class,
+		/**Depend Sequence*/
+		BootInitializationSequenceImpl.class,
+		StandardSequenceImpl.class,
+		SequenceResourcesShell.class,
+		BootInitializationServerManage.class,
+		ParallelSequenceTransactionCharacteristic.class,
+		SequenceTransactionCharacteristic.class,
+		BootInitializationSequenceServer.class,
+		StandardSequenceServer.class,
+		BootInitializationServerListener.class,
+		StandardServerListener.class,
+		BootInitializationServerManage.class,
+		StandardServerManage.class,
 		
 		/**Depend AnnotationImpl*/
 		AnnotationsImpl.class,
@@ -325,14 +344,16 @@ public class GlobalAnnotationApplicationContextInitialization {
 		AnnotationsServerListener.class,
 		AnnotationsServerManage.class,
 		
-//		/**Depend Bus**/
-//		EventBus.class,
-//		EventBusBlockMethodCharacteristic.class,
-//		EventBusNoBlockMethodCharacteristic.class,
-//		EventBusResourcesShell.class,
-//		EventBusServer.class,
-//		EventBusServerListener.class,
-//		EventBusServerManage.class,
+		/**Depend Bus**/
+		EventBus.class,
+		EventBusObserver.class,
+		EventBusObserverShell.class,
+		EventBusResourcesShell.class,
+		EventBusBlockMethodCharacteristic.class,
+		EventBusNoBlockMethodCharacteristic.class,
+		EventBusServer.class,
+		EventBusServerListener.class,
+		EventBusServerManage.class,
 //		
 //		/**Depend Transmission Queue**/
 //		TransmissionConsumer.class,
@@ -345,6 +366,8 @@ public class GlobalAnnotationApplicationContextInitialization {
 //		TransmissionQueueServer.class,
 //		TransmissionQueueServerListener.class,
 //		TransmissionQueueServerManage.class,
+
+		EventExecuteConsumer.class,
 		
 		/**Depend Inject**/
 		InjectImpl.class,
@@ -355,9 +378,9 @@ public class GlobalAnnotationApplicationContextInitialization {
 		InjectServerListener.class,
 		InjectServerManage.class,
 		
-//		/**Depend Analysis**/
+		/**Depend Analysis**/
 //		EventExecuteAnalysisImpl.class,
-//		EventResultAnalysisImpl.class,
+		EventResultAnalysisImpl.class,
 		LogAnalysisImpl.class,
 		
 //		/**Depend CellsInformation**/
@@ -387,7 +410,8 @@ public class GlobalAnnotationApplicationContextInitialization {
 		EventAssembleAnalysisImpl.class,
 		EventExecuteAnalysisImpl.class,
 		EventAssembleAnalysisShell.class,
-		EventExecuteAnalysisShell.class
+		EventExecuteAnalysisShell.class,
+		SequenceTransactionResultAnalysisImpl.class
 		);
 	} 
 	

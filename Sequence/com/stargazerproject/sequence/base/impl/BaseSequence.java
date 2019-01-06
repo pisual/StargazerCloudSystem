@@ -1,13 +1,11 @@
 package com.stargazerproject.sequence.base.impl;
 
-import java.util.concurrent.TimeUnit;
-
 import com.google.common.base.Optional;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
+import com.stargazerproject.bus.exception.EventException;
 import com.stargazerproject.sequence.ParallelSequenceTransaction;
 import com.stargazerproject.sequence.Sequence;
 import com.stargazerproject.sequence.SequenceObserver;
-import com.stargazerproject.sequence.SequenceResult;
 import com.stargazerproject.sequence.SequenceTransaction;
 
 public class BaseSequence<K> implements Sequence<K>{
@@ -22,11 +20,6 @@ public class BaseSequence<K> implements Sequence<K>{
 	@Override
 	public void addParallelSequence(Optional<K> transaction) {
 		sequence.addParallelSequence(transaction);
-	}
-
-	@Override
-	public void clearParallelSequence(Optional<String> transactionID) {
-		sequence.clearParallelSequence(transactionID);
 	}
 
 	@Override
@@ -60,17 +53,12 @@ public class BaseSequence<K> implements Sequence<K>{
 	}
 
 	@Override
-	public void clearSequence(Optional<String> transactionID) {
-		sequence.clearSequence();
-	}
-
-	@Override
 	public void clearSequence() {
 		sequence.clearSequence();
 	}
 
 	@Override
-	public Optional<SequenceObserver<K>> startBlockSequence() throws BusEventTimeoutException {
+	public Optional<SequenceObserver<K>> startBlockSequence() throws BusEventTimeoutException, EventException {
 		return sequence.startBlockSequence();
 	}
 

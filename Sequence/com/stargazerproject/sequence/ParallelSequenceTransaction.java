@@ -47,13 +47,6 @@ public interface ParallelSequenceTransaction<K>{
 	public void addParallelSequence(Optional<K> transaction);
 	
 	/**
-	* @name 清除Sequence序列中指定的事务组
-	* @illustrate 清除Sequence序列的指定事务组
-	* @param Optional<String> OrderID 需要清除的事务组的ID
-	* **/
-	public void clearParallelSequence(Optional<String> transactionID);
-	
-	/**
 	* @name 清除Sequence队列
 	* @illustrate 清除Sequence序列已经添加的的全部事务组
 	* **/
@@ -65,7 +58,7 @@ public interface ParallelSequenceTransaction<K>{
 	* @exception BusEventTimeoutException : 超时会抛出BusEventTimeoutException异常
 	* **/
 	public Optional<SequenceObserver<K>> startBlockParallelSequence() throws BusEventTimeoutException;
-	
+
 	/**
 	* @name 启动并行序列
 	* @illustrate 启动指定的Sequence队列，非阻塞，执行后立即返回ParallelSequenceObserver结果观察对象，可以根据ParallelSequenceObserver来检测

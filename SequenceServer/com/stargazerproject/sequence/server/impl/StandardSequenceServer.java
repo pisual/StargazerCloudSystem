@@ -1,16 +1,15 @@
 package com.stargazerproject.sequence.server.impl;
 
+import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
+import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
+import com.stargazerproject.sequence.Sequence;
+import com.stargazerproject.service.baseinterface.StanderServiceShell;
+import com.stargazerproject.transaction.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import com.google.common.base.Optional;
-import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
-import com.stargazerproject.sequence.Sequence;
-import com.stargazerproject.service.baseinterface.StanderServiceShell;
-import com.stargazerproject.spring.container.impl.BeanContainer;
 
 /** 
  *  @name StandardSequenceServer 服务的实现
@@ -24,7 +23,11 @@ public class StandardSequenceServer implements StanderServiceShell{
 	
 	@Autowired
 	@Qualifier("standardSequence")
-	private StanderCharacteristicShell<Sequence> sequence;
+	private StanderCharacteristicShell<Sequence<Event>> sequence;
+
+	@Autowired
+	@Qualifier("sequenceResourcesShell")
+	private BaseCharacteristic<Sequence<Event>> sequenceCharacteristic;
 	
 	/** @construction 初始化构造 **/
 	private StandardSequenceServer() {}
@@ -33,8 +36,7 @@ public class StandardSequenceServer implements StanderServiceShell{
 	@Override
 	@SuppressWarnings("unchecked")
 	public void startUp() {
-		Optional<Sequence> sequenceImpl = BeanContainer.instance().getBean(Optional.of("sequenceResourcesCharacteristic"), Optional.class);
-		sequence.initialize(sequenceImpl);
+		sequence.initialize(sequenceCharacteristic.characteristic());
 	}
 
 	/** @illustrate 关闭服务及相关操作 **/

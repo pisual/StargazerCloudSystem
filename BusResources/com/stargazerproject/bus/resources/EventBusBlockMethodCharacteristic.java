@@ -32,7 +32,7 @@ public class EventBusBlockMethodCharacteristic implements BusBlockMethod<Event>,
 	private Queue<Event> event;
 	
 	@Autowired
-	@Qualifier("eventResultAnalysis")
+	@Qualifier("eventResultAnalysisImpl")
 	private EventResultAnalysis eventResultAnalysis;
 	
 	public EventBusBlockMethodCharacteristic() {}

@@ -21,7 +21,7 @@ import com.stargazerproject.cache.datastructure.BaseDataStructureCache;
 @Component(value="eventResultCache")
 @Qualifier("eventResultCache")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@NeedInitialization(content = "{'ResultRecord' : 'Faile'," 	  /** @illustrate 结果状态（"Faile" Or "Success"） **/
+@NeedInitialization(content = "{'ResultRecord' : 'Faile'," /** @illustrate 结果状态（"Faile" Or "Success"） **/
 		                    + " 'Exception' : 'NULL'"      /** @illustrate 异常信息（NULL Or ExceptionMessage） **/
 		                    + " 'CompleteTime' : '0'"      /** @illustrate 完成时间（0 Or 格林威治时间（精确到秒）） **/
 		                    + " 'RetryTime':'0'}")         /** @illustrate 重试次数（0 Or Int） **/

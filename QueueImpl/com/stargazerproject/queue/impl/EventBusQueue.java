@@ -1,15 +1,14 @@
 package com.stargazerproject.queue.impl;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.common.base.Optional;
 import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
 import com.stargazerproject.queue.Queue;
 import com.stargazerproject.queue.base.impl.StandQueue;
-import com.stargazerproject.transaction.base.impl.BaseEvent;
+import com.stargazerproject.transaction.Event;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /** 
  *  @name EventBus队列
@@ -20,7 +19,7 @@ import com.stargazerproject.transaction.base.impl.BaseEvent;
 @Component(value="eventBusQueue")
 @Qualifier("eventBusQueue")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class EventBusQueue extends StandQueue<BaseEvent> implements StanderCharacteristicShell<Queue<BaseEvent>>{
+public class EventBusQueue extends StandQueue<Event> implements StanderCharacteristicShell<Queue<Event>>{
 
 	/**
 	* @name 常规初始化构造
@@ -29,7 +28,7 @@ public class EventBusQueue extends StandQueue<BaseEvent> implements StanderChara
 	protected EventBusQueue() {}
 
 	@Override
-	public void initialize(Optional<Queue<BaseEvent>> queueArg) {
+	public void initialize(Optional<Queue<Event>> queueArg) {
 		queue = queueArg.get();
 	}
 

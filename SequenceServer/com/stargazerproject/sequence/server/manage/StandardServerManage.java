@@ -1,17 +1,17 @@
 package com.stargazerproject.sequence.server.manage;
 
-import javax.annotation.PostConstruct;
-
+import com.google.common.util.concurrent.AbstractIdleService;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.stargazerproject.service.annotation.ServiceZone;
+import com.stargazerproject.service.annotation.Services;
+import com.stargazerproject.service.baseinterface.StanderServiceShell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.common.util.concurrent.AbstractIdleService;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.stargazerproject.service.annotation.Services;
-import com.stargazerproject.service.baseinterface.StanderServiceShell;
+import javax.annotation.PostConstruct;
 
 /** 
  *  @name StandardServerManage服务集中托管
@@ -21,7 +21,7 @@ import com.stargazerproject.service.baseinterface.StanderServiceShell;
 @Component(value="standardServerManage")
 @Qualifier("standardServerManage")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-//@Services(value="bootInitializationServerManage", order = 99)
+@Services(name="standardServerManage", serviceZone = ServiceZone.System, layer = 21)
 public class StandardServerManage extends AbstractIdleService{
 	
 	/** @illustrate standardSequenceServer的ServiceShell接口 **/
