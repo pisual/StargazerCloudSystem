@@ -1,15 +1,14 @@
 package com.stargazerproject.transaction.impl;
 
+import com.google.common.base.Optional;
+import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
+import com.stargazerproject.transaction.Event;
+import com.stargazerproject.transaction.base.impl.BaseEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import com.google.common.base.Optional;
-import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
-import com.stargazerproject.transaction.Event;
-import com.stargazerproject.transaction.base.impl.BaseEvent;
 
 @Component(value="standardEvent")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)

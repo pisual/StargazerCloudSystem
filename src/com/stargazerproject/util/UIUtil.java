@@ -1,21 +1,10 @@
 package com.stargazerproject.util;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextPane;
-import javax.swing.text.Document;
-
-import com.google.common.base.Optional;
 import com.stargazerproject.userinterface.resources.MainFrameConsoleTextPaneCharacteristic;
 import com.stargazerproject.userinterface.resources.MainFrameRightConsoleTextPaneCharacteristic;
+
+import javax.swing.*;
+import java.awt.*;
 
 
 /**

@@ -45,7 +45,7 @@ public class EventBusBlockMethodCharacteristic implements BusBlockMethod<Event>,
 	/**
 	* @name 置入事件
 	* @illustrate 阻塞推入事件方法
-	* @param Optional<TimeUnit> timeUnit
+	* @param Optional<EventTimeUnit> timeUnit
 	* @param Optional<Integer> timeout
 	* **/
 	@Override

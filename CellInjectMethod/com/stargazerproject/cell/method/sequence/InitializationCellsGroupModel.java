@@ -1,18 +1,21 @@
 package com.stargazerproject.cell.method.sequence;
 
+import com.google.common.base.Optional;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.stargazerproject.annotation.description.EventConfiguration;
+import com.stargazerproject.annotation.description.EventFailureStrategy;
+import com.stargazerproject.annotation.description.EventRunStrategy;
+import com.stargazerproject.annotation.description.EventTimeUnit;
+import com.stargazerproject.cache.Cache;
+import com.stargazerproject.cell.CellsTransaction;
+import com.stargazerproject.log.LogMethod;
+import com.stargazerproject.util.SequenceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import com.google.common.base.Optional;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import com.stargazerproject.cache.Cache;
-import com.stargazerproject.cell.CellsTransaction;
-import com.stargazerproject.log.LogMethod;
-import com.stargazerproject.util.SequenceUtil;
 
 /** 
  *  @name Cell生成ID序列组
@@ -22,6 +25,13 @@ import com.stargazerproject.util.SequenceUtil;
 @Component(value="initializationCellsGroupModel")
 @Qualifier("initializationCellsGroupModel")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@EventConfiguration(name = "InitializationCellsGroupModel",
+		             waitTimeoutUnit = EventTimeUnit.MILLISECONDS,
+		             waitTimeout = 300,
+		             runTimeoutUnit = EventTimeUnit.MILLISECONDS,
+		             runTimeout = 500,
+		             eventRunStrategy = EventRunStrategy.Single,
+		             eventFailureStrategy = EventFailureStrategy.Rollback)
 public class InitializationCellsGroupModel implements CellsTransaction<String, String>{
 	
 	/** @illustrate 获取Log(日志)接口 **/

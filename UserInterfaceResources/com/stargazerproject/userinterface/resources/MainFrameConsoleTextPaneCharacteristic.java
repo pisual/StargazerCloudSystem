@@ -1,23 +1,5 @@
 package com.stargazerproject.userinterface.resources;
 
-import java.awt.Color;
-import java.awt.Font;
-
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JTextPane;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.common.base.Optional;
 import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
@@ -26,6 +8,14 @@ import com.stargazerproject.util.ColorUtil;
 import com.stargazerproject.util.FontUtil;
 import com.stargazerproject.util.ParameterStringUtil;
 import com.stargazerproject.util.UIUtil;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import javax.swing.*;
+import javax.swing.text.*;
+import java.awt.*;
 
 /**
  * 主界面控制台输出
@@ -118,7 +108,7 @@ public class MainFrameConsoleTextPaneCharacteristic implements BaseCharacteristi
 	}
 
 	public void insertLogo() {
-		ImageIcon imageIcon = new ImageIcon(UserinterfaceResource.class.getResource(Kernel_UserInterface_MainFrame_Font_Icon_Line));
+		ImageIcon imageIcon = new ImageIcon(UserinterfaceResource.class.getClassLoader().getResource(Kernel_UserInterface_MainFrame_Font_Icon_Line));
 		StyleConstants.setIcon(style, imageIcon);
 		try {
 			styledDocument.insertString(styledDocument.getLength(), " ", style);
