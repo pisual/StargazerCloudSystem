@@ -5,6 +5,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.analysis.SequenceTransactionResultAnalysis;
+import com.stargazerproject.annotation.Annotations;
 import com.stargazerproject.bus.BusBlockMethod;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.bus.exception.EventException;
@@ -23,7 +24,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.concurrent.TimeUnit;
 
 @Component(value="sequenceTransactionCharacteristic")
 @Qualifier("sequenceTransactionCharacteristic")
@@ -46,6 +46,10 @@ public class SequenceTransactionCharacteristic implements SequenceTransaction<Ev
 	@Autowired
 	@Qualifier("sequenceTransactionResultAnalysisImpl")
 	private SequenceTransactionResultAnalysis sequenceTransactionResultAnalysis;
+
+	@Autowired
+	@Qualifier("annotationsImpl")
+	private Annotations annotations;
 
 	private String groupID;
 
@@ -92,10 +96,10 @@ public class SequenceTransactionCharacteristic implements SequenceTransaction<Ev
 
 	private void pushEvent(Collection<Event> eventList) throws BusEventTimeoutException, EventException{
 		for (Event event : eventList){
-			eventBus.push(Optional.of(event), Optional.of(TimeUnit.SECONDS), Optional.of(10));
+			eventBus.push(Optional.of(event));
 			ResultState resultState = event.eventResult(Optional.of(eventResultAnalysis)).get().resultState().get();
 			if(resultState != ResultState.SUCCESS){
-				throw new EventException("");
+				throw new EventException("Sequence 序列中存在失败的事物 ： " + event.toString());
 			}
 		}
 	}

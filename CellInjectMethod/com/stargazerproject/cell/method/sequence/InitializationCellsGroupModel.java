@@ -6,7 +6,6 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.stargazerproject.annotation.description.EventConfiguration;
 import com.stargazerproject.annotation.description.EventFailureStrategy;
 import com.stargazerproject.annotation.description.EventRunStrategy;
-import com.stargazerproject.annotation.description.EventTimeUnit;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.CellsTransaction;
 import com.stargazerproject.log.LogMethod;
@@ -17,6 +16,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 /** 
  *  @name Cell生成ID序列组
  *  @illustrate Cells生成UUID序列
@@ -25,13 +26,14 @@ import org.springframework.stereotype.Component;
 @Component(value="initializationCellsGroupModel")
 @Qualifier("initializationCellsGroupModel")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@EventConfiguration(name = "InitializationCellsGroupModel",
-		             waitTimeoutUnit = EventTimeUnit.MILLISECONDS,
+@EventConfiguration( name = "InitializationCellsGroupModel",
+		             waitTimeoutUnit = TimeUnit.MILLISECONDS,
 		             waitTimeout = 300,
-		             runTimeoutUnit = EventTimeUnit.MILLISECONDS,
+		             runTimeoutUnit = TimeUnit.MILLISECONDS,
 		             runTimeout = 500,
 		             eventRunStrategy = EventRunStrategy.Single,
-		             eventFailureStrategy = EventFailureStrategy.Rollback)
+		             eventFailureStrategy = EventFailureStrategy.Rollback,
+		             retryCount = 1)
 public class InitializationCellsGroupModel implements CellsTransaction<String, String>{
 	
 	/** @illustrate 获取Log(日志)接口 **/

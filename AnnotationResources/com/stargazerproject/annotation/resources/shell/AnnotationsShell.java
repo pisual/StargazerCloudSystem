@@ -1,21 +1,20 @@
 package com.stargazerproject.annotation.resources.shell;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.util.List;
-import java.util.Map.Entry;
-
+import com.google.common.base.Optional;
+import com.google.common.collect.Multimap;
+import com.stargazerproject.annotation.Annotations;
+import com.stargazerproject.annotation.AnnotationsScanner;
+import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Multimap;
-import com.stargazerproject.annotation.Annotations;
-import com.stargazerproject.annotation.AnnotationsScanner;
-import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.List;
+import java.util.Map.Entry;
 
 @Component(value="annotationsShell")
 @Qualifier("annotationsShell")
@@ -41,4 +40,8 @@ public class AnnotationsShell implements Annotations, BaseCharacteristic<Annotat
 		return annotationsScannerResourcesCharacteristic.characteristic().get().acquireAppointAnnotationAttributeValue(packagesArg, annotationArg, value);
 	}
 
+	@Override
+	public <A extends Annotation> Optional<A> scannerObjectClassAnnotation(Optional<Object> object, Optional<Class<A>> annotationClass) {
+		return annotationsScannerResourcesCharacteristic.characteristic().get().scannerObjectClassAnnotation(object, annotationClass);
+	}
 }

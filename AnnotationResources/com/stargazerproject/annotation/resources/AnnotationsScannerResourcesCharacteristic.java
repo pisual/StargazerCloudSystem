@@ -1,13 +1,10 @@
 package com.stargazerproject.annotation.resources;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.google.common.base.Optional;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
+import com.stargazerproject.annotation.AnnotationsScanner;
+import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -22,18 +19,18 @@ import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
-import com.stargazerproject.annotation.AnnotationsScanner;
-import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 @Component(value="annotationsScannerResourcesCharacteristic")
 @Qualifier("annotationsScannerResourcesCharacteristic")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AnnotationsScannerResourcesCharacteristic implements AnnotationsScanner, BaseCharacteristic<AnnotationsScanner>{
-
-	private Multimap<Class<?>, Entry<String, List<Object>>> scoreMultimap;
 	
 	private AnnotationsScannerResourcesCharacteristic() {}
 	
@@ -44,10 +41,10 @@ public class AnnotationsScannerResourcesCharacteristic implements AnnotationsSca
 
 	@Override
 	public Optional<Multimap<Class<?>, Entry<String, List<Object>>>> scannerAnnotation(Optional<String> packagesArg, Optional<Class<? extends Annotation>> annotationArg) throws IOException, ClassNotFoundException {
-		scoreMultimap = LinkedHashMultimap.create();
+		Multimap<Class<?>, Entry<String, List<Object>>> scoreMultimap = LinkedHashMultimap.create();
 		Resource[] resources = acquireResourceArray(packagesArg.get());
 		for(Resource resource : resources){
-			matchesEntityTypeFilter(resource, annotationArg.get());
+			matchesEntityTypeFilter(resource, annotationArg.get(), scoreMultimap);
 		}
 		return Optional.of(scoreMultimap);
 	}
@@ -56,8 +53,13 @@ public class AnnotationsScannerResourcesCharacteristic implements AnnotationsSca
 	public Optional<List<String>> acquireAppointAnnotationAttributeValue(Optional<String> packagesArg, Optional<Class<? extends Annotation>> annotationArg, Optional<String> value) throws IOException, ClassNotFoundException {
 		return Optional.of(attributeValueList(packagesArg, annotationArg, value));
 	}
-	
-	private String packagesPattern(String packagesArg){
+
+   // @Override
+    public <A extends Annotation> Optional<A> scannerObjectClassAnnotation(Optional<Object> object, Optional<Class<A>> annotationClass) {
+        return Optional.of(object.get().getClass().getAnnotation(annotationClass.get()));
+    }
+
+    private String packagesPattern(String packagesArg){
 		return ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + ClassUtils.convertClassNameToResourcePath(packagesArg) + "/**/*.class";
 	}
 	
@@ -65,7 +67,7 @@ public class AnnotationsScannerResourcesCharacteristic implements AnnotationsSca
 		return new PathMatchingResourcePatternResolver().getResources(packagesPattern(packagesArg));
 	}
 	
-	private void matchesEntityTypeFilter(Resource resource, Class<? extends Annotation> annotation) throws IOException, ClassNotFoundException{
+	private void matchesEntityTypeFilter(Resource resource, Class<? extends Annotation> annotation, Multimap<Class<?>, Entry<String, List<Object>>> scoreMultimap) throws IOException, ClassNotFoundException{
 		TypeFilter typeFilters = new AnnotationTypeFilter(annotation, false);
 		MetadataReaderFactory readerFactory = new CachingMetadataReaderFactory(new PathMatchingResourcePatternResolver());
 		MetadataReader reader = readerFactory.getMetadataReader(resource);

@@ -46,7 +46,12 @@ public class EventBusResourcesShell implements Bus<Event>, BaseCharacteristic<Bu
 	public Optional<Event> push(Optional<Event> event, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException {
 		return busBlockMethod.push(event, timeUnit, timeout);
 	}
-	
+
+	@Override
+	public Optional<Event> push(Optional<Event> busEvent) throws BusEventTimeoutException {
+		return busBlockMethod.push(busEvent);
+	}
+
 	@Override
 	public Optional<BusObserver<Event>> pushNoBlock(Optional<Event> busEvent) {
 		return busNoBlockMethod.pushNoBlock(busEvent);

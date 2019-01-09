@@ -19,6 +19,12 @@ public class StandardCellsTransactionImpl extends BaseCellsTransaction<String, S
 	@Override
 	@HystrixCommand(fallbackMethod = "fallBack", groupKey="TestMethod", commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "200")})
+	/**
+	 * @name 注入方法
+	 * @illustrate 注入的方法
+	 * @param <Cache<String, String>> 聚合根，不同的方法通过聚合根缓存共享数据
+	 * @param <V> 缓存的Value值
+	 * **/
 	public boolean method(Optional<Cache<String, String>> cache) {
 		System.out.println("局外加载成功");
 		return Boolean.TRUE;

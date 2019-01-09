@@ -1,8 +1,11 @@
 package com.stargazerproject.bus.resources;
 
 import com.google.common.base.Optional;
+import com.stargazerproject.analysis.EventExecuteAnalysis;
 import com.stargazerproject.analysis.EventResultAnalysis;
+import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
+import com.stargazerproject.annotation.description.EventConfiguration;
 import com.stargazerproject.bus.BusBlockMethod;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
@@ -34,6 +37,10 @@ public class EventBusBlockMethodCharacteristic implements BusBlockMethod<Event>,
 	@Autowired
 	@Qualifier("eventResultAnalysisImpl")
 	private EventResultAnalysis eventResultAnalysis;
+
+	@Autowired
+	@Qualifier("eventExecuteAnalysisImpl")
+	private EventExecuteAnalysis eventExecuteAnalysis;
 	
 	public EventBusBlockMethodCharacteristic() {}
 
@@ -64,7 +71,27 @@ public class EventBusBlockMethodCharacteristic implements BusBlockMethod<Event>,
 		l️og.WARN(busEvent.get(), "Event没有在指定时间内完成任务 : BaseEvent Not completed at the specified time");
 		throw new BusEventTimeoutException("Event没有在指定时间内完成任务 : BaseEvent Not completed at the specified time : " + busEvent.toString());
 	}
-	
+
+	@Override
+	public Optional<Event> push(Optional<Event> busEvent) throws BusEventTimeoutException {
+		event.producer(busEvent);
+		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis)).get();
+		EventConfiguration eventConfiguration = eventExecuteAnalysisHandle.EventConfiguration().get();
+
+		EventResultAnalysisHandle eventResultAnalysisHandle = busEvent.get().eventResult(Optional.of(eventResultAnalysis)).get();
+		for(int i=0; i<eventConfiguration.waitTimeout(); i++){
+			if(eventResultAnalysisHandle.resultState().get() == ResultState.WAIT){
+				sleep(eventConfiguration.waitTimeoutUnit());
+				continue;
+			}
+			else{
+				return busEvent;
+			}
+		}
+		l️og.WARN(busEvent.get(), "Event没有在指定时间内完成任务 : BaseEvent Not completed at the specified time");
+		throw new BusEventTimeoutException("Event没有在指定时间内完成任务 : BaseEvent Not completed at the specified time : " + busEvent.toString());
+	}
+
 	private void sleep(TimeUnit timeUnit){
 		try {
 			switch (timeUnit) {

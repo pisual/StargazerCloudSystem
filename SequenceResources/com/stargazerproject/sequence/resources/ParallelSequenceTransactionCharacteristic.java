@@ -5,6 +5,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.analysis.SequenceTransactionResultAnalysis;
+import com.stargazerproject.annotation.Annotations;
 import com.stargazerproject.bus.BusNoBlockMethod;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
@@ -46,6 +47,10 @@ public class ParallelSequenceTransactionCharacteristic implements ParallelSequen
     @Autowired
     @Qualifier("sequenceTransactionResultAnalysisImpl")
     private SequenceTransactionResultAnalysis sequenceTransactionResultAnalysis;
+
+    @Autowired
+    @Qualifier("annotationsImpl")
+    private Annotations annotations;
 
     /** @illustrate Event 临时存储列表 **/
     Multimap<String, Event> cache;
