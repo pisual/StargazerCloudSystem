@@ -1,19 +1,33 @@
 package com.stargazerproject.cell.impl;
 
+import com.google.common.base.Optional;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.stargazerproject.annotation.description.EventBaseParameters;
+import com.stargazerproject.annotation.description.EventConfiguration;
+import com.stargazerproject.annotation.description.EventFailureStrategy;
+import com.stargazerproject.annotation.description.EventRunStrategy;
+import com.stargazerproject.cache.Cache;
+import com.stargazerproject.cell.base.impl.BaseCellsTransaction;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.common.base.Optional;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import com.stargazerproject.cache.Cache;
-import com.stargazerproject.cell.base.impl.BaseCellsTransaction;
+import java.util.concurrent.TimeUnit;
 
 @Component(value="standardCellsTransactionImpl")
 @Qualifier("standardCellsTransactionImpl")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@EventBaseParameters(name = "name", cellsMethodName = " cellsName", CellsMethodNeedParameters = "id. StartPage, EndPage")
+@EventConfiguration( name = "name",
+					 waitTimeoutUnit = TimeUnit.MILLISECONDS,
+					 waitTimeout = 300,
+					 runTimeoutUnit = TimeUnit.MILLISECONDS,
+					 runTimeout = 500,
+					 eventRunStrategy = EventRunStrategy.Single,
+					 eventFailureStrategy = EventFailureStrategy.Rollback,
+					 retryCount = 1)
 public class StandardCellsTransactionImpl extends BaseCellsTransaction<String, String>{
 
 	@Override

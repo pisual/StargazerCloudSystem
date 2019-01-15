@@ -3,11 +3,12 @@ package com.stargazerproject.annotation.description;
 import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;
 
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface EventConfiguration {
     public String name();
+    public boolean parametersBeforehandCheck() default true; //方法参数先行检测，将检测参数是否存在
 
     public TimeUnit waitTimeoutUnit() default TimeUnit.MILLISECONDS; //等待时间单位
     public int waitTimeout() default 500;//等待的最长时间
