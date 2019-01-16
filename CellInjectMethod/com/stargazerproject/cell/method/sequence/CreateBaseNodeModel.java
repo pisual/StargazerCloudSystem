@@ -1,19 +1,18 @@
 package com.stargazerproject.cell.method.sequence;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.cache.Cache;
-import com.stargazerproject.cell.CellsTransaction;
+import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.negotiate.Negotiate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 /** 
  *  @name 创建基础节点
@@ -23,7 +22,7 @@ import com.stargazerproject.negotiate.Negotiate;
 @Component(value="createBaseNodeModel")
 @Qualifier("createBaseNodeModel")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class CreateBaseNodeModel implements CellsTransaction<String, String>{
+public class CreateBaseNodeModel extends StandardCellsTransactionImpl {
 	
 	/** @name 根路径 **/
 	@NeedInject(type="SystemParametersCache")
@@ -62,17 +61,16 @@ public class CreateBaseNodeModel implements CellsTransaction<String, String>{
 	                threadPoolKey = "createBaseNodeModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public boolean method(Optional<Cache<String, String>> cache) {
+	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> cache) {
 		try {
 			creatPersistentNode(Optional.of(Kernel_Negotiate_BasePath_RootPath));
 			creatPersistentNode(Optional.of(Kernel_Negotiate_BasePath_EdenNodePath));
 			creatPersistentNode(Optional.of(Kernel_Negotiate_BasePath_ZoneNodePath));
 			log.INFO(this, "CreateBaseNodeModel Complete: " + cache.get().get(Optional.of("OrderID")).get());
-			return Boolean.TRUE;
 		} catch (Exception e) {
 			log.ERROR(this, e.getMessage());
-			return Boolean.FALSE;
 		}
+		return Optional.of(cacheggregateRootCache);
 	}
 	
 	/**
@@ -81,14 +79,14 @@ public class CreateBaseNodeModel implements CellsTransaction<String, String>{
 	* @param Optional<Cache<String, String>> cache
 	* @param Throwable throwable
 	* **/
-	public boolean fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
+	public Optional<Cache<String, String>> fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
 		if(null == throwable){
 			log.WARN(this, "BaseEvent FallBack : TimeOut");
 		}
 		else{
 			log.WARN(this, "BaseEvent FallBack : " + throwable.getMessage());
 		}
-		return Boolean.FALSE;
+		return Optional.of(cacheggregateRootCache);
     }
 	
 	private void creatPersistentNode(Optional<String> path) throws Exception{

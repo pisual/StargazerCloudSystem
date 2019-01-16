@@ -3,11 +3,9 @@ package com.stargazerproject.cell.method.sequence;
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import com.stargazerproject.annotation.description.EventConfiguration;
-import com.stargazerproject.annotation.description.EventFailureStrategy;
-import com.stargazerproject.annotation.description.EventRunStrategy;
+import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.cache.Cache;
-import com.stargazerproject.cell.CellsTransaction;
+import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.util.SequenceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +13,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.TimeUnit;
 
 /** 
  *  @name Cell生成ID序列组
@@ -26,15 +22,8 @@ import java.util.concurrent.TimeUnit;
 @Component(value="initializationCellsGroupModel")
 @Qualifier("initializationCellsGroupModel")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@EventConfiguration( name = "InitializationCellsGroupModel",
-		             waitTimeoutUnit = TimeUnit.MILLISECONDS,
-		             waitTimeout = 300,
-		             runTimeoutUnit = TimeUnit.MILLISECONDS,
-		             runTimeout = 500,
-		             eventRunStrategy = EventRunStrategy.Single,
-		             eventFailureStrategy = EventFailureStrategy.Rollback,
-		             retryCount = 1)
-public class InitializationCellsGroupModel implements CellsTransaction<String, String>{
+@Event()
+public class InitializationCellsGroupModel extends StandardCellsTransactionImpl {
 	
 	/** @illustrate 获取Log(日志)接口 **/
 	@Autowired
@@ -48,7 +37,7 @@ public class InitializationCellsGroupModel implements CellsTransaction<String, S
 	/**
 	* @name 熔断器包裹的方法
 	* @illustrate 熔断器包裹的方法
-	* @param Optional<Cache<String, String>> cache
+	* @param : Optional<Cache<String, String>> cache 参数缓存
 	* **/
 	@Override
 	@HystrixCommand(commandKey = "initializationCellsGroupModel", 
@@ -57,26 +46,26 @@ public class InitializationCellsGroupModel implements CellsTransaction<String, S
 	                threadPoolKey = "initializationCellsGroupModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public boolean method(Optional<Cache<String, String>> cache) {
-		cache.get().put(Optional.of("OrderID"), Optional.of(SequenceUtil.getUUID()));
+	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> cache) {
+		cacheggregateRootCache.put(Optional.of("OrderID"), Optional.of(SequenceUtil.getUUID()));
 		log.INFO(this, "This_Cells_UUID Initialization: " + cache.get().get(Optional.of("OrderID")).get());
-		return Boolean.TRUE;
+		return Optional.of(cacheggregateRootCache);
 	}
 	
 	/**
 	* @name 熔断器包裹的方法的备用方法
 	* @illustrate 熔断器包裹的方法
-	* @param Optional<Cache<String, String>> cache
+	* @param : Optional<Cache<String, String>> cache
 	* @param Throwable throwable
 	* **/
-	public boolean fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
+	public Optional<Cache<String, String>> fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
 		if(null == throwable){
 			log.WARN(this, "BaseEvent FallBack : TimeOut");
 		}
 		else{
 			log.WARN(this, "BaseEvent FallBack : " + throwable.getMessage());
 		}
-		return Boolean.FALSE;
+		return Optional.of(cacheggregateRootCache);
     }
 	
 }

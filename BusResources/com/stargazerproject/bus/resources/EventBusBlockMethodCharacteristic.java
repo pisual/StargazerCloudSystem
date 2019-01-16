@@ -5,7 +5,7 @@ import com.stargazerproject.analysis.EventExecuteAnalysis;
 import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
-import com.stargazerproject.annotation.description.EventConfiguration;
+import com.stargazerproject.annotation.description.EventTimeOut;
 import com.stargazerproject.bus.BusBlockMethod;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
@@ -76,7 +76,7 @@ public class EventBusBlockMethodCharacteristic implements BusBlockMethod<Event>,
 	public Optional<Event> push(Optional<Event> busEvent) throws BusEventTimeoutException {
 		event.producer(busEvent);
 		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis)).get();
-		EventConfiguration eventConfiguration = eventExecuteAnalysisHandle.EventConfiguration().get();
+		EventTimeOut eventConfiguration = eventExecuteAnalysisHandle.EventConfiguration().get();
 
 		EventResultAnalysisHandle eventResultAnalysisHandle = busEvent.get().eventResult(Optional.of(eventResultAnalysis)).get();
 		for(int i=0; i<eventConfiguration.waitTimeout(); i++){

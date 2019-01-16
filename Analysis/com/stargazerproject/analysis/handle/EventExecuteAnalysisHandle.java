@@ -1,10 +1,10 @@
 package com.stargazerproject.analysis.handle;
 
 import com.google.common.base.Optional;
-import com.stargazerproject.annotation.description.EventConfiguration;
+import com.stargazerproject.annotation.description.EventTimeOut;
 
 public interface EventExecuteAnalysisHandle {
     public void run();
 
-    public Optional<EventConfiguration> EventConfiguration();
+    public Optional<EventTimeOut> EventConfiguration();
 }

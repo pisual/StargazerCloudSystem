@@ -3,7 +3,6 @@ package com.stargazerproject.analysis.resources.handle;
 import com.google.common.base.Optional;
 import com.google.gson.Gson;
 import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
-import com.stargazerproject.annotation.description.EventConfiguration;
 import com.stargazerproject.cache.Cache;
 
 import java.util.Map;
