@@ -1,12 +1,5 @@
 package com.stargazerproject.cell.method.sequence;
 
-import org.apache.curator.framework.recipes.cache.TreeCacheListener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
@@ -14,15 +7,22 @@ import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.cache.BigCache;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.CellsBlockMethod;
-import com.stargazerproject.cell.CellsTransaction;
+import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
+import com.stargazerproject.cell.method.exception.RunException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.negotiate.Negotiate;
+import org.apache.curator.framework.recipes.cache.TreeCacheListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @Component(value="acquireParameterBlockModel")
 @Qualifier("acquireParameterBlockModel")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AcquireParameterBlockModel implements CellsTransaction<String, String>, CellsBlockMethod{
+public class AcquireParameterBlockModel extends StandardCellsTransactionImpl implements CellsBlockMethod{
 	
 	/** @name 聚合根ID **/
 	@NeedInject(type="TransactionCache")
@@ -82,7 +82,7 @@ public class AcquireParameterBlockModel implements CellsTransaction<String, Stri
 	/**
 	* @name 熔断器包裹的方法
 	* @illustrate 熔断器包裹的方法
-	* @param Optional<Cache<String, String>> cache
+	* @param : Optional<Cache<String, String>> cache
 	* **/
 	@Override
 	@HystrixCommand(commandKey = "acquireParameterModel", 
@@ -91,17 +91,16 @@ public class AcquireParameterBlockModel implements CellsTransaction<String, Stri
 	                threadPoolKey = "acquireParameterModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public boolean method(Optional<Cache<String, String>> cache){
-	try {
-		registeredNodeWatch();
-		registeredNode();
-		blockMethod();
-		deleteNodeWatch();
-		return Boolean.TRUE;
-	} catch (Exception e) {
-		log.ERROR(this, e.getMessage());
-	}
-		return Boolean.FALSE;
+	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> cache){
+		try {
+			registeredNodeWatch();
+			registeredNode();
+			blockMethod();
+			deleteNodeWatch();
+			return success();
+		} catch (Exception e) {
+			throw new RunException(e.getMessage());
+		}
 	}
 	
 	@Override
@@ -119,17 +118,11 @@ public class AcquireParameterBlockModel implements CellsTransaction<String, Stri
 	/**
 	* @name 熔断器包裹的方法的备用方法
 	* @illustrate 熔断器包裹的方法
-	* @param Optional<Cache<String, String>> cache
-	* @param Throwable throwable
+	* @param : Optional<Cache<String, String>> cache
+	* @param : Throwable throwable
 	* **/
-	public boolean fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		if(null == throwable){
-			log.WARN(this, "BaseEvent FallBack : TimeOut");
-		}
-		else{
-			log.WARN(this, "BaseEvent FallBack : " + throwable.getMessage());
-		}
-		return Boolean.FALSE;
+	public Optional<Cache<String, String>> fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
+		return super.fallBack(cache, throwable);
     }
 	
 	private void registeredNodeWatch() throws Exception{

@@ -1,23 +1,23 @@
 package com.stargazerproject.cell.method.sequence;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.google.common.base.Optional;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.stargazerproject.cache.BigCache;
+import com.stargazerproject.cache.Cache;
+import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
+import com.stargazerproject.cell.method.exception.RunException;
+import com.stargazerproject.log.LogMethod;
+import com.stargazerproject.util.SerializableUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.common.base.Optional;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import com.stargazerproject.cache.BigCache;
-import com.stargazerproject.cache.Cache;
-import com.stargazerproject.cell.CellsTransaction;
-import com.stargazerproject.log.LogMethod;
-import com.stargazerproject.util.SerializableUtil;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 /** 
  *  @name 注入参数
@@ -27,13 +27,13 @@ import com.stargazerproject.util.SerializableUtil;
 @Component(value="injectParameterModel")
 @Qualifier("injectParameterModel")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class InjectParameterModel implements CellsTransaction<String, String>{
-	
+public class InjectParameterModel extends StandardCellsTransactionImpl {
+
 	/** @illustrate 获取Log(日志)接口 **/
 	@Autowired
 	@Qualifier("logRecord")
 	private LogMethod log;
-	
+
 	@Autowired
 	@Qualifier("byteArrayCache")
 	protected BigCache<String, byte[]> byteArrayCache;
@@ -49,7 +49,7 @@ public class InjectParameterModel implements CellsTransaction<String, String>{
 	/**
 	* @name 熔断器包裹的方法
 	* @illustrate 熔断器包裹的方法
-	* @param Optional<Cache<String, String>> cache
+	* @param : Optional<Cache<String, String>> cache
 	* **/
 	@Override
 	@HystrixCommand(commandKey = "injectParameterModel", 
@@ -58,33 +58,25 @@ public class InjectParameterModel implements CellsTransaction<String, String>{
 	                threadPoolKey = "injectParameterModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public boolean method(Optional<Cache<String, String>> cache) {
+	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> cache) {
 		try {
 			Optional<Object> parameterClass = getParameterClass();
 			Optional<Map<String, String>> paramentMap= getParamentMap(parameterClass);
 			injectParameter(paramentMap);
-			log.INFO(this, "injectParameterModel Complete: " + cache.get().get(Optional.of("OrderID")).get());
-			return true;
+			return success();
 		} catch (Exception e) {
-			log.ERROR(this, e.getMessage());
-			return false;
+			throw new RunException(e.getMessage());
 		}
 	}
 	
 	/**
 	* @name 熔断器包裹的方法的备用方法
 	* @illustrate 熔断器包裹的方法
-	* @param Optional<Cache<String, String>> cache
-	* @param Throwable throwable
+	* @param : Optional <Cache<String, String>> cache
+	* @param : Throwable throwable
 	* **/
-	public boolean fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		if(null == throwable){
-			log.WARN(this, "BaseEvent FallBack : TimeOut");
-		}
-		else{
-			log.WARN(this, "BaseEvent FallBack : " + throwable.getMessage());
-		}
-		return Boolean.FALSE;
+	public Optional<Cache<String, String>> fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
+		return super.fallBack(cache, throwable);
     }
 	
 	/**

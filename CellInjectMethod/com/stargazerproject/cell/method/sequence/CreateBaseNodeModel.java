@@ -6,6 +6,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
+import com.stargazerproject.cell.method.exception.RunException;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.negotiate.Negotiate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,27 +67,20 @@ public class CreateBaseNodeModel extends StandardCellsTransactionImpl {
 			creatPersistentNode(Optional.of(Kernel_Negotiate_BasePath_RootPath));
 			creatPersistentNode(Optional.of(Kernel_Negotiate_BasePath_EdenNodePath));
 			creatPersistentNode(Optional.of(Kernel_Negotiate_BasePath_ZoneNodePath));
-			log.INFO(this, "CreateBaseNodeModel Complete: " + cache.get().get(Optional.of("OrderID")).get());
+			return success();
 		} catch (Exception e) {
-			log.ERROR(this, e.getMessage());
+			throw new RunException(e.getMessage());
 		}
-		return Optional.of(cacheggregateRootCache);
 	}
 	
 	/**
 	* @name 熔断器包裹的方法的备用方法
 	* @illustrate 熔断器包裹的方法
-	* @param Optional<Cache<String, String>> cache
-	* @param Throwable throwable
+	* @param : Optional<Cache<String, String>> cache
+	* @param : Throwable throwable
 	* **/
 	public Optional<Cache<String, String>> fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		if(null == throwable){
-			log.WARN(this, "BaseEvent FallBack : TimeOut");
-		}
-		else{
-			log.WARN(this, "BaseEvent FallBack : " + throwable.getMessage());
-		}
-		return Optional.of(cacheggregateRootCache);
+		return super.fallBack(cache, throwable);
     }
 	
 	private void creatPersistentNode(Optional<String> path) throws Exception{
