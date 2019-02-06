@@ -4,6 +4,7 @@ import com.stargazer.segmentation.impl.EventSegmentation;
 import com.stargazerproject.analysis.impl.*;
 import com.stargazerproject.analysis.resources.shell.EventAssembleAnalysisShell;
 import com.stargazerproject.analysis.resources.shell.EventExecuteAnalysisShell;
+import com.stargazerproject.analysis.resources.shell.EventResultAnalysisShell;
 import com.stargazerproject.annotation.impl.AnnotationsImpl;
 import com.stargazerproject.annotation.resources.AnnotationsScannerResourcesCharacteristic;
 import com.stargazerproject.annotation.resources.shell.AnnotationsShell;
@@ -89,16 +90,12 @@ import com.stargazerproject.queue.server.manage.LogQueueServerManage;
 import com.stargazerproject.queue.server.manage.TransactionExportEventQueueServerManage;
 import com.stargazerproject.resources.parameter.*;
 import com.stargazerproject.resources.service.SystemServiceParameterList;
-import com.stargazerproject.sequence.impl.BootInitializationSequenceImpl;
 import com.stargazerproject.sequence.impl.StandardSequenceImpl;
 import com.stargazerproject.sequence.resources.ParallelSequenceTransactionCharacteristic;
 import com.stargazerproject.sequence.resources.SequenceTransactionCharacteristic;
 import com.stargazerproject.sequence.resources.shell.SequenceResourcesShell;
-import com.stargazerproject.sequence.server.impl.BootInitializationSequenceServer;
 import com.stargazerproject.sequence.server.impl.StandardSequenceServer;
-import com.stargazerproject.sequence.server.listener.impl.BootInitializationServerListener;
 import com.stargazerproject.sequence.server.listener.impl.StandardServerListener;
-import com.stargazerproject.sequence.server.manage.BootInitializationServerManage;
 import com.stargazerproject.sequence.server.manage.StandardServerManage;
 import com.stargazerproject.serializable.impl.NetworkTransmissionSerializables;
 import com.stargazerproject.serializable.server.impl.SerializableServer;
@@ -111,14 +108,12 @@ import com.stargazerproject.service.resources.ServiceControlCharacteristic;
 import com.stargazerproject.service.resources.ServiceInitializationCharacteristic;
 import com.stargazerproject.service.resources.shell.ServerShell;
 import com.stargazerproject.spring.context.impl.GlobalAnnotationApplicationContext;
-import com.stargazerproject.userinterface.impl.UserInterfaceImpl;
-import com.stargazerproject.userinterface.resources.*;
-import com.stargazerproject.userinterface.resources.shall.FrameShell;
-import com.stargazerproject.userinterface.resources.shall.LoadingFrameShell;
-import com.stargazerproject.userinterface.resources.shall.MainFrameShell;
-import com.stargazerproject.userinterface.server.impl.FrameUserInterfaceServer;
-import com.stargazerproject.userinterface.server.listener.impl.FrameUserInterfaceListener;
-import com.stargazerproject.userinterface.server.manage.FrameUserInterfaceServerManage;
+import com.stargazerproject.transaction.impl.StandardEvent;
+import com.stargazerproject.transaction.impl.StandardEventResult;
+import com.stargazerproject.transaction.impl.StandardTransaction;
+import com.stargazerproject.transaction.impl.resources.shell.BaseEventResultShell;
+import com.stargazerproject.transaction.impl.resources.shell.BaseEventShell;
+import com.stargazerproject.transaction.impl.resources.shell.BaseTransactionShell;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
@@ -144,7 +139,8 @@ public class GlobalAnnotationApplicationContextInitialization {
 		SequenceParameters.class,
 		InformationParameter.class,
 		ParametersInjectAOPConfiguration.class,
-		
+		TransactionParameters.class,
+
 		/**Depend ObjectParameterCache **/
 		ObjectParameterCache.class,
 		
@@ -165,6 +161,12 @@ public class GlobalAnnotationApplicationContextInitialization {
 		
 		/**Depend ServerListCache **/
 		ServerListCache.class,
+
+		/**Depend EventResultCache **/
+		EventResultCache.class,
+
+		/**Depend EventInteractionCache **/
+		EventInteractionCache.class,
 		
 		/**Depend OrderQueueMessage**/
 		TransactionMessageQueue.class,
@@ -288,52 +290,42 @@ public class GlobalAnnotationApplicationContextInitialization {
 		GroupServiceConfiguration.class,
 		
 		EventSegmentation.class,
-		EventExecuteAnalysisImpl.class,
-		EventResultAnalysisImpl.class,
 		
-//		StandardCellsTransactionImpl.class,
-//		HystrixConfigurationS.class,
-		
-		/**User Interface Service**/
-		MainFrameBackgroundJlabelCharacteristic.class,
-		MainFrameConsoleTextPaneCharacteristic.class,
-		MainFrameJFrameCharacteristic.class,
-		MainFrameJScrollPaneCharacteristic.class,
-		MainFrameLayoutCharacteristic.class,
-		MainFrameLogoJlabelCharacteristic.class,
-		MainFrameRightConsoleTextPaneCharacteristic.class,
-		MainFrameRightJScrollPaneCharacteristic.class,
-		MainFrameStructureTopologyJlabelCharacteristic.class,
-		MainFrameShell.class,
-		MainFrameLogoClickListenerCharacteristic.class,
-		MainFrameMouseAdapterListenerCharacteristic.class,
-		MainFrameMouseMotionAdapterListenerCharacteristic.class,
-		MainFramePointCharacteristic.class,
-		LoadingBaseFrameJDialogCharacteristic.class,
-		LoadingJProgressBarCharacteristic.class,
-		LoadingProgressInfoCharacteristic.class,
-		LoadingFrameBackgroundJlabelCharacteristic.class,
-		LoadingFrameLayoutCharacteristic.class,
-		LoadingFrameShell.class,
-		UserInterfaceImpl.class,
-		FrameUserInterfaceServer.class,
-		FrameUserInterfaceListener.class,
-		FrameUserInterfaceServerManage.class,
-		LoadingJProgressBarUI.class,
-		FrameShell.class,
+//		/**User Interface Service**/
+//		MainFrameBackgroundJlabelCharacteristic.class,
+//		MainFrameConsoleTextPaneCharacteristic.class,
+//		MainFrameJFrameCharacteristic.class,
+//		MainFrameJScrollPaneCharacteristic.class,
+//		MainFrameLayoutCharacteristic.class,
+//		MainFrameLogoJlabelCharacteristic.class,
+//		MainFrameRightConsoleTextPaneCharacteristic.class,
+//		MainFrameRightJScrollPaneCharacteristic.class,
+//		MainFrameStructureTopologyJlabelCharacteristic.class,
+//		MainFrameShell.class,
+//		MainFrameLogoClickListenerCharacteristic.class,
+//		MainFrameMouseAdapterListenerCharacteristic.class,
+//		MainFrameMouseMotionAdapterListenerCharacteristic.class,
+//		MainFramePointCharacteristic.class,
+//		LoadingBaseFrameJDialogCharacteristic.class,
+//		LoadingJProgressBarCharacteristic.class,
+//		LoadingProgressInfoCharacteristic.class,
+//		LoadingFrameBackgroundJlabelCharacteristic.class,
+//		LoadingFrameLayoutCharacteristic.class,
+//		LoadingFrameShell.class,
+//		UserInterfaceImpl.class,
+//		FrameUserInterfaceServer.class,
+//		FrameUserInterfaceListener.class,
+//		FrameUserInterfaceServerManage.class,
+//		LoadingJProgressBarUI.class,
+//		FrameShell.class,
 		
 		/**Depend Sequence*/
-		BootInitializationSequenceImpl.class,
 		StandardSequenceImpl.class,
 		SequenceResourcesShell.class,
-		BootInitializationServerManage.class,
 		ParallelSequenceTransactionCharacteristic.class,
 		SequenceTransactionCharacteristic.class,
-		BootInitializationSequenceServer.class,
 		StandardSequenceServer.class,
-		BootInitializationServerListener.class,
 		StandardServerListener.class,
-		BootInitializationServerManage.class,
 		StandardServerManage.class,
 		
 		/**Depend AnnotationImpl*/
@@ -379,9 +371,15 @@ public class GlobalAnnotationApplicationContextInitialization {
 		InjectServerManage.class,
 		
 		/**Depend Analysis**/
-//		EventExecuteAnalysisImpl.class,
 		EventResultAnalysisImpl.class,
-		LogAnalysisImpl.class,
+        EventResultAnalysisShell.class,
+                EventAssembleAnalysisImpl.class,
+                EventAssembleAnalysisShell.class,
+                EventExecuteAnalysisImpl.class,
+                EventExecuteAnalysisShell.class,
+                LogAnalysisImpl.class,
+
+
 		
 //		/**Depend CellsInformation**/
 //		CellsInformation.class,
@@ -411,7 +409,16 @@ public class GlobalAnnotationApplicationContextInitialization {
 		EventExecuteAnalysisImpl.class,
 		EventAssembleAnalysisShell.class,
 		EventExecuteAnalysisShell.class,
-		SequenceTransactionResultAnalysisImpl.class
+		SequenceTransactionResultAnalysisImpl.class,
+
+		/**Depend Transaction**/
+		StandardEvent.class,
+		StandardEventResult.class,
+		StandardTransaction.class,
+		BaseEventResultShell.class,
+		BaseEventShell.class,
+		BaseTransactionShell.class
+
 		);
 	} 
 	

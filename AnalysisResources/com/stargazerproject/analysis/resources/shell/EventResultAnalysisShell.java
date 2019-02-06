@@ -6,7 +6,14 @@ import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.analysis.resources.handle.EventResultAnalysisHandleResources;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+@Component(value="eventResultAnalysisShell")
+@Qualifier("eventResultAnalysisShell")
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class EventResultAnalysisShell implements EventResultAnalysis, BaseCharacteristic<EventResultAnalysis> {
 
     @Override

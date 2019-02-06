@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 /** 
  *  @name Event队列
- *  @illustrate Log队列的实现
+ *  @illustrate Event队列队列的实现
  *  @param <K> 队列的Entry值类型
  *  @author Felixerio
  *  **/

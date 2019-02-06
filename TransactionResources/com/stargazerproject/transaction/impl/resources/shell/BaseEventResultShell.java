@@ -3,7 +3,6 @@ package com.stargazerproject.transaction.impl.resources.shell;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
-import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Result;
@@ -28,14 +27,6 @@ import org.springframework.stereotype.Component;
 public class BaseEventResultShell implements Result<EventResultAnalysisHandle>, BaseCharacteristic<Result>{
 
 	private static final long serialVersionUID = -4726816340050497590L;
-
-	/**@illustrate 事件结果内容缓存（executionResultCache）中结果标志（ResultState）的Key值**/
-	@NeedInject(type="SystemParametersCache")
-	private static String Kernel_Order_Event_Result_Map_ExecutionResultCacheResultState;
-	
-	/**@illustrate 事件结果内容缓存（executionResultCache）中异常信息（ErrorMessage）的Key值**/
-	@NeedInject(type="SystemParametersCache")
-	private static String Kernel_Order_Event_Result_Map_ExecutionResultCacheErrorMessage;
 	
 	/**
 	* @name 事件结果内容缓存
@@ -49,12 +40,8 @@ public class BaseEventResultShell implements Result<EventResultAnalysisHandle>, 
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
 	* **/
-	public BaseEventResultShell(Optional<Cache<String, String>> executionResultCacheArg,
-			                    Optional<String> Kernel_Order_Event_Result_Map_ExecutionResultCacheResultStateArg,
-			                    Optional<String> Kernel_Order_Event_Result_Map_ExecutionResultCacheErrorMessageArg) {
+	public BaseEventResultShell(Optional<Cache<String, String>> executionResultCacheArg) {
 		executionResultCache = executionResultCacheArg.get();
-		Kernel_Order_Event_Result_Map_ExecutionResultCacheResultState = Kernel_Order_Event_Result_Map_ExecutionResultCacheResultStateArg.get();
-		Kernel_Order_Event_Result_Map_ExecutionResultCacheErrorMessage = Kernel_Order_Event_Result_Map_ExecutionResultCacheErrorMessageArg.get();
 	}
 	
 	/**
@@ -80,7 +67,7 @@ public class BaseEventResultShell implements Result<EventResultAnalysisHandle>, 
 	/** @illustrate 设置事件结果标志为完成状态，**/
 	@Override
 	public Optional<ResultRecord> complete(Optional<ResultState> resultState) {
-		executionResultCache.put(Optional.of(Kernel_Order_Event_Result_Map_ExecutionResultCacheResultState), 
+		executionResultCache.put(Optional.of("ResultState"),
 				                 Optional.of(ResultState.SUCCESS.toString()));
 		return Optional.of(this);
 	}
@@ -108,7 +95,7 @@ public class BaseEventResultShell implements Result<EventResultAnalysisHandle>, 
 			cacheErrorMessage = Optional.of(errorMessage + ":" + exception);
 		}
 		
-		executionResultCache.put(Optional.of(Kernel_Order_Event_Result_Map_ExecutionResultCacheErrorMessage), 
+		executionResultCache.put(Optional.of("ErrorMessage"),
 								cacheErrorMessage);
 
 	}

@@ -1,20 +1,15 @@
 package com.stargazerproject.kernel.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.common.base.Optional;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.kernel.KernelGuide;
-import com.stargazerproject.service.ServiceInitialization;
 import com.stargazerproject.service.ServiceControl;
-import com.stargazerproject.service.aop.configuration.ServerDependDetectionAOPConfiguration;
+import com.stargazerproject.service.ServiceInitialization;
 import com.stargazerproject.spring.container.impl.BeanContainer;
 import com.stargazerproject.spring.context.initialization.test.GlobalAnnotationApplicationContextInitialization;
 
 public class KernelGuideImpl implements KernelGuide{
-	
-	private static List<String> serviceList = new ArrayList<String>();
+
 	private static KernelGuide kernelGuide = new KernelGuideImpl();
 	private static String Cells_Kind = "Cells_Master";
 
