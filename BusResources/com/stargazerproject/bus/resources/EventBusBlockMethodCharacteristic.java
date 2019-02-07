@@ -76,12 +76,12 @@ public class EventBusBlockMethodCharacteristic implements BusBlockMethod<Event>,
 	public Optional<Event> push(Optional<Event> busEvent) throws BusEventTimeoutException {
 		event.producer(busEvent);
 		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis)).get();
-		EventTimeOut eventConfiguration = eventExecuteAnalysisHandle.EventConfiguration().get();
+		EventTimeOut eventEventTimeOutConfiguration = eventExecuteAnalysisHandle.eventEventTimeOutConfiguration().get();
 
 		EventResultAnalysisHandle eventResultAnalysisHandle = busEvent.get().eventResult(Optional.of(eventResultAnalysis)).get();
-		for(int i=0; i<eventConfiguration.waitTimeout(); i++){
+		for(int i=0; i<eventEventTimeOutConfiguration.waitTimeout(); i++){
 			if(eventResultAnalysisHandle.resultState().get() == ResultState.WAIT){
-				sleep(eventConfiguration.waitTimeoutUnit());
+				sleep(eventEventTimeOutConfiguration.waitTimeoutUnit());
 				continue;
 			}
 			else{

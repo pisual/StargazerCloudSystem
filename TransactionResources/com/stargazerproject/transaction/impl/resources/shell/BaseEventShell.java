@@ -112,8 +112,10 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 * **/
 	@Override
 	public Optional<EventExecuteAnalysisHandle> eventExecute(Optional<EventExecuteAnalysis> eventAnalysis) {
+		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(interactionCache), Optional.of(result)).get();
 		if(EventState.WAIT == eventState){
 			eventState = EventState.RUN;
+			eventExecuteAnalysisHandle.run();
 			eventState = EventState.COMPLETE;
 		}
 		else if(EventState.PASS == eventState){
@@ -124,7 +126,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 			logMethod.ERROR(this, "Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState);
 			throw new IllegalStateException("Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState);
 		}
-		return eventAnalysis.get().analysis(Optional.of(interactionCache), Optional.of(result));
+		return Optional.of(eventExecuteAnalysisHandle);
 	}
 	
 	/** @illustrate 分析事件结果，分析者调用

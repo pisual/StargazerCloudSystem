@@ -28,13 +28,12 @@ public abstract class StandardCellsTransactionImpl extends BaseCellsTransaction<
 	}
 	
 	public Optional<Cache<String, String>> fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		if(null == throwable){
-			return faild("TimeOut");
+		if(throwable instanceof Exception){
+			System.out.println(throwable);
 		}
-		else{
-			return faild(throwable.getMessage());
-		}
-    }
+
+		return faild("throwable.getMessage()");
+	}
 
     protected Optional<Cache<String, String>> success(){
 

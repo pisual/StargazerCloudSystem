@@ -5,6 +5,5 @@ import com.stargazerproject.annotation.description.EventTimeOut;
 
 public interface EventExecuteAnalysisHandle {
     public void run();
-
-    public Optional<EventTimeOut> EventConfiguration();
+    public Optional<EventTimeOut> eventEventTimeOutConfiguration();
 }

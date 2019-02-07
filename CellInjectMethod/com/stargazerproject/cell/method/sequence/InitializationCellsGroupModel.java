@@ -3,6 +3,7 @@ package com.stargazerproject.cell.method.sequence;
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.netflix.hystrix.exception.HystrixRuntimeException;
 import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
@@ -41,13 +42,15 @@ public class InitializationCellsGroupModel extends StandardCellsTransactionImpl 
 	* **/
 	@Override
 	@HystrixCommand(commandKey = "initializationCellsGroupModel", 
-	                fallbackMethod = "fallBack", 
+	                fallbackMethod = "fallBack",
 	                groupKey="initializationCellsGroupModel", 
 	                threadPoolKey = "initializationCellsGroupModel",
+			        ignoreExceptions = HystrixRuntimeException.class,
 	                commandProperties = {
-    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
+    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2")})
 	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> cache) {
 		cacheggregateRootCache.put(Optional.of("OrderID"), Optional.of(SequenceUtil.getUUID()));
+		System.out.println("initializationCellsGroupModel Complete" + SequenceUtil.getUUID());
 		return success();
 	}
 	

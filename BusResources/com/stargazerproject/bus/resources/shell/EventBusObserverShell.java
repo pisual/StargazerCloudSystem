@@ -21,7 +21,7 @@ public class EventBusObserverShell implements BusObserver<Event> ,BaseCharacteri
 
 	private Event event;
 	
-	@Qualifier("eventBusResultAnalysisImpl")
+	@Qualifier("eventResultAnalysisImpl")
 	@Autowired
 	private EventResultAnalysis eventResultAnalysis;
 	

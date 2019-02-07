@@ -38,6 +38,8 @@ import com.stargazerproject.cache.server.listener.impl.TransactionCacheServerLis
 import com.stargazerproject.cache.server.manage.ByteArrayCacheServerManage;
 import com.stargazerproject.cache.server.manage.SystemParameterCacheServerManage;
 import com.stargazerproject.cache.server.manage.TransactionCacheServerManage;
+import com.stargazerproject.cell.aop.configuration.HystrixConfigurationS;
+import com.stargazerproject.cell.method.sequence.InitializationCellsGroupModel;
 import com.stargazerproject.consumer.impl.EventBusConsumer;
 import com.stargazerproject.consumer.impl.EventConsumer;
 import com.stargazerproject.consumer.impl.EventExecuteConsumer;
@@ -143,6 +145,9 @@ public class GlobalAnnotationApplicationContextInitialization {
 
 		/**Depend ObjectParameterCache **/
 		ObjectParameterCache.class,
+
+		/**Depend AggregateRootCache **/
+		AggregateRootCache.class,
 		
 		/**Depend SocketChannelCache **/
 		SocketChannelCache.class,
@@ -410,6 +415,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		EventAssembleAnalysisShell.class,
 		EventExecuteAnalysisShell.class,
 		SequenceTransactionResultAnalysisImpl.class,
+        EventBusResultAnalysisImpl.class,
 
 		/**Depend Transaction**/
 		StandardEvent.class,
@@ -417,7 +423,14 @@ public class GlobalAnnotationApplicationContextInitialization {
 		StandardTransaction.class,
 		BaseEventResultShell.class,
 		BaseEventShell.class,
-		BaseTransactionShell.class
+		BaseTransactionShell.class,
+
+        /**Depend HystrixConfigurationS**/
+        HystrixConfigurationS.class,
+
+
+		/**测试用方法，实际需要动态注入**/
+		InitializationCellsGroupModel.class
 
 		);
 	} 

@@ -52,6 +52,7 @@ public class ServiceControlCharacteristic implements ServiceControl, BaseCharact
 		serverLayerMenu.forEach(serviceLayer -> {
 			serviceGroupStateBlockCheck(serviceLayer);
 			startGroupService(serviceLayer);
+			serviceGroupStateBlockCheck(serviceLayer);
 		});
 	}
 

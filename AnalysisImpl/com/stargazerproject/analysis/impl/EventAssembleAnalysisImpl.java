@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class EventAssembleAnalysisImpl extends BaseEventAssembleAnalysisImpl implements BeforehandCharacteristicShell<EventAssembleAnalysis> {
 
-	@Qualifier("eventAssembleAnalysisImplResourcesShell")
+	@Qualifier("eventAssembleAnalysisShell")
 	@Autowired
 	@Override
 	public void initialize(BaseCharacteristic<EventAssembleAnalysis> eventAssembleAnalysisArg) {

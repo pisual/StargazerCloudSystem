@@ -1,6 +1,7 @@
 package com.stargazerproject.microkernel.impl.test;
 
 import com.google.common.base.Optional;
+import com.stargazerproject.analysis.EventAssembleAnalysis;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.sequence.ParallelSequenceTransaction;
 import com.stargazerproject.spring.container.impl.BeanContainer;
@@ -16,9 +17,12 @@ public class parallelSequenceTransactionTest extends BaseJunitTest {
 
     private ParallelSequenceTransaction<Event> sequence;
 
+    private EventAssembleAnalysis eventAssembleAnalysis;
+
     @Before
     public void init(){
         sequence = BeanContainer.instance().getBean(Optional.of("standardSequence"), ParallelSequenceTransaction.class);
+        eventAssembleAnalysis = BeanContainer.instance().getBean(Optional.of("eventAssembleAnalysisImpl"), EventAssembleAnalysis.class);
     }
 
     @Test
@@ -30,6 +34,7 @@ public class parallelSequenceTransactionTest extends BaseJunitTest {
     @Test
     public void Test_02_addParallelSequence(){
         Event event = BeanContainer.instance().getBean(Optional.of("standardEvent"), Event.class);
+        event.eventAssemble(Optional.of(eventAssembleAnalysis)).get().injectEventParameter(Optional.of("Test"), Optional.of("Test"));
         sequence.addParallelSequence(Optional.of(event));
     }
 

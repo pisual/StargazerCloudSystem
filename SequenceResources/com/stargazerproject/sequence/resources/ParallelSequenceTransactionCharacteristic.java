@@ -84,6 +84,7 @@ public class ParallelSequenceTransactionCharacteristic implements ParallelSequen
 
     @Override
     public Optional<SequenceObserver<Event>> startBlockParallelSequence() throws BusEventTimeoutException {
+        pushEvent(cache.values());
         checkEventResult(cache.values());
         return Optional.of(getSequenceObserver());
     }
@@ -130,6 +131,9 @@ public class ParallelSequenceTransactionCharacteristic implements ParallelSequen
                         e.printStackTrace();
                     }
                     continue;
+                }
+                else{
+                    break;
                 }
             }
             if(result == Boolean.TRUE){
