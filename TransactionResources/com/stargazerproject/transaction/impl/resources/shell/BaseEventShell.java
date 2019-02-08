@@ -15,8 +15,10 @@ import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.Event;
 import com.stargazerproject.transaction.EventState;
 import com.stargazerproject.transaction.Result;
+import com.stargazerproject.transaction.ResultState;
 import com.stargazerproject.transaction.base.impl.ID;
 import com.stargazerproject.util.CloneUtil;
+import com.stargazerproject.util.SequenceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -101,7 +103,9 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 			throw new IllegalStateException("Evenr无法构建，因为Event状态不为Init（初始状态），现在Event的状态为：" + eventState);
 		}
 		else{
+			this.injectSequenceID(Optional.of(SequenceUtil.getUUIDSequence()));
 			eventState = EventState.WAIT;
+			result.complete(Optional.of(ResultState.WAIT));
 		}
 		return eventAssembleAnalysis.get().analysis(Optional.of(interactionCache));
 	}
@@ -117,12 +121,15 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 			eventState = EventState.RUN;
 			eventExecuteAnalysisHandle.run();
 			eventState = EventState.COMPLETE;
+			result.complete(Optional.of(ResultState.SUCCESS));
 		}
 		else if(EventState.PASS == eventState){
-			logMethod.INFO(this, "事件处于PASS状态，将快速失败此事务");
+			result.complete(Optional.of(ResultState.FAULT));
 			result.errorMessage(Optional.of("事件处于PASS状态，将快速失败此事务"), null);
+			logMethod.INFO(this, "事件处于PASS状态，将快速失败此事务");
 		}
 		else{
+			result.complete(Optional.of(ResultState.FAULT));
 			logMethod.ERROR(this, "Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState);
 			throw new IllegalStateException("Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState);
 		}

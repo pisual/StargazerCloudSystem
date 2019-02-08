@@ -52,8 +52,8 @@ public class ServiceControlCharacteristic implements ServiceControl, BaseCharact
 		serverLayerMenu.forEach(serviceLayer -> {
 			serviceGroupStateBlockCheck(serviceLayer);
 			startGroupService(serviceLayer);
-			serviceGroupStateBlockCheck(serviceLayer);
 		});
+		serviceManager.awaitHealthy();
 	}
 
 	private void serviceGroupStateBlockCheck(int serviceLayer){
@@ -71,7 +71,8 @@ public class ServiceControlCharacteristic implements ServiceControl, BaseCharact
 	private void startGroupService(int serviceLayer){
 		serviceMenu.rowMap().get(serviceLayer).keySet().forEach(service->{
 			new Thread(() -> {
-				BeanContainer.instance().getBean(Optional.of(service), AbstractIdleService.class).startAsync().awaitRunning();
+				AbstractIdleService serviceUnit = BeanContainer.instance().getBean(Optional.of(service), AbstractIdleService.class);
+				serviceUnit.startAsync().awaitRunning();
 				serviceMenu.put(serviceLayer, service, Boolean.TRUE);
 			}).start();
 		});

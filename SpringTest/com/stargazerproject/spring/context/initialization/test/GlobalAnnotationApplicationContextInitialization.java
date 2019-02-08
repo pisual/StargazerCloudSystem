@@ -116,6 +116,14 @@ import com.stargazerproject.transaction.impl.StandardTransaction;
 import com.stargazerproject.transaction.impl.resources.shell.BaseEventResultShell;
 import com.stargazerproject.transaction.impl.resources.shell.BaseEventShell;
 import com.stargazerproject.transaction.impl.resources.shell.BaseTransactionShell;
+import com.stargazerproject.userinterface.impl.UserInterfaceImpl;
+import com.stargazerproject.userinterface.resources.*;
+import com.stargazerproject.userinterface.resources.shall.FrameShell;
+import com.stargazerproject.userinterface.resources.shall.LoadingFrameShell;
+import com.stargazerproject.userinterface.resources.shall.MainFrameShell;
+import com.stargazerproject.userinterface.server.impl.FrameUserInterfaceServer;
+import com.stargazerproject.userinterface.server.listener.impl.FrameUserInterfaceListener;
+import com.stargazerproject.userinterface.server.manage.FrameUserInterfaceServerManage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 
@@ -296,33 +304,33 @@ public class GlobalAnnotationApplicationContextInitialization {
 		
 		EventSegmentation.class,
 		
-//		/**User Interface Service**/
-//		MainFrameBackgroundJlabelCharacteristic.class,
-//		MainFrameConsoleTextPaneCharacteristic.class,
-//		MainFrameJFrameCharacteristic.class,
-//		MainFrameJScrollPaneCharacteristic.class,
-//		MainFrameLayoutCharacteristic.class,
-//		MainFrameLogoJlabelCharacteristic.class,
-//		MainFrameRightConsoleTextPaneCharacteristic.class,
-//		MainFrameRightJScrollPaneCharacteristic.class,
-//		MainFrameStructureTopologyJlabelCharacteristic.class,
-//		MainFrameShell.class,
-//		MainFrameLogoClickListenerCharacteristic.class,
-//		MainFrameMouseAdapterListenerCharacteristic.class,
-//		MainFrameMouseMotionAdapterListenerCharacteristic.class,
-//		MainFramePointCharacteristic.class,
-//		LoadingBaseFrameJDialogCharacteristic.class,
-//		LoadingJProgressBarCharacteristic.class,
-//		LoadingProgressInfoCharacteristic.class,
-//		LoadingFrameBackgroundJlabelCharacteristic.class,
-//		LoadingFrameLayoutCharacteristic.class,
-//		LoadingFrameShell.class,
-//		UserInterfaceImpl.class,
-//		FrameUserInterfaceServer.class,
-//		FrameUserInterfaceListener.class,
-//		FrameUserInterfaceServerManage.class,
-//		LoadingJProgressBarUI.class,
-//		FrameShell.class,
+		/**User Interface Service**/
+		MainFrameBackgroundJlabelCharacteristic.class,
+		MainFrameConsoleTextPaneCharacteristic.class,
+		MainFrameJFrameCharacteristic.class,
+		MainFrameJScrollPaneCharacteristic.class,
+		MainFrameLayoutCharacteristic.class,
+		MainFrameLogoJlabelCharacteristic.class,
+		MainFrameRightConsoleTextPaneCharacteristic.class,
+		MainFrameRightJScrollPaneCharacteristic.class,
+		MainFrameStructureTopologyJlabelCharacteristic.class,
+		MainFrameShell.class,
+		MainFrameLogoClickListenerCharacteristic.class,
+		MainFrameMouseAdapterListenerCharacteristic.class,
+		MainFrameMouseMotionAdapterListenerCharacteristic.class,
+		MainFramePointCharacteristic.class,
+		LoadingBaseFrameJDialogCharacteristic.class,
+		LoadingJProgressBarCharacteristic.class,
+		LoadingProgressInfoCharacteristic.class,
+		LoadingFrameBackgroundJlabelCharacteristic.class,
+		LoadingFrameLayoutCharacteristic.class,
+		LoadingFrameShell.class,
+		UserInterfaceImpl.class,
+		FrameUserInterfaceServer.class,
+		FrameUserInterfaceListener.class,
+		FrameUserInterfaceServerManage.class,
+		LoadingJProgressBarUI.class,
+		FrameShell.class,
 		
 		/**Depend Sequence*/
 		StandardSequenceImpl.class,

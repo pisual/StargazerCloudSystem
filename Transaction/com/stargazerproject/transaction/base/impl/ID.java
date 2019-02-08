@@ -1,10 +1,5 @@
 package com.stargazerproject.transaction.base.impl;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.common.base.Optional;
 import com.stargazerproject.transaction.Entity;
 
@@ -14,9 +9,9 @@ import com.stargazerproject.transaction.Entity;
  *  @author Felixerio
  *  @version 1.0.0
  *  **/
-@Component
-@Qualifier("iD")
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+//@Component
+//@Qualifier("iD")
+//@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ID implements Entity<String>{
 	
 	private static final long serialVersionUID = -8739771505481213633L;

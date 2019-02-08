@@ -7,9 +7,7 @@ import com.netflix.hystrix.exception.HystrixRuntimeException;
 import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
-import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.util.SequenceUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -25,11 +23,6 @@ import org.springframework.stereotype.Component;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Event()
 public class InitializationCellsGroupModel extends StandardCellsTransactionImpl {
-	
-	/** @illustrate 获取Log(日志)接口 **/
-	@Autowired
-	@Qualifier("logRecord")
-	private LogMethod log;
 	
 	public InitializationCellsGroupModel() { 
 		super(); 
@@ -47,10 +40,11 @@ public class InitializationCellsGroupModel extends StandardCellsTransactionImpl 
 	                threadPoolKey = "initializationCellsGroupModel",
 			        ignoreExceptions = HystrixRuntimeException.class,
 	                commandProperties = {
-    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2")})
+    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
 	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> cache) {
 		cacheggregateRootCache.put(Optional.of("OrderID"), Optional.of(SequenceUtil.getUUID()));
-		System.out.println("initializationCellsGroupModel Complete" + SequenceUtil.getUUID());
+		log.INFO(this,"initializationCellsGroupModel Complete , OrderID : " + SequenceUtil.getUUID());
+		log.INFO(this,"initializationCellsGroupModel Complete , User: " + cache.get().get(Optional.of("User")).get());
 		return success();
 	}
 	

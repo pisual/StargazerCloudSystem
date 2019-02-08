@@ -35,7 +35,13 @@ public class BaseEventResultShell implements Result<EventResultAnalysisHandle>, 
 	@Autowired
 	@Qualifier("eventResultCache")
 	private Cache<String, String> executionResultCache;
-	
+
+	/**
+	 * @name 交互缓存接口
+	 * @illustrate 交互缓存接口
+	 * **/
+	private Cache<String, String> interactionCache;
+
 	/**
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
@@ -85,18 +91,18 @@ public class BaseEventResultShell implements Result<EventResultAnalysisHandle>, 
 	* @param Optional<Exception> exception 异常Exception
 	* **/
 	private void addCacheContent(String errorMessage, String exception){
-		Optional<String> cacheErrorMessage = executionResultCache.get(Optional.of("Kernel_Order_Event_Result_Map_ExecutionResultCacheErrorMessage"));
-		
-		if(cacheErrorMessage.isPresent()){
-			cacheErrorMessage = Optional.of(cacheErrorMessage.get() + ";" + errorMessage + ":" + exception);
-
-		}
-		else{
-			cacheErrorMessage = Optional.of(errorMessage + ":" + exception);
-		}
-		
-		executionResultCache.put(Optional.of("ErrorMessage"),
-								cacheErrorMessage);
+//		Optional<String> cacheErrorMessage = executionResultCache.get(Optional.of("ErrorMessage"));
+//
+//		if(cacheErrorMessage.isPresent()){
+//			cacheErrorMessage = Optional.of(cacheErrorMessage.get() + ";" + errorMessage + ":" + exception);
+//
+//		}
+//		else{
+//			cacheErrorMessage = Optional.of(errorMessage + ":" + exception);
+//		}
+//
+//		executionResultCache.put(Optional.of("ErrorMessage"),
+//								cacheErrorMessage);
 
 	}
 	

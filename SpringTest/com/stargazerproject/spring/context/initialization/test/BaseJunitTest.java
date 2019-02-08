@@ -8,6 +8,8 @@ import com.stargazerproject.spring.container.impl.BeanContainer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
+import java.util.concurrent.TimeUnit;
+
 public class BaseJunitTest {
 
     @BeforeClass
@@ -21,6 +23,11 @@ public class BaseJunitTest {
 
     @AfterClass
     public static void stopAllService(){
+        try {
+            TimeUnit.SECONDS.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         BaseCharacteristic<ServiceControl> serviceControl = BeanContainer.instance().getBean(Optional.of("serviceControlCharacteristic"), BaseCharacteristic.class);
         serviceControl.characteristic().get().stopAllService();
     }

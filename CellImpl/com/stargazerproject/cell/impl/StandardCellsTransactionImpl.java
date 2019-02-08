@@ -3,8 +3,11 @@ package com.stargazerproject.cell.impl;
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.netflix.hystrix.exception.HystrixTimeoutException;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.base.impl.BaseCellsTransaction;
+import com.stargazerproject.log.LogMethod;
+import com.stargazerproject.transaction.ResultState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -13,6 +16,11 @@ public abstract class StandardCellsTransactionImpl extends BaseCellsTransaction<
 	@Autowired
 	@Qualifier("aggregateRootCache")
 	protected Cache<String, String> cacheggregateRootCache;
+
+	/** @illustrate 获取Log(日志)接口 **/
+	@Autowired
+	@Qualifier("logRecord")
+	protected LogMethod log;
 
 	@Override
 	@HystrixCommand(fallbackMethod = "fallBack", groupKey="TestMethod", commandProperties = {
@@ -28,20 +36,19 @@ public abstract class StandardCellsTransactionImpl extends BaseCellsTransaction<
 	}
 	
 	public Optional<Cache<String, String>> fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		if(throwable instanceof Exception){
-			System.out.println(throwable);
+		if(throwable instanceof HystrixTimeoutException){
+			log.WARN(this, HystrixTimeoutException.class.toString());
 		}
-
-		return faild("throwable.getMessage()");
+		return faild(throwable.getMessage());
 	}
 
     protected Optional<Cache<String, String>> success(){
-
+		cacheggregateRootCache.put(Optional.of("ResultState"), Optional.of(ResultState.SUCCESS.toString()));
 		return Optional.of(cacheggregateRootCache);
 	}
 
 	protected Optional<Cache<String, String>> faild(String message){
-
+		cacheggregateRootCache.put(Optional.of("ResultState"), Optional.of(ResultState.FAULT.toString()));
 		return Optional.of(cacheggregateRootCache);
 	}
 

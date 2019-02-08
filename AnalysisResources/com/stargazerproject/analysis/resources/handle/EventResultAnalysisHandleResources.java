@@ -15,7 +15,26 @@ public class EventResultAnalysisHandleResources implements EventResultAnalysisHa
 
     @Override
     public Optional<ResultState> resultState() {
-        return Optional.of(ResultState.SUCCESS);
+        String result = resultCache.get(Optional.of("ResultState")).get();
+        return conversionResultState(result);
+    }
+
+    private Optional<ResultState> conversionResultState(String result){
+        ResultState resultState;
+        switch (result){
+            case "SUCCESS":
+                resultState = ResultState.SUCCESS;
+            break;
+            case "FAULT":
+                resultState = ResultState.FAULT;
+                break;
+            case "WAIT":
+                resultState = ResultState.WAIT;
+                break;
+            default:
+                throw new NullPointerException("ResultState Null");
+        }
+        return Optional.of(resultState);
     }
 
 }

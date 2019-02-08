@@ -48,5 +48,15 @@ public class BaseEvent extends ID implements Event{
 	public Optional<EventState> eventState() {
 		return event.eventState();
 	}
+
+	@Override
+	public Optional<String> sequenceID(){
+		return event.sequenceID();
+	}
+
+	@Override
+	public void injectSequenceID(Optional<String> idArg) {
+		event.injectSequenceID(idArg);
+	}
 	
 }

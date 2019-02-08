@@ -23,7 +23,6 @@ public class EventExecuteAnalysisHandleResources implements EventExecuteAnalysis
     public void run() {
         CellsTransaction cellsTransaction = BeanContainer.instance().getBean(Optional.of("initializationCellsGroupModel"), CellsTransaction.class);
         cellsTransaction.method(Optional.of(cache));
-        System.out.println("Event 开始执行");
     }
 
     @Override
