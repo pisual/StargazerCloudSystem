@@ -6,6 +6,6 @@ package com.stargazerproject.transaction;
  *  @author Felixerio
  *  @version 1.1.0
  *  **/
-public interface Result<Handle> extends ResultResult<Handle>, ResultRecord, ValueObject<Result>{
+public interface Result<Handle, CacheKey, CacheValue> extends ResultResult<Handle, CacheKey, CacheValue>, ResultRecord, ValueObject<Result>{
 
 }

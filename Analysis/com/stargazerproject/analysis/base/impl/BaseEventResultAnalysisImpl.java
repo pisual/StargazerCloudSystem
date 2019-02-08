@@ -10,8 +10,8 @@ public abstract class BaseEventResultAnalysisImpl implements EventResultAnalysis
 	protected EventResultAnalysis eventResultAnalysis;
 	
 	@Override
-	public Optional<EventResultAnalysisHandle> analysis(Optional<Cache<String, String>> executionResultCache) {
-		return eventResultAnalysis.analysis(executionResultCache);
+	public Optional<EventResultAnalysisHandle> analysis(Optional<Cache<String, String>> executionResultCache, Optional<Cache<String, String>> interactionCache) {
+		return eventResultAnalysis.analysis(executionResultCache, interactionCache);
 	}
 
 }

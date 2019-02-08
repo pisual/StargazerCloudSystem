@@ -2,9 +2,9 @@ package com.stargazerproject.analysis;
 
 import com.google.common.base.Optional;
 
-public interface ResultResultAnalysis<R, H> {
+public interface ResultResultAnalysis<ResultCache, InteractionCache,  Handle> {
 
 	/** @illustrate 结果分析器 **/
-	public Optional<H> analysis(Optional<R> resultCache);
+	public Optional<Handle> analysis(Optional<ResultCache> resultCache, Optional<InteractionCache> interactionCache);
 	
 }

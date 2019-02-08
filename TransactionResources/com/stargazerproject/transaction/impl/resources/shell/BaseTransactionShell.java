@@ -10,10 +10,7 @@ import com.stargazerproject.analysis.handle.TransactionAssembleAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
-import com.stargazerproject.transaction.Event;
-import com.stargazerproject.transaction.EventExecute;
-import com.stargazerproject.transaction.EventResult;
-import com.stargazerproject.transaction.Transaction;
+import com.stargazerproject.transaction.*;
 import com.stargazerproject.transaction.base.impl.ID;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -38,6 +35,8 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 private static final long serialVersionUID = 5579247376914613210L;
 	
 	private Collection<Event> eventsList;
+
+	private Result result;
 	
 	protected BaseTransactionShell() {}
 	
@@ -63,8 +62,8 @@ private static final long serialVersionUID = 5579247376914613210L;
 	* **/
 	@Override
 	public Optional<TransactionResultAnalysisHandle> transactionResult(Optional<TransactionResultAnalysis> transactionResultAnalysisArg){
-		List<EventResult> eventAnalyzeList = eventsList.stream().map(x -> (EventResult)x).collect(Collectors.toList());
-		return transactionResultAnalysisArg.get().analysis(Optional.of(eventAnalyzeList));
+		List<EventResult> eventResultList = eventsList.stream().map(x -> (EventResult)x).collect(Collectors.toList());
+		return result.resultResult(transactionResultAnalysisArg, eventResultList);
 	}
 	
 	/**

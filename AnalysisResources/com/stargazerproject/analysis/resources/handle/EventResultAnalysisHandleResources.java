@@ -9,14 +9,17 @@ public class EventResultAnalysisHandleResources implements EventResultAnalysisHa
 
     private Cache<String, String> resultCache;
 
-    public EventResultAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg){
+    private Cache<String, String> interactionCache;
+
+    public EventResultAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg, Optional<Cache<String, String>> interactionCacheArg){
         resultCache = resultCacheArg.get();
+        interactionCache = interactionCacheArg.get();
     }
 
     @Override
     public Optional<ResultState> resultState() {
-        String result = resultCache.get(Optional.of("ResultState")).get();
-        return conversionResultState(result);
+        /**分析结果**/
+        return conversionResultState("SUCCESS");
     }
 
     private Optional<ResultState> conversionResultState(String result){

@@ -3,6 +3,7 @@ package com.stargazerproject.analysis.resources.handle;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
+import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.EventResult;
 import com.stargazerproject.transaction.ResultState;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,11 @@ public class TransactionResultAnalysisHandleResources implements TransactionResu
 
     private Collection<EventResult> eventResultList;
 
-    public TransactionResultAnalysisHandleResources(Optional<Collection<EventResult>> eventResultListArg){
-        eventResultList = eventResultListArg.get();
+    private Cache<String, String> resultCache;
+
+    public TransactionResultAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg, Optional<Collection<EventResult>> interactionCacheArg){
+        resultCache = resultCacheArg.get();
+        eventResultList = interactionCacheArg.get();
     }
 
     @Override

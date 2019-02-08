@@ -1,5 +1,7 @@
 package com.stargazerproject.cache.datastructure.impl;
 
+import com.google.common.base.Optional;
+import com.stargazerproject.transaction.ResultState;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -33,6 +35,11 @@ public final class EventResultCache extends BaseDataStructureCache<String, Strin
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
 	* **/
-	public EventResultCache() {}
+	public EventResultCache() {
+		resultStateInit();
+	}
 
+	private void resultStateInit(){
+		this.put(Optional.of("ResultState"), Optional.of(ResultState.WAIT.toString()));
+	}
 }

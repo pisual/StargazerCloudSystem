@@ -7,7 +7,6 @@ import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Result;
 import com.stargazerproject.transaction.ResultRecord;
-import com.stargazerproject.transaction.ResultState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -24,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component(value="baseEventResultShell")
 @Qualifier("baseEventResultShell")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class BaseEventResultShell implements Result<EventResultAnalysisHandle>, BaseCharacteristic<Result>{
+public class BaseEventResultShell implements Result<EventResultAnalysis, EventResultAnalysisHandle, Cache<String, String>>, BaseCharacteristic<Result>{
 
 	private static final long serialVersionUID = -4726816340050497590L;
 	
@@ -35,12 +34,6 @@ public class BaseEventResultShell implements Result<EventResultAnalysisHandle>, 
 	@Autowired
 	@Qualifier("eventResultCache")
 	private Cache<String, String> executionResultCache;
-
-	/**
-	 * @name 交互缓存接口
-	 * @illustrate 交互缓存接口
-	 * **/
-	private Cache<String, String> interactionCache;
 
 	/**
 	* @name 常规初始化构造
@@ -66,16 +59,8 @@ public class BaseEventResultShell implements Result<EventResultAnalysisHandle>, 
 
 	/** @illustrate 事件结果内容分析器*/
 	@Override
-	public Optional<EventResultAnalysisHandle> resultResult(EventResultAnalysis eventResultAnalysis) {
-		return eventResultAnalysis.analysis(Optional.of(executionResultCache));
-	}
-
-	/** @illustrate 设置事件结果标志为完成状态，**/
-	@Override
-	public Optional<ResultRecord> complete(Optional<ResultState> resultState) {
-		executionResultCache.put(Optional.of("ResultState"),
-				                 Optional.of(ResultState.SUCCESS.toString()));
-		return Optional.of(this);
+	public Optional<EventResultAnalysisHandle> resultResult(EventResultAnalysis eventResultAnalysis, Cache<String, String> interactionCacheArg) {
+		return eventResultAnalysis.analysis(Optional.of(executionResultCache), Optional.of(interactionCacheArg));
 	}
 
 	@Override

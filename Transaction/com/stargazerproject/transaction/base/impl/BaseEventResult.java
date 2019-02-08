@@ -3,9 +3,9 @@ package com.stargazerproject.transaction.base.impl;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
+import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.Result;
 import com.stargazerproject.transaction.ResultRecord;
-import com.stargazerproject.transaction.ResultState;
 
 
 /** 
@@ -16,7 +16,7 @@ import com.stargazerproject.transaction.ResultState;
  *  @author Felixerio
  *  @version 1.0.0
  *  **/
-public class BaseEventResult implements Result<EventResultAnalysisHandle>{
+public class BaseEventResult implements Result<EventResultAnalysis, EventResultAnalysisHandle, Cache<String, String>>{
 
 	private static final long serialVersionUID = -8725503398105907243L;
 	
@@ -25,14 +25,10 @@ public class BaseEventResult implements Result<EventResultAnalysisHandle>{
 	protected BaseEventResult() {}
 	
 	@Override
-	public Optional<EventResultAnalysisHandle> resultResult(EventResultAnalysis eventResultAnalysis) {
-		return result.resultResult(eventResultAnalysis);
+	public Optional<EventResultAnalysisHandle> resultResult(EventResultAnalysis eventResultAnalysis, Cache<String, String> cache) {
+		return result.resultResult(eventResultAnalysis, cache);
 	}
 
-	@Override
-	public Optional<ResultRecord> complete(Optional<ResultState> resultState) {
-		return result.complete(resultState);
-	}
 
 	@Override
 	public Optional<ResultRecord> errorMessage(Optional<String> errorMessage, Optional<Exception> exception) {

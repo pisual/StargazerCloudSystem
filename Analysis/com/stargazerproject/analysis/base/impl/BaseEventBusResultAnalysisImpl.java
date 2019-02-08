@@ -4,17 +4,18 @@ import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventBusResultAnalysis;
 import com.stargazerproject.analysis.handle.EventBusResultAnalysisHandle;
 import com.stargazerproject.bus.BusEventTimeoutModel;
+import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.EventResult;
 
-import java.util.List;
+import java.util.Collection;
 
 public abstract class BaseEventBusResultAnalysisImpl implements EventBusResultAnalysis {
 
 	protected EventBusResultAnalysis eventBusResultAnalysis;
 	
 	@Override
-	public Optional<EventBusResultAnalysisHandle> analysis(Optional<List<EventResult>> resultCacheArg) {
-		return eventBusResultAnalysis.analysis(resultCacheArg);
+	public Optional<EventBusResultAnalysisHandle> analysis(Optional<Cache<String, String>> resultCache, Optional<Collection<EventResult>> interactionCache) {
+		return eventBusResultAnalysis.analysis(resultCache, interactionCache);
 	}
 
 	@Override
