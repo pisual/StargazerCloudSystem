@@ -31,8 +31,8 @@ public class BaseEventResult implements Result<EventResultAnalysis, EventResultA
 
 
 	@Override
-	public Optional<ResultRecord> errorMessage(Optional<String> errorMessage, Optional<Exception> exception) {
-		return result.errorMessage(errorMessage, exception);
+	public Optional<ResultRecord> errorMessage(Optional<Exception> exception) {
+		return result.errorMessage(exception);
 	}
 
 	@Override

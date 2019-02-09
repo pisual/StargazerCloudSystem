@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
+import com.stargazerproject.cache.MultimapCache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Result;
 import com.stargazerproject.transaction.ResultRecord;
@@ -33,13 +34,13 @@ public class BaseEventResultShell implements Result<EventResultAnalysis, EventRe
 	* **/
 	@Autowired
 	@Qualifier("eventResultCache")
-	private Cache<String, String> executionResultCache;
+	private MultimapCache<String, String> executionResultCache;
 
 	/**
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
 	* **/
-	public BaseEventResultShell(Optional<Cache<String, String>> executionResultCacheArg) {
+	public BaseEventResultShell(Optional<MultimapCache<String, String>> executionResultCacheArg) {
 		executionResultCache = executionResultCacheArg.get();
 	}
 	
@@ -64,31 +65,9 @@ public class BaseEventResultShell implements Result<EventResultAnalysis, EventRe
 	}
 
 	@Override
-	public Optional<ResultRecord> errorMessage(Optional<String> errorMessage, Optional<Exception> exception) {
-		addCacheContent(errorMessage.get(), exception.get().fillInStackTrace().toString());
+	public Optional<ResultRecord> errorMessage(Optional<Exception> exception) {
+		executionResultCache.put(Optional.of("ErrorMessage"), Optional.of(exception.get().getMessage()));
 		return null;
-	}
-	
-	/**
-	* @name cache Add方法
-	* @illustrate 在Cache现有内容上添加新的内容
-	* @param Optional<String> errorMessage 异常信息
-	* @param Optional<Exception> exception 异常Exception
-	* **/
-	private void addCacheContent(String errorMessage, String exception){
-//		Optional<String> cacheErrorMessage = executionResultCache.get(Optional.of("ErrorMessage"));
-//
-//		if(cacheErrorMessage.isPresent()){
-//			cacheErrorMessage = Optional.of(cacheErrorMessage.get() + ";" + errorMessage + ":" + exception);
-//
-//		}
-//		else{
-//			cacheErrorMessage = Optional.of(errorMessage + ":" + exception);
-//		}
-//
-//		executionResultCache.put(Optional.of("ErrorMessage"),
-//								cacheErrorMessage);
-
 	}
 	
 	@Override

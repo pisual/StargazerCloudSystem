@@ -9,6 +9,7 @@ import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.annotation.description.NoSpringDepend;
+import com.stargazerproject.bus.exception.EventException;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
@@ -121,7 +122,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 			eventState = EventState.COMPLETE;
 		}
 		else if(EventState.PASS == eventState){
-			result.errorMessage(Optional.of("事件处于PASS状态，将快速失败此事务"), null);
+			result.errorMessage(Optional.of(new EventException("事件处于PASS状态，将快速失败此事务")));
 			logMethod.INFO(this, "事件处于PASS状态，将快速失败此事务");
 		}
 		else{

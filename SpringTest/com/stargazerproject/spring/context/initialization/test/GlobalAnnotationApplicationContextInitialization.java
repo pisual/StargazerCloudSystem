@@ -21,6 +21,7 @@ import com.stargazerproject.bus.server.impl.EventBusServer;
 import com.stargazerproject.bus.server.listener.impl.EventBusServerListener;
 import com.stargazerproject.bus.server.manage.EventBusServerManage;
 import com.stargazerproject.cache.aop.configuration.ParametersInjectAOPConfiguration;
+import com.stargazerproject.cache.datastructure.BaseDataMultimapCache;
 import com.stargazerproject.cache.datastructure.impl.*;
 import com.stargazerproject.cache.impl.ByteArrayCache;
 import com.stargazerproject.cache.impl.SystemParameterCahce;
@@ -180,6 +181,10 @@ public class GlobalAnnotationApplicationContextInitialization {
 
 		/**Depend EventInteractionCache **/
 		EventInteractionCache.class,
+
+		/**Depend EventInteractionCache **/
+		BaseDataMultimapCache.class,
+
 		
 		/**Depend OrderQueueMessage**/
 		TransactionMessageQueue.class,

@@ -3,15 +3,16 @@ package com.stargazerproject.analysis.resources.handle;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
+import com.stargazerproject.cache.MultimapCache;
 import com.stargazerproject.transaction.ResultState;
 
 public class EventResultAnalysisHandleResources implements EventResultAnalysisHandle {
 
-    private Cache<String, String> resultCache;
+    private MultimapCache<String, String> resultCache;
 
     private Cache<String, String> interactionCache;
 
-    public EventResultAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg, Optional<Cache<String, String>> interactionCacheArg){
+    public EventResultAnalysisHandleResources(Optional<MultimapCache<String, String>> resultCacheArg, Optional<Cache<String, String>> interactionCacheArg){
         resultCache = resultCacheArg.get();
         interactionCache = interactionCacheArg.get();
     }
