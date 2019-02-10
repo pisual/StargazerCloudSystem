@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component(value="standardTransaction")
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Qualifier("standardTransaction")
 public class StandardTransaction extends BaseTransaction implements StanderCharacteristicShell<Transaction>, BeforehandCharacteristicShell<Transaction> {
 

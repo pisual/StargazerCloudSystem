@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component(value="standardEventResult")
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Qualifier("standardEventResult")
 public class StandardEventResult extends BaseEventResult implements StanderCharacteristicShell<Result>, BeforehandCharacteristicShell<Result> {
 

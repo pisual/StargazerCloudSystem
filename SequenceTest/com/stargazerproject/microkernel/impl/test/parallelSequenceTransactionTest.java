@@ -60,7 +60,7 @@ public class parallelSequenceTransactionTest extends BaseJunitTest {
 
     @Test
     public void Test_04_checkEventResult() {
-        eventResultAnalysisHandle = event.eventResult(Optional.of(eventResultAnalysis)).get();
+     eventResultAnalysisHandle = event.eventResult(Optional.of(eventResultAnalysis)).get();
         if(eventResultAnalysisHandle.resultState().get() != ResultState.SUCCESS){
             throw new IllegalStateException("Event 没有完成，现在Event的状态为 " + eventResultAnalysisHandle.resultState().get());
         }

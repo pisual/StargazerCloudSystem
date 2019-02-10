@@ -19,7 +19,7 @@ public class EventResultAnalysisHandleResources implements EventResultAnalysisHa
 
     @Override
     public Optional<ResultState> resultState() {
-        /**分析结果**/
+        resultCache.get(Optional.of("ResultState")).get().forEach(x -> System.out.println("########### result  " + x.toString()));
         return conversionResultState("SUCCESS");
     }
 

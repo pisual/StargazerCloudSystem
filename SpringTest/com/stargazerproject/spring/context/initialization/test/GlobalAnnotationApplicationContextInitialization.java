@@ -20,14 +20,16 @@ import com.stargazerproject.bus.resources.shell.EventBusResourcesShell;
 import com.stargazerproject.bus.server.impl.EventBusServer;
 import com.stargazerproject.bus.server.listener.impl.EventBusServerListener;
 import com.stargazerproject.bus.server.manage.EventBusServerManage;
+import com.stargazerproject.cache.aop.configuration.ParametersInItializationAOPConfiguration;
 import com.stargazerproject.cache.aop.configuration.ParametersInjectAOPConfiguration;
-import com.stargazerproject.cache.datastructure.BaseDataMultimapCache;
 import com.stargazerproject.cache.datastructure.impl.*;
 import com.stargazerproject.cache.impl.ByteArrayCache;
+import com.stargazerproject.cache.impl.EventResultMultimapCache;
 import com.stargazerproject.cache.impl.SystemParameterCahce;
 import com.stargazerproject.cache.impl.TransactionCache;
 import com.stargazerproject.cache.impl.resources.*;
 import com.stargazerproject.cache.impl.resources.shell.ByteArrayCacheShell;
+import com.stargazerproject.cache.impl.resources.shell.EventResultMultimapCacheShell;
 import com.stargazerproject.cache.impl.resources.shell.SystemParameterCahceShell;
 import com.stargazerproject.cache.impl.resources.shell.TransactionCahceShell;
 import com.stargazerproject.cache.server.impl.ByteArrayCacheServer;
@@ -150,6 +152,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		SequenceParameters.class,
 		InformationParameter.class,
 		ParametersInjectAOPConfiguration.class,
+		ParametersInItializationAOPConfiguration.class,
 		TransactionParameters.class,
 
 		/**Depend ObjectParameterCache **/
@@ -176,15 +179,15 @@ public class GlobalAnnotationApplicationContextInitialization {
 		/**Depend ServerListCache **/
 		ServerListCache.class,
 
-		/**Depend EventResultCache **/
-		EventResultCache.class,
+		/**Depend EventResultMultimapCache **/
+		EventResultMultimapCache.class,
 
 		/**Depend EventInteractionCache **/
 		EventInteractionCache.class,
 
-		/**Depend EventInteractionCache **/
-		BaseDataMultimapCache.class,
-
+		/**Depend EventResultMultimapCache **/
+		EventResultMultimapCacheShell.class,
+		EventResultMultimapCache.class,
 		
 		/**Depend OrderQueueMessage**/
 		TransactionMessageQueue.class,

@@ -6,6 +6,7 @@ import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cache.MultimapCache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
+import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
 import com.stargazerproject.transaction.Result;
 import com.stargazerproject.transaction.ResultRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +30,26 @@ public class BaseEventResultShell implements Result<EventResultAnalysis, EventRe
 	private static final long serialVersionUID = -4726816340050497590L;
 	
 	/**
-	* @name 事件结果内容缓存
-	* @illustrate 事件结果内容缓存
+	* @name 事件结果内容Multimap缓存
+	* @illustrate 事件结果内容Multimap缓存
 	* **/
+	private MultimapCache<String, String> resultMultimapCache;
+
 	@Autowired
-	@Qualifier("eventResultCache")
-	private MultimapCache<String, String> executionResultCache;
+	@Qualifier("eventResultMultimapCache")
+	private StanderCharacteristicShell<MultimapCache<String, String>> eventResultMultimapCache;
+
+	@Autowired
+	@Qualifier("eventResultMultimapCacheShell")
+	private BaseCharacteristic<MultimapCache<String, String>> eventResultMultimapCacheShell;
+
 
 	/**
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
 	* **/
-	public BaseEventResultShell(Optional<MultimapCache<String, String>> executionResultCacheArg) {
-		executionResultCache = executionResultCacheArg.get();
+	public BaseEventResultShell(Optional<MultimapCache<String, String>> resultMultimapCacheArg) {
+		resultMultimapCache = resultMultimapCacheArg.get();
 	}
 	
 	/**
@@ -55,18 +63,20 @@ public class BaseEventResultShell implements Result<EventResultAnalysis, EventRe
 	
 	@Override
 	public Optional<Result> characteristic() {
+		eventResultMultimapCache.initialize(eventResultMultimapCacheShell.characteristic());
+		resultMultimapCache = eventResultMultimapCacheShell.characteristic().get();
 		return Optional.of(this);
 	}
 
 	/** @illustrate 事件结果内容分析器*/
 	@Override
 	public Optional<EventResultAnalysisHandle> resultResult(EventResultAnalysis eventResultAnalysis, Cache<String, String> interactionCacheArg) {
-		return eventResultAnalysis.analysis(Optional.of(executionResultCache), Optional.of(interactionCacheArg));
+		return eventResultAnalysis.analysis(Optional.of(resultMultimapCache), Optional.of(interactionCacheArg));
 	}
 
 	@Override
 	public Optional<ResultRecord> errorMessage(Optional<Exception> exception) {
-		executionResultCache.put(Optional.of("ErrorMessage"), Optional.of(exception.get().getMessage()));
+		resultMultimapCache.put(Optional.of("ErrorMessage"), Optional.of(exception.get().getMessage()));
 		return null;
 	}
 	

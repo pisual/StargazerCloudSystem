@@ -1,4 +1,4 @@
-package com.stargazerproject.cache.datastructure;
+package com.stargazerproject.cache.impl.resources.shell;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ArrayListMultimap;
@@ -14,30 +14,30 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-@Component(value="baseDataMultimapCache")
-@Qualifier("baseDataMultimapCache")
+@Component(value="eventResultMultimapCacheShell")
+@Qualifier("eventResultMultimapCacheShell")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class BaseDataMultimapCache<K, V> implements MultimapCache<K, V>, BaseCharacteristic<MultimapCache<K, V>> {
+public class EventResultMultimapCacheShell implements MultimapCache<String, String>, BaseCharacteristic<MultimapCache<String, String>> {
 
-    private Multimap<K, V> cache = ArrayListMultimap.create();
+    private Multimap<String, String> cache = ArrayListMultimap.create();
 
     @Override
-    public Optional<MultimapCache<K, V>> characteristic() {
+    public Optional<MultimapCache<String, String>> characteristic() {
         return Optional.of(this);
     }
 
     @Override
-    public void put(Optional<K> key, Optional<V> value) {
+    public void put(Optional<String> key, Optional<String> value) {
         cache.put(key.get(), value.get());
     }
 
     @Override
-    public Optional<Collection<V>> get(Optional<K> key) {
+    public Optional<Collection<String>> get(Optional<String> key) {
         return Optional.of(cache.get(key.get()));
     }
 
     @Override
-    public void remove(Optional<K> key) {
+    public void remove(Optional<String> key) {
         cache.removeAll(key.get());
     }
 
@@ -47,7 +47,7 @@ public class BaseDataMultimapCache<K, V> implements MultimapCache<K, V>, BaseCha
     }
 
     @Override
-    public Optional<Set<Map.Entry<K, Collection<V>>>> entrySet() {
+    public Optional<Set<Map.Entry<String, Collection<String>>>> entrySet() {
         return Optional.of(cache.asMap().entrySet());
     }
 

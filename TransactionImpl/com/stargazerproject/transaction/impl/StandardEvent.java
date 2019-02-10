@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component(value="standardEvent")
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Qualifier("standardEvent")
 public class StandardEvent extends BaseEvent implements StanderCharacteristicShell<Event>, BeforehandCharacteristicShell<Event> {
 

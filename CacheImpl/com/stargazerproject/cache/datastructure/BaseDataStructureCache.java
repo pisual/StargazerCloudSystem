@@ -1,14 +1,19 @@
 package com.stargazerproject.cache.datastructure;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentSkipListMap;
-
 import com.google.common.base.Optional;
 import com.stargazerproject.annotation.description.ThreadSafeLevel;
 import com.stargazerproject.annotation.description.ThreadSafeMethodsLevel;
 import com.stargazerproject.cache.Cache;
+import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /** 
  *  @name Event内部交换缓存（eventI nteraction Cache）
@@ -17,7 +22,10 @@ import com.stargazerproject.cache.Cache;
  *  @param <V> 缓存的Value类型
  *  @author Felixerio
  *  **/
-public abstract class BaseDataStructureCache<K, V> implements Cache<K, V>{
+@Component(value="baseDataStructureCache")
+@Qualifier("baseDataStructureCache")
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class BaseDataStructureCache<K, V> implements Cache<K, V>, BaseCharacteristic<Cache<K, V>> {
 		
 	private static final long serialVersionUID = 4406535394386240817L;
 	
@@ -25,6 +33,11 @@ public abstract class BaseDataStructureCache<K, V> implements Cache<K, V>{
 
 	/** @construction 初始化构造 **/
 	public BaseDataStructureCache() {}
+
+	@Override
+	public Optional<Cache<K, V>> characteristic() {
+		return Optional.of(this);
+	}
 
 	/**
 	 * @name 置入
@@ -83,5 +96,4 @@ public abstract class BaseDataStructureCache<K, V> implements Cache<K, V>{
 	public Optional<Set<Entry<K, V>>> entrySet(){
 		return ( Optional.of(cache.entrySet()) );
 	}
-
 }
