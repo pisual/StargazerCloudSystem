@@ -25,7 +25,11 @@ public class parallelSequenceTransactionTest extends BaseJunitTest {
 
     private static EventResultAnalysisHandle eventResultAnalysisHandle;
 
+    private static EventResultAnalysisHandle eventResultAnalysisHandle2;
+
     private static Event event;
+
+    private static Event event2;
 
 
     @Test
@@ -36,6 +40,10 @@ public class parallelSequenceTransactionTest extends BaseJunitTest {
 
         event = BeanContainer.instance().getBean(Optional.of("standardEvent"), Event.class);
         event.eventAssemble(Optional.of(eventAssembleAnalysis)).get().injectEventParameter(Optional.of("User"), Optional.of("Felixeiro"));
+
+
+        event2 = BeanContainer.instance().getBean(Optional.of("standardEvent"), Event.class);
+        event2.eventAssemble(Optional.of(eventAssembleAnalysis)).get().injectEventParameter(Optional.of("User"), Optional.of("Sion"));
     }
 
     @Test
@@ -47,6 +55,7 @@ public class parallelSequenceTransactionTest extends BaseJunitTest {
     @Test
     public void Test_02_addParallelSequence(){
         sequence.addParallelSequence(Optional.of(event));
+        sequence.addParallelSequence(Optional.of(event2));
     }
 
     @Test
@@ -66,6 +75,17 @@ public class parallelSequenceTransactionTest extends BaseJunitTest {
         }
         else {
             System.out.println("Event完成, EventID为: " + event.sequenceID());
+        }
+    }
+
+    @Test
+    public void Test_04_checkEvent2Result() {
+        eventResultAnalysisHandle2 = event2.eventResult(Optional.of(eventResultAnalysis)).get();
+        if(eventResultAnalysisHandle2.resultState().get() != ResultState.SUCCESS){
+            throw new IllegalStateException("Event2 没有完成，现在Event2的状态为 " + eventResultAnalysisHandle2.resultState().get());
+        }
+        else {
+            System.out.println("Event2完成, Event2ID为: " + event2.sequenceID());
         }
     }
 
