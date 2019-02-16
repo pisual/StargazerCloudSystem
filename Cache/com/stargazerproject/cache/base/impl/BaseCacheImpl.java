@@ -1,10 +1,10 @@
 package com.stargazerproject.cache.base.impl;
 
-import java.util.Set;
-import java.util.Map.Entry;
-
 import com.google.common.base.Optional;
 import com.stargazerproject.cache.Cache;
+
+import java.util.Map.Entry;
+import java.util.Set;
 
 public abstract class BaseCacheImpl<K, V> implements Cache<K, V>{
 	

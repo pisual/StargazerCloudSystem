@@ -62,12 +62,12 @@ public class CreateBaseNodeModel extends StandardCellsTransactionImpl {
 	                threadPoolKey = "createBaseNodeModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> cache) {
+	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> interactionCache) {
 		try {
 			creatPersistentNode(Optional.of(Kernel_Negotiate_BasePath_RootPath));
 			creatPersistentNode(Optional.of(Kernel_Negotiate_BasePath_EdenNodePath));
 			creatPersistentNode(Optional.of(Kernel_Negotiate_BasePath_ZoneNodePath));
-			return success();
+			return success(interactionCache);
 		} catch (Exception e) {
 			throw new RunException(e.getMessage());
 		}

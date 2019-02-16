@@ -1,13 +1,8 @@
 package com.stargazerproject.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
-
 import com.google.common.base.Optional;
+
+import java.io.*;
 
 public class CloneUtil {
 
@@ -27,7 +22,7 @@ public class CloneUtil {
 			throw new NullPointerException();
 		}
 	}
-	
+
 	public static Object deepClone(Object object) {
 		try {
 			ByteArrayOutputStream bo = new ByteArrayOutputStream();
@@ -41,7 +36,7 @@ public class CloneUtil {
 		} catch (ClassNotFoundException e) {
 			throw new NullPointerException();
 		} catch (IOException e) {
-			throw new NullPointerException();
+			throw new NullPointerException(e.getMessage());
 		}
 	}
 }

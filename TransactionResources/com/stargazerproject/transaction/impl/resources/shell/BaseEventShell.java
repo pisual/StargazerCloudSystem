@@ -12,6 +12,7 @@ import com.stargazerproject.annotation.description.NoSpringDepend;
 import com.stargazerproject.bus.exception.EventException;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
+import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.Event;
 import com.stargazerproject.transaction.EventState;
@@ -53,9 +54,15 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	* @name 交互缓存接口
 	* @illustrate 交互缓存接口
 	* **/
+	public Cache<String, String> interactionCache;
+
+	@Autowired
+	@Qualifier("baseDataStructureCache")
+	private BaseCharacteristic<Cache<String, String>> baseDataStructureCache;
+
 	@Autowired
 	@Qualifier("eventInteractionCache")
-	public Cache<String, String> interactionCache;
+	private StanderCharacteristicShell<Cache<String, String>> eventInteractionCache;
 	
 	/**
 	* @name 日志接口
@@ -90,6 +97,8 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	@Override
 	public Optional<Event> characteristic() {
 		result = baseEventResultShell.characteristic().get();
+		interactionCache = baseDataStructureCache.characteristic().get();
+		eventInteractionCache.initialize(baseDataStructureCache.characteristic());
 		return Optional.of(this);
 	}
 	
@@ -115,7 +124,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 * **/
 	@Override
 	public Optional<EventExecuteAnalysisHandle> eventExecute(Optional<EventExecuteAnalysis> eventAnalysis) {
-		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(interactionCache), Optional.of(result)).get();
+		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(interactionCache)).get();
 		if(EventState.WAIT == eventState){
 			eventState = EventState.RUN;
 			eventExecuteAnalysisHandle.run();

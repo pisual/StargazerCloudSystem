@@ -16,8 +16,9 @@ public class EventAssembleAnalysisHandleResources implements EventAssembleAnalys
     }
 
     @Override
-    public void injectEventParameter(Optional<String> Key, Optional<String> value) {
+    public EventAssembleAnalysisHandle injectEventParameter(Optional<String> Key, Optional<String> value) {
         cacheAssemble.put(Key, value);
+        return this;
     }
 
     @Override

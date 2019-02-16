@@ -36,12 +36,20 @@ public class LogData {
 	public Optional<LogLevel> logLevel(){
 		return Optional.of(logLevel);
 	}
-	
+
+	public Optional<String> logContent() {
+		return Optional.of(content);
+	}
+
+	public Optional<String> logName() {
+		return Optional.of(name);
+	}
+
 	@Override
 	public String toString() {
         return MoreObjects.toStringHelper(this)
-                          .add(" # name", name)
-                          .add(" # content", content)
-                          .add(" # logLevel", logLevel.name()).toString();
+				.add(" # content", content)
+				.add(" # name", name)
+				.add(" # logLevel", logLevel.name()).toString();
 	}
 }

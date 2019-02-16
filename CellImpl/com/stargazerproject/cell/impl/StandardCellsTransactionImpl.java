@@ -15,7 +15,7 @@ public abstract class StandardCellsTransactionImpl extends BaseCellsTransaction<
 
 	@Autowired
 	@Qualifier("aggregateRootCache")
-	protected Cache<String, String> cacheggregateRootCache;
+	protected Cache<String, String> aggregationRootCache;
 
 	/** @illustrate 获取Log(日志)接口 **/
 	@Autowired
@@ -31,25 +31,25 @@ public abstract class StandardCellsTransactionImpl extends BaseCellsTransaction<
 	 * @return <Cache<String, String>> 聚合根，不同的方法通过聚合根缓存共享数据
 	 * @param <V> 缓存的Value值
 	 * **/
-	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> cache) {
-		return Optional.of(cacheggregateRootCache);
+	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> interactionCache) {
+		return Optional.of(aggregationRootCache);
 	}
 	
-	public Optional<Cache<String, String>> fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
+	public Optional<Cache<String, String>> fallBack(Optional<Cache<String, String>> interactionCache, Throwable throwable){
 		if(throwable instanceof HystrixTimeoutException){
 			log.WARN(this, HystrixTimeoutException.class.toString());
 		}
-		return faild(throwable.getMessage());
+		return faild(interactionCache, throwable.getMessage());
 	}
 
-    protected Optional<Cache<String, String>> success(){
-		cacheggregateRootCache.put(Optional.of("ResultState"), Optional.of(ResultState.SUCCESS.toString()));
-		return Optional.of(cacheggregateRootCache);
+    protected Optional<Cache<String, String>> success(Optional<Cache<String, String>> interactionCache){
+		interactionCache.get().put(Optional.of("ResultState"), Optional.of(ResultState.SUCCESS.toString()));
+		return Optional.of(aggregationRootCache);
 	}
 
-	protected Optional<Cache<String, String>> faild(String message){
-		cacheggregateRootCache.put(Optional.of("ResultState"), Optional.of(ResultState.FAULT.toString()));
-		return Optional.of(cacheggregateRootCache);
+	protected Optional<Cache<String, String>> faild(Optional<Cache<String, String>> interactionCache, String message){
+		interactionCache.get().put(Optional.of("ResultState"), Optional.of(ResultState.FAULT.toString()));
+		return Optional.of(aggregationRootCache);
 	}
 
 }

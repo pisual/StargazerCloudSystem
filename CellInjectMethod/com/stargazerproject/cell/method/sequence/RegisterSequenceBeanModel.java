@@ -46,7 +46,7 @@ public class RegisterSequenceBeanModel extends StandardCellsTransactionImpl {
 	                threadPoolKey = "registerSequenceBeanModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> cache) {
+	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> interactionCache) {
 		try{
 
 			//**模拟远程注入 Start**//
@@ -55,7 +55,7 @@ public class RegisterSequenceBeanModel extends StandardCellsTransactionImpl {
 
 			BeanContainer.instance().setBean(Optional.of(initializationCellsGroupModel.getClass()));
 
-			return success();
+			return success(interactionCache);
 		} catch(Exception e){
 			throw new RunException(e.getMessage());
 		}

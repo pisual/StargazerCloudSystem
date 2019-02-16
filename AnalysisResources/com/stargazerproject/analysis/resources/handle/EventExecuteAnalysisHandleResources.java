@@ -6,28 +6,29 @@ import com.stargazerproject.annotation.description.EventTimeOut;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.CellsTransaction;
 import com.stargazerproject.spring.container.impl.BeanContainer;
-import com.stargazerproject.transaction.Result;
 
 public class EventExecuteAnalysisHandleResources implements EventExecuteAnalysisHandle {
 
     private Cache<String, String> cache;
 
-    private Result record;
-
-    public EventExecuteAnalysisHandleResources(Optional<Cache<String, String>> cacheArg, Optional<Result> recordArg){
+    public EventExecuteAnalysisHandleResources(Optional<Cache<String, String>> cacheArg){
         cache = cacheArg.get();
-        record = recordArg.get();
     }
 
     @Override
     public void run() {
-        CellsTransaction cellsTransaction = BeanContainer.instance().getBean(Optional.of("initializationCellsGroupModel"), CellsTransaction.class);
+        CellsTransaction cellsTransaction = BeanContainer.instance().getBean(method(), CellsTransaction.class);
         cellsTransaction.method(Optional.of(cache));
     }
 
+
     @Override
     public Optional<EventTimeOut> eventEventTimeOutConfiguration() {
-        CellsTransaction cellsTransaction = BeanContainer.instance().getBean(Optional.of("initializationCellsGroupModel"), CellsTransaction.class);
+        CellsTransaction cellsTransaction = BeanContainer.instance().getBean(method(), CellsTransaction.class);
         return Optional.of(cellsTransaction.getClass().getAnnotation(EventTimeOut.class));
+    }
+
+    private Optional<String> method(){
+        return cache.get(Optional.of("Method"));
     }
 }

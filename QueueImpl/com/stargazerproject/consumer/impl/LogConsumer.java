@@ -1,16 +1,17 @@
 package com.stargazerproject.consumer.impl;
 
+import com.google.common.base.Optional;
+import com.stargazerproject.analysis.LogAnalysis;
+import com.stargazerproject.log.model.LogData;
+import com.stargazerproject.log.model.LogLevel;
+import com.stargazerproject.queue.QueueConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.common.base.Optional;
-import com.stargazerproject.analysis.LogAnalysis;
-import com.stargazerproject.log.model.LogData;
-import com.stargazerproject.log.model.LogLevel;
-import com.stargazerproject.queue.QueueConsumer;
+import static org.fusesource.jansi.Ansi.ansi;
 
 @Component(value="logConsumer")
 @Qualifier("logConsumer")
@@ -30,10 +31,10 @@ public class LogConsumer implements QueueConsumer<LogData>{
 	@Override
 	public void consumer(Optional<LogData> logData) {
 		if(logData.get().logLevel().get().equals(LogLevel.ERROR) || (logData.get().logLevel().get().equals(LogLevel.FATAL))){
-			System.err.println("Stargazer System Report : " + logData.get().toString());
+			System.err.println(ansi().eraseScreen().fgRed().a("Stargazer System Report : ").fgBrightRed().a(logData.get().logContent()).reset());
 		}
 		else{
-			System.out.println("Stargazer System Report : " + logData.get().toString());
+			System.err.println(ansi().eraseScreen().fgGreen().a("Stargazer System Report : ").fgBlue().a(logData.get().logLevel().get()+"		").fgYellow().a(logData.get().logContent().get()).reset());
 		}
 	}
 	

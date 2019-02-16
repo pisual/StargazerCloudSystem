@@ -41,11 +41,11 @@ public class InitializationCellsGroupModel extends StandardCellsTransactionImpl 
 			        ignoreExceptions = HystrixRuntimeException.class,
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> cache) {
-		cacheggregateRootCache.put(Optional.of("OrderID"), Optional.of(SequenceUtil.getUUID()));
+	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> interactionCache) {
+		aggregationRootCache.put(Optional.of("OrderID"), Optional.of(SequenceUtil.getUUID()));
 		log.INFO(this,"initializationCellsGroupModel Complete , OrderID : " + SequenceUtil.getUUID());
-		log.INFO(this,"initializationCellsGroupModel Complete , User: " + cache.get().get(Optional.of("User")).get());
-		return success();
+		log.INFO(this,"initializationCellsGroupModel Complete , User: " + interactionCache.get().get(Optional.of("User")).get());
+		return success(interactionCache);
 	}
 	
 	/**

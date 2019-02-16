@@ -22,22 +22,20 @@ import com.stargazerproject.bus.server.listener.impl.EventBusServerListener;
 import com.stargazerproject.bus.server.manage.EventBusServerManage;
 import com.stargazerproject.cache.aop.configuration.ParametersInItializationAOPConfiguration;
 import com.stargazerproject.cache.aop.configuration.ParametersInjectAOPConfiguration;
+import com.stargazerproject.cache.datastructure.BaseDataStructureCache;
 import com.stargazerproject.cache.datastructure.impl.*;
-import com.stargazerproject.cache.impl.ByteArrayCache;
-import com.stargazerproject.cache.impl.EventResultMultimapCache;
-import com.stargazerproject.cache.impl.SystemParameterCahce;
-import com.stargazerproject.cache.impl.TransactionCache;
+import com.stargazerproject.cache.impl.*;
 import com.stargazerproject.cache.impl.resources.*;
-import com.stargazerproject.cache.impl.resources.shell.ByteArrayCacheShell;
-import com.stargazerproject.cache.impl.resources.shell.EventResultMultimapCacheShell;
-import com.stargazerproject.cache.impl.resources.shell.SystemParameterCahceShell;
-import com.stargazerproject.cache.impl.resources.shell.TransactionCahceShell;
+import com.stargazerproject.cache.impl.resources.shell.*;
+import com.stargazerproject.cache.server.impl.AggregateRootIndexCacheServer;
 import com.stargazerproject.cache.server.impl.ByteArrayCacheServer;
 import com.stargazerproject.cache.server.impl.SystemParameterCacheServer;
 import com.stargazerproject.cache.server.impl.TransactionCacheServer;
+import com.stargazerproject.cache.server.listener.impl.AggregateRootIndexCacheServerListener;
 import com.stargazerproject.cache.server.listener.impl.ByteArrayCacheServerListener;
 import com.stargazerproject.cache.server.listener.impl.SystemParameterCacheServerListener;
 import com.stargazerproject.cache.server.listener.impl.TransactionCacheServerListener;
+import com.stargazerproject.cache.server.manage.AggregateRootIndexCacheServerManage;
 import com.stargazerproject.cache.server.manage.ByteArrayCacheServerManage;
 import com.stargazerproject.cache.server.manage.SystemParameterCacheServerManage;
 import com.stargazerproject.cache.server.manage.TransactionCacheServerManage;
@@ -188,6 +186,9 @@ public class GlobalAnnotationApplicationContextInitialization {
 		/**Depend EventResultMultimapCache **/
 		EventResultMultimapCacheShell.class,
 		EventResultMultimapCache.class,
+
+		/**Depend BaseDataStructureCache **/
+		BaseDataStructureCache.class,
 		
 		/**Depend OrderQueueMessage**/
 		TransactionMessageQueue.class,
@@ -237,6 +238,17 @@ public class GlobalAnnotationApplicationContextInitialization {
 		ByteArrayCacheServer.class,
 		ByteArrayCacheServerListener.class,
 		ByteArrayCacheServerManage.class,
+
+
+		/**Depend ByteArrayCache**/
+		AggregateRootIndexCache.class,
+		AggregateRootIndexCacheShell.class,
+		AggregateRootIndexCacheCacheLoaderCharacteristic.class,
+		AggregateRootIndexCacheLoadingCacheCharacteristic.class,
+		AggregateRootIndexCacheRemovalListenerCharacteristic.class,
+		AggregateRootIndexCacheServer.class,
+		AggregateRootIndexCacheServerListener.class,
+		AggregateRootIndexCacheServerManage.class,
 		
 		/**Depend EventQueue**/
 		EventQueue.class,

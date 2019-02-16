@@ -1,12 +1,14 @@
 package com.stargazerproject.log;
 
 
-/** 
+import java.io.Serializable;
+
+/**
  *  @name 核心日志托管接口
  *  @illustrate 针对于日志进行统一的收集，然后根据系统预先设定的日志级别进行处理
  *  @author Felixerio
  *  **/
-public interface LogMethod{
+public interface LogMethod extends Serializable {
 	
 	/** @illustrate 根据系统现在预定的DEBUG级别的处理程序进行日志处理**/
 	public void DEBUG(Object object, String message);

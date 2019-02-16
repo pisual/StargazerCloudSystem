@@ -19,8 +19,8 @@ public class EventResultAnalysisHandleResources implements EventResultAnalysisHa
 
     @Override
     public Optional<ResultState> resultState() {
-        resultCache.get(Optional.of("ResultState")).get().forEach(x -> System.out.println("########### result  " + x.toString()));
-        return conversionResultState("SUCCESS");
+        String resultState = interactionCache.get(Optional.of("ResultState")).get();
+        return conversionResultState(resultState);
     }
 
     private Optional<ResultState> conversionResultState(String result){
@@ -36,7 +36,7 @@ public class EventResultAnalysisHandleResources implements EventResultAnalysisHa
                 resultState = ResultState.WAIT;
                 break;
             default:
-                throw new NullPointerException("ResultState Null");
+                throw new NullPointerException("ResultState Error , ResultState : " + result);
         }
         return Optional.of(resultState);
     }

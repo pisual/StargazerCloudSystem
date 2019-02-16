@@ -39,11 +39,11 @@ public class parallelSequenceTransactionTest extends BaseJunitTest {
         eventResultAnalysis = BeanContainer.instance().getBean(Optional.of("eventResultAnalysisImpl"), EventResultAnalysis.class);
 
         event = BeanContainer.instance().getBean(Optional.of("standardEvent"), Event.class);
-        event.eventAssemble(Optional.of(eventAssembleAnalysis)).get().injectEventParameter(Optional.of("User"), Optional.of("Felixeiro"));
+        event.eventAssemble(Optional.of(eventAssembleAnalysis)).get().injectEventParameter(Optional.of("User"), Optional.of("Felixeiro")).injectEventParameter(Optional.of("Method"), Optional.of("initializationCellsGroupModel"));
 
 
         event2 = BeanContainer.instance().getBean(Optional.of("standardEvent"), Event.class);
-        event2.eventAssemble(Optional.of(eventAssembleAnalysis)).get().injectEventParameter(Optional.of("User"), Optional.of("Sion"));
+        event2.eventAssemble(Optional.of(eventAssembleAnalysis)).get().injectEventParameter(Optional.of("User"), Optional.of("Sion")).injectEventParameter(Optional.of("Method"), Optional.of("initializationCellsGroupModel"));
     }
 
     @Test

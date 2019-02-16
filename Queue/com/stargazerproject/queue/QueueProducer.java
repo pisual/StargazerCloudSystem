@@ -2,13 +2,15 @@ package com.stargazerproject.queue;
 
 import com.google.common.base.Optional;
 
+import java.io.Serializable;
+
 /** 
  *  @name 队列生产者
  *  @illustrate 队列生产者的基础功能
  *  @param <K> 队列的Entry值类型
  *  @author Felixerio
  *  **/
-public interface QueueProducer<E>{
+public interface QueueProducer<E> extends Serializable {
 	
 	/**
 	* @name 置入

@@ -3,6 +3,7 @@ package com.stargazerproject.cache.aop.configuration;
 import com.google.common.base.Optional;
 import com.google.gson.Gson;
 import com.stargazerproject.annotation.description.NeedInitialization;
+import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cache.MultimapCache;
 import com.stargazerproject.log.LogMethod;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 /** 
@@ -27,7 +29,7 @@ import java.util.Map;
 @EnableAspectJAutoProxy
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Aspect
-public class ParametersInItializationAOPConfiguration {
+public class ParametersInItializationAOPConfiguration{
 
 	/** @illustrate 获取Log(日志)接口 **/
 	@Autowired
@@ -46,12 +48,21 @@ public class ParametersInItializationAOPConfiguration {
 	public Object setMethodAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
 		try {
 			Object object = proceedingJoinPoint.getTarget();
-			try{
-				NeedInitialization needInitialization = object.getClass().getAnnotation(NeedInitialization.class);
-				String content = needInitialization.content();
-				Optional<MultimapCache> multimapCache = (Optional<MultimapCache>)proceedingJoinPoint.getArgs()[0];
-				initParameters(parametersMap(content), multimapCache.get());
-			}catch(NullPointerException nullPointerException){
+			Annotation[] annotationArray = object.getClass().getAnnotations();
+
+			if(checkAnnotationExist(NeedInitialization.class, annotationArray)){
+				String content = ((NeedInitialization)getAnnotation(NeedInitialization.class, annotationArray)).content();
+				Object arg = ((Optional<Object>)proceedingJoinPoint.getArgs()[0]).get();
+
+				if(arg instanceof MultimapCache){
+					initMultimapParameters(parametersMap(content), (MultimapCache)arg);
+				}
+				else if(arg instanceof Cache){
+					initMapParameters(parametersMap(content), (Cache)arg);
+				}
+				else{
+					throw new IllegalArgumentException("NeedInitialization Parameters Type Error : " + arg.toString());
+				}
 			}
 			return proceedingJoinPoint.proceed();
 		} catch (Throwable throwable) {
@@ -65,9 +76,30 @@ public class ParametersInItializationAOPConfiguration {
 		return map;
 	}
 
-	private void initParameters(Map<String, String> map, MultimapCache multimapCache){
-		System.out.println(" ¥¥¥¥¥¥¥¥¥¥   Put     " + map.toString());
+	private void initMultimapParameters(Map<String, String> map, MultimapCache multimapCache){
 		map.entrySet().stream().forEach(parameter -> multimapCache.put(Optional.of(parameter.getKey()), Optional.of(parameter.getValue())));
+	}
+
+	private void initMapParameters(Map<String, String> map, Cache cache){
+		map.entrySet().stream().forEach(parameter -> cache.put(Optional.of(parameter.getKey()), Optional.of(parameter.getValue())));
+	}
+
+	private boolean checkAnnotationExist(Class<? extends Annotation> annotationClass, Annotation[] annotationArray){
+		for (Annotation annotationUnit : annotationArray){
+			if(annotationUnit.annotationType().equals(annotationClass)){
+				return Boolean.TRUE;
+			}
+		}
+		return Boolean.FALSE;
+	}
+
+	private Annotation getAnnotation(Class<? extends Annotation> annotationClass, Annotation[] annotationArray){
+		for (Annotation annotationUnit : annotationArray){
+			if(annotationUnit.annotationType().equals(annotationClass)){
+				return annotationUnit;
+			}
+		}
+		throw new NullPointerException("Annotation inexistence");
 	}
 
 }
