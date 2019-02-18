@@ -3,9 +3,7 @@ package com.stargazerproject.bus.resources;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventExecuteAnalysis;
 import com.stargazerproject.analysis.EventResultAnalysis;
-import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
-import com.stargazerproject.annotation.description.EventTimeOut;
 import com.stargazerproject.bus.BusBlockMethod;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
@@ -32,7 +30,7 @@ public class EventBusBlockMethodCharacteristic implements BusBlockMethod<Event>,
 	
 	@Autowired
 	@Qualifier("eventBusQueue")
-	private Queue<Event> event;
+	private Queue<Event> eventBus;
 	
 	@Autowired
 	@Qualifier("eventResultAnalysisImpl")
@@ -57,7 +55,7 @@ public class EventBusBlockMethodCharacteristic implements BusBlockMethod<Event>,
 	* **/
 	@Override
 	public Optional<Event> push(Optional<Event> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException {
-		event.producer(busEvent);
+		eventBus.producer(busEvent);
 		EventResultAnalysisHandle eventResultAnalysisHandle = busEvent.get().eventResult(Optional.of(eventResultAnalysis)).get();
 		for(int i=0; i<timeout.get(); i++){
 			if(eventResultAnalysisHandle.resultState().get() == ResultState.WAIT){
@@ -74,14 +72,13 @@ public class EventBusBlockMethodCharacteristic implements BusBlockMethod<Event>,
 
 	@Override
 	public Optional<Event> push(Optional<Event> busEvent) throws BusEventTimeoutException {
-		event.producer(busEvent);
-		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis)).get();
-		EventTimeOut eventEventTimeOutConfiguration = eventExecuteAnalysisHandle.eventEventTimeOutConfiguration().get();
-
+		eventBus.producer(busEvent);
 		EventResultAnalysisHandle eventResultAnalysisHandle = busEvent.get().eventResult(Optional.of(eventResultAnalysis)).get();
-		for(int i=0; i<eventEventTimeOutConfiguration.waitTimeout(); i++){
+		int waitTimeout = eventResultAnalysisHandle.waitTimeout().get();
+		TimeUnit waitTimeoutUnit = eventResultAnalysisHandle.waitTimeoutUnit().get();
+		for(int i = 0; i< waitTimeout; i++){
 			if(eventResultAnalysisHandle.resultState().get() == ResultState.WAIT){
-				sleep(eventEventTimeOutConfiguration.waitTimeoutUnit());
+				sleep(waitTimeoutUnit);
 				continue;
 			}
 			else{

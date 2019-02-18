@@ -55,7 +55,7 @@ public class SequenceResourcesShell implements Sequence<Event>, BaseCharacterist
 	}
 
 	@Override
-	public Optional<SequenceObserver<Event>> startBlockParallelSequence() throws BusEventTimeoutException {
+	public Optional<SequenceObserver<Event>> startBlockParallelSequence() throws BusEventTimeoutException, EventException {
 		return parallelSequenceTransaction.startBlockParallelSequence();
 	}
 

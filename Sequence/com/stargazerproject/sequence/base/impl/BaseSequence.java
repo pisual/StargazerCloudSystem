@@ -28,7 +28,7 @@ public class BaseSequence<K> implements Sequence<K>{
 	}
 
 	@Override
-	public Optional<SequenceObserver<K>> startBlockParallelSequence() throws BusEventTimeoutException {
+	public Optional<SequenceObserver<K>> startBlockParallelSequence() throws BusEventTimeoutException, EventException {
 		return sequence.startBlockParallelSequence();
 	}
 

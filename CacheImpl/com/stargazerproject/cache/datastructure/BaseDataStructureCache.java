@@ -29,7 +29,7 @@ public class BaseDataStructureCache<K, V> implements Cache<K, V>, BaseCharacteri
 		
 	private static final long serialVersionUID = 4406535394386240817L;
 	
-	private Map<K, V> cache = new ConcurrentSkipListMap<K, V>();
+	protected Map<K, V> cache = new ConcurrentSkipListMap<K, V>();
 
 	/** @construction 初始化构造 **/
 	public BaseDataStructureCache() {}
@@ -61,7 +61,7 @@ public class BaseDataStructureCache<K, V> implements Cache<K, V>, BaseCharacteri
 	 * **/
 	@Override
 	public Optional<V> get(Optional<K> key) {
-		return Optional.of(cache.get(key.get()));
+		return Optional.fromNullable(cache.get(key.get()));
 	}
 
 	/**

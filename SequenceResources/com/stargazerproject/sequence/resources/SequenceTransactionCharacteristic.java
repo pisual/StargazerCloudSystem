@@ -3,12 +3,15 @@ package com.stargazerproject.sequence.resources;
 import com.google.common.base.Optional;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.stargazerproject.analysis.EventAssembleAnalysis;
 import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.analysis.SequenceTransactionResultAnalysis;
+import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
 import com.stargazerproject.annotation.Annotations;
 import com.stargazerproject.bus.BusBlockMethod;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.bus.exception.EventException;
+import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.sequence.SequenceObserver;
@@ -36,21 +39,34 @@ public class SequenceTransactionCharacteristic implements SequenceTransaction<Ev
 	private LogMethod logMethod;
 
 	@Autowired
+	@Qualifier("annotationsImpl")
+	private Annotations annotations;
+
+	@Autowired
 	@Qualifier("eventBusImpl")
 	private BusBlockMethod<Event> eventBus;
+
+	@Autowired
+	@Qualifier("aggregateRootCache")
+	Cache<String, String> aggregateRootCache;
 
 	@Autowired
 	@Qualifier("eventResultAnalysisImpl")
 	private EventResultAnalysis eventResultAnalysis;
 
 	@Autowired
+	@Qualifier("eventAssembleAnalysisImpl")
+	private EventAssembleAnalysis eventAssembleAnalysis;
+
+	@Autowired
+	@Qualifier("aggregateRootIndexCache")
+	private Cache<String, Cache<String, String>> aggregateRootIndexCache;
+
+	@Autowired
 	@Qualifier("sequenceTransactionResultAnalysisImpl")
 	private SequenceTransactionResultAnalysis sequenceTransactionResultAnalysis;
 
-	@Autowired
-	@Qualifier("annotationsImpl")
-	private Annotations annotations;
-
+	/** @illustrate Sequence ID, 同时也承担者聚合根索引的ID **/
 	private String groupID;
 
 	/** @illustrate Event 临时存储列表 **/
@@ -67,12 +83,14 @@ public class SequenceTransactionCharacteristic implements SequenceTransaction<Ev
 	public Optional<SequenceTransaction<Event>> creatSequence() {
 		cache = ArrayListMultimap.create();
 		groupID = SequenceUtil.getUUIDSequence();
+		aggregateRootIndexCacheInitialization();
 		return Optional.of(this);
 	}
 
 	@Override
 	public void addSequence(Optional<Event> event) {
 		cache.put(groupID, event.get());
+		aggregateRootIndexCacheEventParameterInject(event.get(), eventAssembleAnalysis);
 	}
 
 	@Override
@@ -116,4 +134,12 @@ public class SequenceTransactionCharacteristic implements SequenceTransaction<Ev
 		}).start();
 	}
 
+	private void aggregateRootIndexCacheInitialization(){
+		aggregateRootIndexCache.put(Optional.of(groupID), Optional.of(aggregateRootCache));
+	}
+
+	private void aggregateRootIndexCacheEventParameterInject(Event event, EventAssembleAnalysis eventAssembleAnalysis){
+		EventAssembleAnalysisHandle eventAssembleAnalysisHandle = event.eventAssemble(Optional.of(eventAssembleAnalysis)).get();
+		eventAssembleAnalysisHandle.injectEventParameter(Optional.of("AggregateRootCacheIndex"), Optional.of(groupID));
+	}
 }

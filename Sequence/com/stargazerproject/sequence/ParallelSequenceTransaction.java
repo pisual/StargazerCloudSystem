@@ -2,6 +2,7 @@ package com.stargazerproject.sequence;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
+import com.stargazerproject.bus.exception.EventException;
 
 /** 
  *  @name 并行序列的事务接口
@@ -57,7 +58,7 @@ public interface ParallelSequenceTransaction<K>{
 	* @illustrate 启动指定的Sequence队列，并阻塞，直到序列全部完成后返回ParallelSequenceResult结果
 	* @exception BusEventTimeoutException : 超时会抛出BusEventTimeoutException异常
 	* **/
-	public Optional<SequenceObserver<K>> startBlockParallelSequence() throws BusEventTimeoutException;
+	public Optional<SequenceObserver<K>> startBlockParallelSequence() throws BusEventTimeoutException, EventException;
 
 	/**
 	* @name 启动并行序列

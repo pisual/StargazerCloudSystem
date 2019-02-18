@@ -8,6 +8,7 @@ import com.stargazerproject.analysis.SequenceTransactionResultAnalysis;
 import com.stargazerproject.annotation.Annotations;
 import com.stargazerproject.bus.BusNoBlockMethod;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
+import com.stargazerproject.bus.exception.EventException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.sequence.ParallelSequenceTransaction;
@@ -83,7 +84,7 @@ public class ParallelSequenceTransactionCharacteristic implements ParallelSequen
     }
 
     @Override
-    public Optional<SequenceObserver<Event>> startBlockParallelSequence() throws BusEventTimeoutException {
+    public Optional<SequenceObserver<Event>> startBlockParallelSequence() throws BusEventTimeoutException, EventException {
         pushEvent(cache.values());
         checkEventResult(cache.values());
         return Optional.of(getSequenceObserver());
@@ -117,14 +118,17 @@ public class ParallelSequenceTransactionCharacteristic implements ParallelSequen
         }
     }
 
-    private void checkEventResult(Collection<Event> eventList) throws BusEventTimeoutException{
+    private void checkEventResult(Collection<Event> eventList) throws BusEventTimeoutException, EventException{
 
         for (int i = 0; i <=100; i++) {
-            Boolean result = Boolean.TRUE;
+
+            if(i == 100){
+                throw new  BusEventTimeoutException("Event time out : " + this.toString());
+            }
+            int successsNum = eventList.size();
             for (Event event : eventList){
                 ResultState resultState = event.eventResult(Optional.of(eventResultAnalysis)).get().resultState().get();
-                if(resultState != ResultState.SUCCESS){
-                    result = result && Boolean.FALSE;
+                if(resultState == ResultState.WAIT){
                     try {
                         TimeUnit.SECONDS.sleep(1);
                     } catch (InterruptedException e) {
@@ -132,18 +136,22 @@ public class ParallelSequenceTransactionCharacteristic implements ParallelSequen
                     }
                     continue;
                 }
-                else{
-                    break;
+                else if(resultState == ResultState.FAULT){
+                    throw new EventException("Event Run Fault, Event : " + event.toString());
                 }
-            }
-            if(result == Boolean.TRUE){
-                break;
-            }
-            if(i == 100){
-                throw new  BusEventTimeoutException("Event time out : " + this.toString());
+                else if(resultState == ResultState.SUCCESS){
+                    successsNum--;
+                    if(successsNum == totalSuccessNum()){
+                        return;
+                    }
+                }
             }
         }
 
+    }
+
+    private int totalSuccessNum(){
+        return 0;
     }
 
 }

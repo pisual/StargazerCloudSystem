@@ -107,7 +107,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 * **/
 	@Override
 	public Optional<EventAssembleAnalysisHandle> eventAssemble(Optional<EventAssembleAnalysis> eventAssembleAnalysis){
-		if(eventState != EventState.INIT){
+		if(eventState != EventState.INIT && eventState != EventState.WAIT){
 			logMethod.ERROR(this, "Evenr无法构建，因为Event状态不为Init（初始状态），现在Event的状态为：" + eventState);
 			throw new IllegalStateException("Evenr无法构建，因为Event状态不为Init（初始状态），现在Event的状态为：" + eventState);
 		}

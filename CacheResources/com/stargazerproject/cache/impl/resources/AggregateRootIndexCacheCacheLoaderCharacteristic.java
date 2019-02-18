@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.cache.CacheLoader;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
+import com.stargazerproject.spring.container.impl.BeanContainer;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,7 +36,8 @@ public class AggregateRootIndexCacheCacheLoaderCharacteristic implements BaseCha
 		cacheLoader = new CacheLoader<String, Cache<String, String>>(){
 			@Override
 			public Cache<String, String> load(String key) throws ExecutionException {
-				throw new ExecutionException("事务缓存键 : "+ key +" 不存在 : Transaction Cache Key Inexistence", new Throwable());
+				Cache<String, String> aggregateRootCache = BeanContainer.instance().getBean(Optional.of("aggregateRootCache"), Cache.class);
+				return aggregateRootCache;
 			}
 		};
 	}

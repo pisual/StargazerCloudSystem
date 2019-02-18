@@ -41,6 +41,8 @@ import com.stargazerproject.cache.server.manage.SystemParameterCacheServerManage
 import com.stargazerproject.cache.server.manage.TransactionCacheServerManage;
 import com.stargazerproject.cell.aop.configuration.HystrixConfigurationS;
 import com.stargazerproject.cell.method.sequence.InitializationCellsGroupModel;
+import com.stargazerproject.cell.method.sequence.Test_GetCellsGroupIDModel;
+import com.stargazerproject.cell.method.sequence.Test_NowTimeModel;
 import com.stargazerproject.consumer.impl.EventBusConsumer;
 import com.stargazerproject.consumer.impl.EventConsumer;
 import com.stargazerproject.consumer.impl.EventExecuteConsumer;
@@ -458,7 +460,9 @@ public class GlobalAnnotationApplicationContextInitialization {
 
 
 		/**测试用方法，实际需要动态注入**/
-		InitializationCellsGroupModel.class
+		InitializationCellsGroupModel.class,
+		Test_GetCellsGroupIDModel.class,
+        Test_NowTimeModel.class
 
 		);
 	} 

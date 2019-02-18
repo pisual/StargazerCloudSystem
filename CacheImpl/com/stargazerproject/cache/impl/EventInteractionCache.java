@@ -15,7 +15,11 @@ import org.springframework.stereotype.Component;
 @Qualifier("eventInteractionCache")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @NeedInitialization(content = "{\"ResultState\" : \"WAIT\"," /** @illustrate 结果状态（"Faile" Or "Success"） **/
-							+ " \"ErrorMessage\" : \"NULL\","      /** @illustrate 异常信息（NULL Or ExceptionMessage） **/
+							+ " \"ErrorMessage\" : \"NULL\","/** @illustrate 异常信息（NULL Or ExceptionMessage） **/
+							+ " \"waitTimeoutUnit\" : \"MILLISECONDS\","/** @illustrate 异常信息（NULL Or ExceptionMessage） **/
+							+ " \"waitTimeout\" : \"500\","/** @illustrate 异常信息（NULL Or ExceptionMessage） **/
+							+ " \"runTimeoutUnit\" : \"MILLISECONDS\","/** @illustrate 异常信息（NULL Or ExceptionMessage） **/
+							+ " \"runTimeout\" : \"500\","/** @illustrate 异常信息（NULL Or ExceptionMessage） **/
 							+ " \"Method\" : \"NULL\"}")      /** @illustrate 完成时间（0 Or 格林威治时间（精确到微秒）） **/
 @NoSpringDepend
 public final class EventInteractionCache extends BaseCacheImpl<String, String> implements StanderCharacteristicShell<Cache<String, String>> {

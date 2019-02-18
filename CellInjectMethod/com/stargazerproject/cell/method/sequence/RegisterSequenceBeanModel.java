@@ -37,7 +37,7 @@ public class RegisterSequenceBeanModel extends StandardCellsTransactionImpl {
 	/**
 	* @name 熔断器包裹的方法, 模拟远程注入Cells Method的过程
 	* @illustrate 熔断器包裹的方法
-	* @param Optional<Cache<String, String>> cache
+	* @param : Optional<Cache<String, String>> cache
 	* **/
 	@Override
 	@HystrixCommand(commandKey = "registerSequenceBeanModel", 
@@ -46,7 +46,7 @@ public class RegisterSequenceBeanModel extends StandardCellsTransactionImpl {
 	                threadPoolKey = "registerSequenceBeanModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public Optional<Cache<String, String>> method(Optional<Cache<String, String>> interactionCache) {
+	public void method(Optional<Cache<String, String>> interactionCache) {
 		try{
 
 			//**模拟远程注入 Start**//
@@ -55,7 +55,7 @@ public class RegisterSequenceBeanModel extends StandardCellsTransactionImpl {
 
 			BeanContainer.instance().setBean(Optional.of(initializationCellsGroupModel.getClass()));
 
-			return success(interactionCache);
+			success(interactionCache);
 		} catch(Exception e){
 			throw new RunException(e.getMessage());
 		}
@@ -68,8 +68,8 @@ public class RegisterSequenceBeanModel extends StandardCellsTransactionImpl {
 	* @param : Optional<Cache<String, String>> cache
 	* @param : Throwable throwable
 	* **/
-	public Optional<Cache<String, String>> fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		return super.fallBack(cache, throwable);
+	public void fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
+		super.fallBack(cache, throwable);
     }
 	
 }

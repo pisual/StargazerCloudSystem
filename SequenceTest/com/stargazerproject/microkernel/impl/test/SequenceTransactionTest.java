@@ -6,7 +6,7 @@ import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.bus.exception.EventException;
-import com.stargazerproject.sequence.ParallelSequenceTransaction;
+import com.stargazerproject.sequence.SequenceTransaction;
 import com.stargazerproject.spring.container.impl.BeanContainer;
 import com.stargazerproject.spring.context.initialization.test.BaseJunitTest;
 import com.stargazerproject.transaction.Event;
@@ -16,9 +16,9 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class parallelSequenceTransactionTest extends BaseJunitTest {
+public class SequenceTransactionTest extends BaseJunitTest {
 
-    private static ParallelSequenceTransaction<Event> sequence;
+    private static SequenceTransaction<Event> sequence;
 
     private static EventAssembleAnalysis eventAssembleAnalysis;
 
@@ -35,34 +35,34 @@ public class parallelSequenceTransactionTest extends BaseJunitTest {
 
     @Test
     public void Test_00_init(){
-        sequence = BeanContainer.instance().getBean(Optional.of("standardSequence"), ParallelSequenceTransaction.class);
+        sequence = BeanContainer.instance().getBean(Optional.of("standardSequence"), SequenceTransaction.class);
         eventAssembleAnalysis = BeanContainer.instance().getBean(Optional.of("eventAssembleAnalysisImpl"), EventAssembleAnalysis.class);
         eventResultAnalysis = BeanContainer.instance().getBean(Optional.of("eventResultAnalysisImpl"), EventResultAnalysis.class);
 
         event = BeanContainer.instance().getBean(Optional.of("standardEvent"), Event.class);
-        event.eventAssemble(Optional.of(eventAssembleAnalysis)).get().injectEventParameter(Optional.of("User"), Optional.of("Felixeiro")).injectEventParameter(Optional.of("Method"), Optional.of("test_NowTimeModel"));
+        event.eventAssemble(Optional.of(eventAssembleAnalysis)).get().injectEventParameter(Optional.of("User"), Optional.of("Felixeiro")).injectEventParameter(Optional.of("Method"), Optional.of("initializationCellsGroupModel"));
 
 
         event2 = BeanContainer.instance().getBean(Optional.of("standardEvent"), Event.class);
-        event2.eventAssemble(Optional.of(eventAssembleAnalysis)).get().injectEventParameter(Optional.of("User"), Optional.of("Sion")).injectEventParameter(Optional.of("Method"), Optional.of("test_NowTimeModel"));
+        event2.eventAssemble(Optional.of(eventAssembleAnalysis)).get().injectEventParameter(Optional.of("User"), Optional.of("Sion")).injectEventParameter(Optional.of("Method"), Optional.of("test_GetCellsGroupIDModel"));
     }
 
     @Test
     public void Test_01_creatParallelSequence(){
-        sequence.creatParallelSequence();
+        sequence.creatSequence();
 
     }
 
     @Test
     public void Test_02_addParallelSequence(){
-        sequence.addParallelSequence(Optional.of(event));
-        sequence.addParallelSequence(Optional.of(event2));
+        sequence.addSequence(Optional.of(event));
+        sequence.addSequence(Optional.of(event2));
     }
 
     @Test
     public void Test_03_startBlockParallelSequence(){
         try {
-            sequence.startBlockParallelSequence();
+            sequence.startBlockSequence();
         } catch (BusEventTimeoutException e) {
             e.printStackTrace();
         } catch (EventException e) {
