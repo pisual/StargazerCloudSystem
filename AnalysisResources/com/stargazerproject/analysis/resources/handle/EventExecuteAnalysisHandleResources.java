@@ -17,6 +17,7 @@ public class EventExecuteAnalysisHandleResources implements EventExecuteAnalysis
     @Override
     public void run() {
         CellsTransaction cellsTransaction = BeanContainer.instance().getBean(method(), CellsTransaction.class);
+//        System.out.println("###############        :   "+cellsTransaction.eventAnnotation().);
         cellsTransaction.method(Optional.of(cache));
     }
 

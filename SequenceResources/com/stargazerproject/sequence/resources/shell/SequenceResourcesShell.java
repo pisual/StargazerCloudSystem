@@ -21,21 +21,21 @@ import org.springframework.stereotype.Component;
 public class SequenceResourcesShell implements Sequence<Event>, BaseCharacteristic<Sequence<Event>>{
 
 	@Autowired
-	@Qualifier("sequenceTransactionCharacteristic")
-	private BaseCharacteristic<SequenceTransaction<Event>> sequenceTransactionCharacteristic;
+	@Qualifier("sequenceEventsCharacteristic")
+	private BaseCharacteristic<SequenceTransaction<Event>> sequenceEventsCharacteristic;
 
 	private SequenceTransaction<Event> sequenceTransaction;
 
 	@Autowired
-	@Qualifier("parallelSequenceTransactionCharacteristic")
-	private BaseCharacteristic<ParallelSequenceTransaction<Event>> parallelSequenceTransactionCharacteristic;
+	@Qualifier("parallelSequenceEventsCharacteristic")
+	private BaseCharacteristic<ParallelSequenceTransaction<Event>> parallelSequenceEventsCharacteristic;
 
 	private ParallelSequenceTransaction<Event> parallelSequenceTransaction;
 
 	@Override
 	public Optional<Sequence<Event>> characteristic() {
-		sequenceTransaction = sequenceTransactionCharacteristic.characteristic().get();
-		parallelSequenceTransaction = parallelSequenceTransactionCharacteristic.characteristic().get();
+		sequenceTransaction = sequenceEventsCharacteristic.characteristic().get();
+		parallelSequenceTransaction = parallelSequenceEventsCharacteristic.characteristic().get();
 		return Optional.of(this);
 	}
 

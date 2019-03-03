@@ -26,10 +26,10 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
-@Component(value="parallelSequenceTransactionCharacteristic")
-@Qualifier("parallelSequenceTransactionCharacteristic")
+@Component(value="parallelSequenceEventsCharacteristic")
+@Qualifier("parallelSequenceEventsCharacteristic")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class ParallelSequenceTransactionCharacteristic implements ParallelSequenceTransaction<Event> , BaseCharacteristic<ParallelSequenceTransaction<Event>> {
+public class ParallelSequenceEventsCharacteristic implements ParallelSequenceTransaction<Event> , BaseCharacteristic<ParallelSequenceTransaction<Event>> {
 
     /** @illustrate 获取Log(日志)接口 **/
     @Autowired
@@ -58,7 +58,7 @@ public class ParallelSequenceTransactionCharacteristic implements ParallelSequen
 
     private String groupID;
 
-    public ParallelSequenceTransactionCharacteristic(){ }
+    public ParallelSequenceEventsCharacteristic(){ }
 
     @Override
     public Optional<ParallelSequenceTransaction<Event>> characteristic() {

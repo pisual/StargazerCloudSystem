@@ -3,6 +3,7 @@ package com.stargazerproject.cell.method.sequence;
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
 import com.stargazerproject.cell.method.exception.RunException;
@@ -33,6 +34,10 @@ public class RegisterSequenceBeanModel extends StandardCellsTransactionImpl {
 	protected LogMethod log;
 	
 	public RegisterSequenceBeanModel() { super(); }
+
+	public Event eventAnnotation(){
+		return this.getClass().getAnnotation(Event.class);
+	}
 	
 	/**
 	* @name 熔断器包裹的方法, 模拟远程注入Cells Method的过程

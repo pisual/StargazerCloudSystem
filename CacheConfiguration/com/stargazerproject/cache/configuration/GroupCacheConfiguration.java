@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Import;
 import com.stargazerproject.cache.aop.configuration.CacheAOPConfiguration;
 import com.stargazerproject.cache.di.configuration.CacheDIConfiguration;
 
-@Configuration 
+@Configuration
 @Import({CacheDIConfiguration.class,CacheAOPConfiguration.class})
 public class GroupCacheConfiguration {
 

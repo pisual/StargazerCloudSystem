@@ -43,7 +43,9 @@ public abstract class StandardCellsTransactionImpl extends BaseCellsTransaction<
 		if(throwable instanceof HystrixTimeoutException){
 			log.WARN(this, HystrixTimeoutException.class.toString());
 		}
-		faild(interactionCache, throwable.getMessage());
+		else{
+			faild(interactionCache, throwable.getMessage());
+		}
 	}
 
     protected void success(Optional<Cache<String, String>> interactionCache){
@@ -56,11 +58,23 @@ public abstract class StandardCellsTransactionImpl extends BaseCellsTransaction<
 	}
 
 	protected void putAggregationRootCache(Optional<String> key, Optional<String> value){
-		aggregateRootCache.put(key, value);
+		if(null == aggregateRootCache){
+			log.ERROR(this, "aggregateRootCache未初始化， 子类Method方法需要继承父类方法{super.method(Optional<Cache<String, String>> interactionCache)}");
+			throw new NullPointerException("aggregateRootCache未初始化， 子类Method方法需要继承父类方法{super.method(Optional<Cache<String, String>> interactionCache)}");
+		}
+		else{
+			aggregateRootCache.put(key, value);
+		}
 	}
 
 	protected Optional<String> getAggregationRootCache(Optional<String> key){
-		return aggregateRootCache.get(key);
+		if(null == aggregateRootCache){
+			log.ERROR(this, "aggregateRootCache未初始化， 子类Method方法需要继承父类方法{super.method(Optional<Cache<String, String>> interactionCache)}");
+			throw new NullPointerException("aggregateRootCache未初始化， 子类Method方法需要继承父类方法{super.method(Optional<Cache<String, String>> interactionCache)}");
+		}
+		else{
+			return aggregateRootCache.get(key);
+		}
 	}
 
 	private void aggregationRootCacheAcquire(Optional<Cache<String, String>> interactionCache){

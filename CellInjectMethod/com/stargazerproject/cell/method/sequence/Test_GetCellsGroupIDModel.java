@@ -26,6 +26,10 @@ public class Test_GetCellsGroupIDModel extends StandardCellsTransactionImpl {
 	public Test_GetCellsGroupIDModel() {
 		super(); 
 		}
+
+	public Event eventAnnotation(){
+		return this.getClass().getAnnotation(Event.class);
+	}
 	
 	/**
 	* @name 熔断器包裹的方法

@@ -14,10 +14,10 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-@Component(value="eventResultMultimapCacheShell")
-@Qualifier("eventResultMultimapCacheShell")
+@Component(value="resultCacheMultimapCacheShell")
+@Qualifier("resultCacheMultimapCacheShell")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class EventResultMultimapCacheShell implements MultimapCache<String, String>, BaseCharacteristic<MultimapCache<String, String>> {
+public class ResultCacheMultimapCacheShell implements MultimapCache<String, String>, BaseCharacteristic<MultimapCache<String, String>> {
 
     private Multimap<String, String> cache = ArrayListMultimap.create();
 

@@ -27,7 +27,11 @@ public class InitializationCellsGroupModel extends StandardCellsTransactionImpl 
 	public InitializationCellsGroupModel() { 
 		super(); 
 		}
-	
+
+	public Event eventAnnotation(){
+		return this.getClass().getAnnotation(Event.class);
+	}
+
 	/**
 	* @name 熔断器包裹的方法
 	* @illustrate 熔断器包裹的方法
@@ -41,6 +45,7 @@ public class InitializationCellsGroupModel extends StandardCellsTransactionImpl 
 			        ignoreExceptions = HystrixRuntimeException.class,
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
+	@Event()
 	public void method(Optional<Cache<String, String>> interactionCache) {
 		super.method(interactionCache);
 		putAggregationRootCache(Optional.of("OrderID"), Optional.of(SequenceUtil.getUUID()));

@@ -3,6 +3,7 @@ package com.stargazerproject.cell.method.sequence;
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.cache.BigCache;
 import com.stargazerproject.cache.Cache;
@@ -59,6 +60,10 @@ public class AcquireParameterBlockModel extends StandardCellsTransactionImpl imp
 	private AcquireParameterBlockModel() {
 		super();
 		}
+
+	public Event eventAnnotation(){
+		return this.getClass().getAnnotation(Event.class);
+	}
 	
 	/**
 	* @name 常规初始化构造

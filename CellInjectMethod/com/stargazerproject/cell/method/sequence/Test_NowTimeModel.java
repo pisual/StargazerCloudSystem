@@ -28,6 +28,10 @@ public class Test_NowTimeModel extends StandardCellsTransactionImpl {
 	public Test_NowTimeModel() {
 		super(); 
 		}
+
+	public Event eventAnnotation(){
+		return this.getClass().getAnnotation(Event.class);
+	}
 	
 	/**
 	* @name 熔断器包裹的方法

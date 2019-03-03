@@ -6,9 +6,16 @@ import com.stargazerproject.analysis.handle.TransactionAssembleAnalysisHandle;
 import com.stargazerproject.analysis.resources.handle.TransactionAssembleAnalysisHandleResources;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Event;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
+@Component(value="transactionAssembleAnalysisShell")
+@Qualifier("transactionAssembleAnalysisShell")
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class TransactionAssembleAnalysisShell implements TransactionAssembleAnalysis, BaseCharacteristic<TransactionAssembleAnalysis> {
 
     @Override

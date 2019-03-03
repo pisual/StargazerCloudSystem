@@ -1,5 +1,6 @@
 package com.stargazerproject.analysis.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -15,6 +16,8 @@ import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristi
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class TransactionAssembleAnalysisImpl extends BaseTransactionAssembleAnalysisImpl implements StanderCharacteristicShell<TransactionAssembleAnalysis>{
 
+	@Qualifier("transactionAssembleAnalysisShell")
+	@Autowired
 	@Override
 	public void initialize(Optional<TransactionAssembleAnalysis> transactionAssembleAnalysisArg) {
 		transactionAssembleAnalysis = transactionAssembleAnalysisArg.get();

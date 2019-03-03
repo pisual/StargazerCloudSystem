@@ -14,18 +14,18 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component(value="eventInteractionCache")
-@Qualifier("eventInteractionCache")
+@Component(value="transactionInteractionCache")
+@Qualifier("transactionInteractionCache")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@NeedInitialization(content = "{\"ResultState\" : \"WAIT\"," 			/** @illustrate 结果状态（"Faile" Or "Success"） **/
+@NeedInitialization(content = "{\"ResultState\" : \"WAIT\","		 	/** @illustrate 结果状态（"Faile" Or "Success"） **/
 							+ " \"ErrorMessage\" : \"NULL\","		 	/** @illustrate 异常信息（NULL Or ExceptionMessage） **/
 							+ " \"waitTimeoutUnit\" : \"MILLISECONDS\","/** @illustrate 等待超时时间单位（TimeUnit类型，默认为MILLISECONDS） **/
 							+ " \"waitTimeout\" : \"500\","				/** @illustrate 等待超时时间（500 Or 其他数值） **/
 							+ " \"runTimeoutUnit\" : \"MILLISECONDS\","	/** @illustrate 运行超时时间单位（TimeUnit类型，默认为MILLISECONDS **/
 							+ " \"runTimeout\" : \"500\","				/** @illustrate 运行超时时间（500 Or 其他数值） **/
-							+ " \"Method\" : \"NULL\"}")      			/** @illustrate 调动方法（NULL Or 具体的方法） **/
+							+ " \"RunWay\" : \"Parallel\"}")      		/** @illustrate 运行方式（Parallel（并使运行）， Sequence（序列运行）） **/
 @NoSpringDepend
-public final class EventInteractionCache extends BaseCacheImpl<String, String> implements StanderCharacteristicShell<Cache<String, String>> , BeforehandCharacteristicShell<Cache<String, String>> {
+public final class TransactionInteractionCache extends BaseCacheImpl<String, String> implements StanderCharacteristicShell<Cache<String, String>>, BeforehandCharacteristicShell<Cache<String, String>> {
 
 	private static final long serialVersionUID = 7649254860731557694L;
 
@@ -33,8 +33,7 @@ public final class EventInteractionCache extends BaseCacheImpl<String, String> i
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
 	* **/
-	public EventInteractionCache() {
-	}
+	public TransactionInteractionCache() {}
 
 	@Override
 	public void initialize(Optional<Cache<String, String>> cacheArg) {

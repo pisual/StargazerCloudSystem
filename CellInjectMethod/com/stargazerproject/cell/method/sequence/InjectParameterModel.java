@@ -3,6 +3,7 @@ package com.stargazerproject.cell.method.sequence;
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.cache.BigCache;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
@@ -45,6 +46,10 @@ public class InjectParameterModel extends StandardCellsTransactionImpl {
 	public InjectParameterModel() { 
 		super();
 		}
+
+	public Event eventAnnotation(){
+		return this.getClass().getAnnotation(Event.class);
+	}
 	
 	/**
 	* @name 熔断器包裹的方法

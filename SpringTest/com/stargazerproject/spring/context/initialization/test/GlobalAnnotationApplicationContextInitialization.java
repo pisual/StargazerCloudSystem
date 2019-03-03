@@ -20,7 +20,6 @@ import com.stargazerproject.bus.resources.shell.EventBusResourcesShell;
 import com.stargazerproject.bus.server.impl.EventBusServer;
 import com.stargazerproject.bus.server.listener.impl.EventBusServerListener;
 import com.stargazerproject.bus.server.manage.EventBusServerManage;
-import com.stargazerproject.cache.aop.configuration.ParametersInItializationAOPConfiguration;
 import com.stargazerproject.cache.aop.configuration.ParametersInjectAOPConfiguration;
 import com.stargazerproject.cache.datastructure.BaseDataStructureCache;
 import com.stargazerproject.cache.datastructure.impl.*;
@@ -96,8 +95,8 @@ import com.stargazerproject.queue.server.manage.TransactionExportEventQueueServe
 import com.stargazerproject.resources.parameter.*;
 import com.stargazerproject.resources.service.SystemServiceParameterList;
 import com.stargazerproject.sequence.impl.StandardSequenceImpl;
-import com.stargazerproject.sequence.resources.ParallelSequenceTransactionCharacteristic;
-import com.stargazerproject.sequence.resources.SequenceTransactionCharacteristic;
+import com.stargazerproject.sequence.resources.ParallelSequenceEventsCharacteristic;
+import com.stargazerproject.sequence.resources.SequenceEventsCharacteristic;
 import com.stargazerproject.sequence.resources.shell.SequenceResourcesShell;
 import com.stargazerproject.sequence.server.impl.StandardSequenceServer;
 import com.stargazerproject.sequence.server.listener.impl.StandardServerListener;
@@ -118,6 +117,7 @@ import com.stargazerproject.transaction.impl.StandardEventResult;
 import com.stargazerproject.transaction.impl.StandardTransaction;
 import com.stargazerproject.transaction.impl.resources.shell.BaseEventResultShell;
 import com.stargazerproject.transaction.impl.resources.shell.BaseEventShell;
+import com.stargazerproject.transaction.impl.resources.shell.BaseTransactionResultShell;
 import com.stargazerproject.transaction.impl.resources.shell.BaseTransactionShell;
 import com.stargazerproject.userinterface.impl.UserInterfaceImpl;
 import com.stargazerproject.userinterface.resources.*;
@@ -152,7 +152,6 @@ public class GlobalAnnotationApplicationContextInitialization {
 		SequenceParameters.class,
 		InformationParameter.class,
 		ParametersInjectAOPConfiguration.class,
-		ParametersInItializationAOPConfiguration.class,
 		TransactionParameters.class,
 
 		/**Depend ObjectParameterCache **/
@@ -186,8 +185,14 @@ public class GlobalAnnotationApplicationContextInitialization {
 		EventInteractionCache.class,
 
 		/**Depend EventResultMultimapCache **/
-		EventResultMultimapCacheShell.class,
+		ResultCacheMultimapCacheShell.class,
 		EventResultMultimapCache.class,
+
+		/**Depend TransactionInteractionCache **/
+		TransactionInteractionCache.class,
+
+		/**Depend TransactionResultMultimapCache **/
+		TransactionResultMultimapCache.class,
 
 		/**Depend BaseDataStructureCache **/
 		BaseDataStructureCache.class,
@@ -357,8 +362,8 @@ public class GlobalAnnotationApplicationContextInitialization {
 		/**Depend Sequence*/
 		StandardSequenceImpl.class,
 		SequenceResourcesShell.class,
-		ParallelSequenceTransactionCharacteristic.class,
-		SequenceTransactionCharacteristic.class,
+		ParallelSequenceEventsCharacteristic.class,
+		SequenceEventsCharacteristic.class,
 		StandardSequenceServer.class,
 		StandardServerListener.class,
 		StandardServerManage.class,
@@ -408,11 +413,11 @@ public class GlobalAnnotationApplicationContextInitialization {
 		/**Depend Analysis**/
 		EventResultAnalysisImpl.class,
         EventResultAnalysisShell.class,
-                EventAssembleAnalysisImpl.class,
-                EventAssembleAnalysisShell.class,
-                EventExecuteAnalysisImpl.class,
-                EventExecuteAnalysisShell.class,
-                LogAnalysisImpl.class,
+        EventAssembleAnalysisImpl.class,
+        EventAssembleAnalysisShell.class,
+        EventExecuteAnalysisImpl.class,
+        EventExecuteAnalysisShell.class,
+        LogAnalysisImpl.class,
 
 
 		
@@ -454,6 +459,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		BaseEventResultShell.class,
 		BaseEventShell.class,
 		BaseTransactionShell.class,
+		BaseTransactionResultShell.class,
 
         /**Depend HystrixConfigurationS**/
         HystrixConfigurationS.class,

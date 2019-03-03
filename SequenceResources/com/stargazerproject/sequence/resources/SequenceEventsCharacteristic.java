@@ -28,10 +28,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
-@Component(value="sequenceTransactionCharacteristic")
-@Qualifier("sequenceTransactionCharacteristic")
+@Component(value="sequenceEventsCharacteristic")
+@Qualifier("sequenceEventsCharacteristic")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SequenceTransactionCharacteristic implements SequenceTransaction<Event>, BaseCharacteristic<SequenceTransaction<Event>> {
+public class SequenceEventsCharacteristic implements SequenceTransaction<Event>, BaseCharacteristic<SequenceTransaction<Event>> {
 
 	/** @illustrate 获取Log(日志)接口 **/
 	@Autowired
@@ -72,7 +72,7 @@ public class SequenceTransactionCharacteristic implements SequenceTransaction<Ev
 	/** @illustrate Event 临时存储列表 **/
 	Multimap<String, Event> cache;
 
-	public SequenceTransactionCharacteristic(){ }
+	public SequenceEventsCharacteristic(){ }
 
 	@Override
 	public Optional<SequenceTransaction<Event>> characteristic() {

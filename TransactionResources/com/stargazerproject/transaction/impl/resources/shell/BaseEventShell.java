@@ -12,7 +12,6 @@ import com.stargazerproject.annotation.description.NoSpringDepend;
 import com.stargazerproject.bus.exception.EventException;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
-import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.Event;
 import com.stargazerproject.transaction.EventState;
@@ -38,39 +37,22 @@ import org.springframework.stereotype.Component;
 @NoSpringDepend
 public class BaseEventShell extends ID implements Event, BaseCharacteristic<Event>{
 
-	private static final long serialVersionUID = 8581224354660031049L;
-
-	/**
-	* @name 事件结果接口
-	* @illustrate 事件结果接口
-	* **/
-	private Result result;
-	
-	@Autowired
-	@Qualifier("baseEventResultShell")
-	private BaseCharacteristic<Result> baseEventResultShell;
-	
-	/**
-	* @name 交互缓存接口
-	* @illustrate 交互缓存接口
-	* **/
-	public Cache<String, String> interactionCache;
-
-	@Autowired
-	@Qualifier("baseDataStructureCache")
-	private BaseCharacteristic<Cache<String, String>> baseDataStructureCache;
-
-	@Autowired
-	@Qualifier("eventInteractionCache")
-	private StanderCharacteristicShell<Cache<String, String>> eventInteractionCache;
-	
-	/**
-	* @name 日志接口
-	* @illustrate 交互缓存接口
-	* **/
+	/** @illustrate 日志接口 **/
 	@Autowired
 	@Qualifier("logRecord")
 	public LogMethod logMethod;
+
+	/** @illustrate 交互缓存接口 **/
+	@Autowired
+	@Qualifier("eventInteractionCache")
+	public Cache<String, String> interactionCache;
+
+	@Autowired
+	@Qualifier("baseEventResultShell")
+	private BaseCharacteristic<Result> baseEventResultShell;
+
+	/** @illustrate 事件结果接口 **/
+	private Result result;
 	
 	/** @illustrate 事件状态, 初始状态为初始态**/
 	private EventState eventState = EventState.INIT;
@@ -97,8 +79,6 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	@Override
 	public Optional<Event> characteristic() {
 		result = baseEventResultShell.characteristic().get();
-		interactionCache = baseDataStructureCache.characteristic().get();
-		eventInteractionCache.initialize(baseDataStructureCache.characteristic());
 		return Optional.of(this);
 	}
 	
@@ -108,10 +88,10 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	@Override
 	public Optional<EventAssembleAnalysisHandle> eventAssemble(Optional<EventAssembleAnalysis> eventAssembleAnalysis){
 		if(eventState != EventState.INIT && eventState != EventState.WAIT){
-			logMethod.ERROR(this, "Evenr无法构建，因为Event状态不为Init（初始状态），现在Event的状态为：" + eventState);
-			throw new IllegalStateException("Evenr无法构建，因为Event状态不为Init（初始状态），现在Event的状态为：" + eventState);
+			logMethod.ERROR(this, "Event无法构建，因为Event状态不为Init（初始状态）或者 Wait（等待状态），现在Event的状态为：" + eventState);
+			throw new IllegalStateException("Event无法构建，因为Event状态不为Init（初始状态）或者 Wait（等待状态），现在Event的状态为：" + eventState);
 		}
-		else{
+		else if(eventState == EventState.INIT){
 			this.injectSequenceID(Optional.of(SequenceUtil.getUUIDSequence()));
 			eventState = EventState.WAIT;
 		}

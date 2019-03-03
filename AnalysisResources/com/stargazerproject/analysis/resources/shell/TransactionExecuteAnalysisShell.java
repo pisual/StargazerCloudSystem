@@ -4,28 +4,28 @@ import com.google.common.base.Optional;
 import com.stargazerproject.analysis.TransactionExecuteAnalysis;
 import com.stargazerproject.analysis.handle.TransactionExecuteAnalysisHandle;
 import com.stargazerproject.analysis.resources.handle.TransactionExecuteAnalysisHandleResoources;
+import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
-import com.stargazerproject.queue.QueueProducer;
-import com.stargazerproject.transaction.EventExecute;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.stargazerproject.transaction.Event;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
+@Component(value="transactionExecuteAnalysisShell")
+@Qualifier("transactionExecuteAnalysisShell")
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class TransactionExecuteAnalysisShell implements TransactionExecuteAnalysis, BaseCharacteristic<TransactionExecuteAnalysis> {
 
-    @Autowired
-    @Qualifier("eventExecuteQueue")
-    public QueueProducer<EventExecute> eventExecuteQueue;
-
     @Override
-    public Optional<TransactionExecuteAnalysisHandle> analysis(Optional<Collection<EventExecute>> eventList) {
-        eventList.get().forEach(event -> eventExecuteQueue.producer(Optional.of(event)));
-        return Optional.of(new TransactionExecuteAnalysisHandleResoources());
+    public Optional<TransactionExecuteAnalysisHandle> analysis(Optional<Collection<Event>> eventList, Optional<Cache<String, String>> transactionInteractionCache) {
+        return Optional.of(new TransactionExecuteAnalysisHandleResoources(eventList, transactionInteractionCache));
     }
-
     @Override
     public Optional<TransactionExecuteAnalysis> characteristic() {
-        return null;
+        return Optional.of(this);
     }
+
 }
