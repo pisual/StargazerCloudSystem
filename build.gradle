@@ -4,6 +4,8 @@ apply plugin: 'idea'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'application'
+//apply plugin: "com.commercehub.gradle.plugin.avro"
+apply plugin: "com.commercehub.gradle.plugin.avro-base"
 
 
 group 'StargazerCloudSystem'
@@ -15,15 +17,19 @@ targetCompatibility = 1.8
 buildscript {
     repositories {
         mavenCentral()
+        jcenter()
+        
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
+        classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.16.0"
     }
 }
 
 repositories {
     mavenLocal()
     mavenCentral()
+    jcenter()
     flatDir {  dirs '/Users/Felixerio/IdeaProjects/StargazerCloudSystem/Lib' }
 }
 dependencies {
@@ -94,14 +100,22 @@ dependencies {
     compile group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
     // https://mvnrepository.com/artifact/org.fusesource.jansi/jansi
     compile group: 'org.fusesource.jansi', name: 'jansi', version: '1.17.1'
+    // https://mvnrepository.com/artifact/org.apache.avro/avro
+    compile group: 'org.apache.avro', name: 'avro', version: '1.8.2'
 
 
-
+    //包含外部JAR包
     compile fileTree(dir:'lib',includes:['*jar'])
-
     compile fileTree(dir:'src',includes:['*'])
 
 }
+
+task generateAvro(type: com.commercehub.gradle.plugin.avro.GenerateAvroJavaTask) {
+    source("ResourcesFile/avro")
+    outputDir = file("ResourcesFile/avro")
+}
+
+compileJava.source(generateAvro.outputs)
 
 mainClassName = "com.stargazerproject.kernel.impl.test.Application"
 

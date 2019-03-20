@@ -44,7 +44,6 @@ import com.stargazerproject.cell.method.sequence.Test_GetCellsGroupIDModel;
 import com.stargazerproject.cell.method.sequence.Test_NowTimeModel;
 import com.stargazerproject.consumer.impl.EventBusConsumer;
 import com.stargazerproject.consumer.impl.EventConsumer;
-import com.stargazerproject.consumer.impl.EventExecuteConsumer;
 import com.stargazerproject.inject.impl.InjectImpl;
 import com.stargazerproject.inject.resources.InjectClassMethodCharacteristic;
 import com.stargazerproject.inject.resources.InjectSearchMethodCharacteristic;
@@ -398,8 +397,6 @@ public class GlobalAnnotationApplicationContextInitialization {
 //		TransmissionQueueServer.class,
 //		TransmissionQueueServerListener.class,
 //		TransmissionQueueServerManage.class,
-
-		EventExecuteConsumer.class,
 		
 		/**Depend Inject**/
 		InjectImpl.class,
