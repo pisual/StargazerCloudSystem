@@ -60,10 +60,15 @@ StargazerCloud使用的是定制化的StargazerCellsUI，以下为UI的启动界
 ![image](https://github.com/pisual/StargazerProjectDistributedSystemVessel/blob/master/UIShow/3.jpeg)
 ![image](https://github.com/pisual/StargazerProjectDistributedSystemVessel/blob/master/UIShow/5.jpeg)
 ##9. Negotiate 协商介绍
+###
     协商服务模块负责分布式系统整体架构的构建，StargazerCloud系统并没有要求强行指使用定某一种架构模式，架构是演变与进化的，今天的架构并不一定适合明日的架构，这个项目的架构模式也不适用另外项目的，保持架构的灵活性是为了延长StargazerCloud生存周期，使得StargazerCloud能够不断的分支演化，StargazerCloud在架构哲学上遵守着最基本的一点就是协商架构，在StargazerCloud系统之内，节点的分化及架构成型，是由模型来进行指定，每一次系统新生都不会形成完全相同的架构。
+###
     现阶段，Stargazer分布式系统的拓扑结构是扁平化布局，使得节点的加入和退出或者局部扩张和消亡对整体构架造成的影响降到最低，
+###
             Group - Group - Group * *
+###
            Cell - Cell - Cell - Cell - Cell *
+###
  Group: 是一个内部包含节点的拓扑结构，根据BackupLevel（集群事务备份级别）来确定包含的数目以此实现备份级别。
 例如
             BackupLevel（节点备份级别）: 3
