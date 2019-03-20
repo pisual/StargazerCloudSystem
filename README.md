@@ -39,14 +39,14 @@
 
 ----------
 
-##2. Cache 缓存模块介绍
-##3. Queue 队列介绍
+## 2. Cache 缓存模块介绍
+## 3. Queue 队列介绍
     框架采用非阻塞的高速Disruptor队列，可以灵活的配置消费者线程及等待寻轮策略，并可以显著控制高速队列的背景功率（Power Background，意指高速队列在空闲时期其反复空寻轮对系统资源的占用率）。
-##4. Log 日志介绍
-##5. Bus 总线介绍
-##6. Server 服务介绍
-##7. Sequence 序列介绍
-##8. UserInterface 界面介绍
+## 4. Log 日志介绍
+## 5. Bus 总线介绍
+## 6. Server 服务介绍
+## 7. Sequence 序列介绍
+## 8. UserInterface 界面介绍
 StargazerCloud使用的是定制化的StargazerCellsUI，以下为UI的启动界面及使用界面，UI已经开发完毕，因为其依赖了StargazerCloud的一些内部模块，所以就不单独发布了。
 # 启动界面截图
 ![image](https://github.com/pisual/StargazerProjectDistributedSystemVessel/blob/master/UIShow/1.jpeg)
@@ -59,25 +59,34 @@ StargazerCloud使用的是定制化的StargazerCellsUI，以下为UI的启动界
 ![image](https://github.com/pisual/StargazerProjectDistributedSystemVessel/blob/master/UIShow/4.jpeg)
 ![image](https://github.com/pisual/StargazerProjectDistributedSystemVessel/blob/master/UIShow/3.jpeg)
 ![image](https://github.com/pisual/StargazerProjectDistributedSystemVessel/blob/master/UIShow/5.jpeg)
-##9. Negotiate 协商介绍
-###
+## 9. Negotiate 协商介绍
+######
     协商服务模块负责分布式系统整体架构的构建，StargazerCloud系统并没有要求强行指使用定某一种架构模式，架构是演变与进化的，今天的架构并不一定适合明日的架构，这个项目的架构模式也不适用另外项目的，保持架构的灵活性是为了延长StargazerCloud生存周期，使得StargazerCloud能够不断的分支演化，StargazerCloud在架构哲学上遵守着最基本的一点就是协商架构，在StargazerCloud系统之内，节点的分化及架构成型，是由模型来进行指定，每一次系统新生都不会形成完全相同的架构。
-###
+######
     现阶段，Stargazer分布式系统的拓扑结构是扁平化布局，使得节点的加入和退出或者局部扩张和消亡对整体构架造成的影响降到最低，
-###
+######
             Group - Group - Group * *
-###
+######
            Cell - Cell - Cell - Cell - Cell *
-###
+######
  Group: 是一个内部包含节点的拓扑结构，根据BackupLevel（集群事务备份级别）来确定包含的数目以此实现备份级别。
+######
 例如
+######
             BackupLevel（节点备份级别）: 3
+######
             Group A (Cell 1 : Cell 2 : Cell 3)
-组内节点互相跟踪，节点分为跟踪节点（Follow，用于同步跟踪节点）和 领导节点（Leader，负责实际的运算），为了提高负载能力系统将根据BackupLevel来进行固定分组，
+######
+      组内节点互相跟踪，节点分为跟踪节点（Follow，用于同步跟踪节点）和 领导节点（Leader，负责实际的运算），为了提高负载能力系统将根据BackupLevel来进行固定分组，
+######
                      Group A (Cell 1 : Cell 2 : Cell 3)
+######
         CellsGroup1 (Cell 1(Leader) : Cell 2(Follow) : Cell 3(Follow))
+######
         CellsGroup1 (Cell 1(Follow) : Cell 2(Leader) : Cell 3(Follow))
+######
         CellsGroup1 (Cell 1(Follow) : Cell 2(Follow) : Cell 3(Leader))
+######
     组成员将会定期通信来记录已经处理完成的指令，Leader将定期发送指令来指示Follow推进备份指令队列的位置
 ####分布式区域协议：
     Cell节点需要自行组建Group结构，依靠共识算法（例如比特币的POW工作量证明）来获取组建的权利，分布式区域协议的建组是动态模式，任何时候都可以进行自由建组。
