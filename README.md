@@ -39,14 +39,14 @@
 
 ----------
 
-##     2. Cache 缓存模块介绍
-##     3. Queue 队列介绍
+##2. Cache 缓存模块介绍
+##3. Queue 队列介绍
     框架采用非阻塞的高速Disruptor队列，可以灵活的配置消费者线程及等待寻轮策略，并可以显著控制高速队列的背景功率（Power Background，意指高速队列在空闲时期其反复空寻轮对系统资源的占用率）。
-##     4. Log 日志介绍
-##     5. Bus 总线介绍
-##     6. Server 服务介绍
-##     7. Sequence 序列介绍
-##     8. UserInterface 界面介绍
+##4. Log 日志介绍
+##5. Bus 总线介绍
+##6. Server 服务介绍
+##7. Sequence 序列介绍
+##8. UserInterface 界面介绍
 StargazerCloud使用的是定制化的StargazerCellsUI，以下为UI的启动界面及使用界面，UI已经开发完毕，因为其依赖了StargazerCloud的一些内部模块，所以就不单独发布了。
 # 启动界面截图
 ![image](https://github.com/pisual/StargazerProjectDistributedSystemVessel/blob/master/UIShow/1.jpeg)
@@ -59,7 +59,7 @@ StargazerCloud使用的是定制化的StargazerCellsUI，以下为UI的启动界
 ![image](https://github.com/pisual/StargazerProjectDistributedSystemVessel/blob/master/UIShow/4.jpeg)
 ![image](https://github.com/pisual/StargazerProjectDistributedSystemVessel/blob/master/UIShow/3.jpeg)
 ![image](https://github.com/pisual/StargazerProjectDistributedSystemVessel/blob/master/UIShow/5.jpeg)
-##     9. Negotiate 协商介绍
+##9. Negotiate 协商介绍
     协商服务模块负责分布式系统整体架构的构建，StargazerCloud系统并没有要求强行指使用定某一种架构模式，架构是演变与进化的，今天的架构并不一定适合明日的架构，这个项目的架构模式也不适用另外项目的，保持架构的灵活性是为了延长StargazerCloud生存周期，使得StargazerCloud能够不断的分支演化，StargazerCloud在架构哲学上遵守着最基本的一点就是协商架构，在StargazerCloud系统之内，节点的分化及架构成型，是由模型来进行指定，每一次系统新生都不会形成完全相同的架构。
     现阶段，Stargazer分布式系统的拓扑结构是扁平化布局，使得节点的加入和退出或者局部扩张和消亡对整体构架造成的影响降到最低，
             Group - Group - Group * *
@@ -86,15 +86,15 @@ StargazerCloud使用的是定制化的StargazerCellsUI，以下为UI的启动界
 ##     14. Resources 资源介绍
 ##     15. @SHELL壳式编程
     @SHELL是一种对于未来编程的描绘与设计，很多我开发的项目，最后都死在了无法维护、无法更新、无法更迭上，随着项目的不断扩张，原来能稳定运行的项目不断被腐蚀，最后，巨大的无法维护的代码堆就摆在一代代接盘侠的眼前，无法重构，没人能了解这个代码堆的全局架构，最后，往往是成为一个被死去的孩子。
-我们能开发出一个万能的架构
 
-后记：
+#后记：
     每个人都有一个伴随了自己大半个人生的故事，总有一天会拿出来讲一讲，每个人都会有自己最大的隐藏的能力，默默的在深夜里磨练，希望有他成熟的一天，会闪耀在夜空中，那么，就让我讲一讲我的故事吧。
     从第一次接触编程，我就认为，编程是未来世界的改编者之一，从Pisual项目的幼稚到StargazerProject项目的成熟，未来总会有一天，在某某项目里继续成长，正是不断的书写，不断的完善，不断的重构，给了我从幼稚到成长的故事。
      StargazerProject顶层项目CloudSystem的最初的设想很简单，首先设计出一个工作引擎，这个工作引擎可以完成大量的工作，系统会自动的设计指令，自动的调度运行，自动的运算结果，自动的分布布局，自动的容灾重组，并在指定时间内返回结果，这就是我最初希望的结果，抛掉Hadoop，抛掉Spark，最为纯正的需要，最为纯正的设想。
     现在看来，这是多么的奢想，这是多么的梦幻，没想到这简简单单的几句话就写了5年代码。
     至今为止，正如前面说的，StargazerProjectCloudSystem项目已经书写了近5年，重构了8次，其子成果已经用在其它很多的项目之上，因为我本身是一名UI设计师、前端技术设计师，动画师、摄影师、平日里还要在银行工作，留给我的时间并不多，但即使如此，正如小镇在慢慢的向前前进者，我也在尽力的书写者，这便是爱吧。虽然我在银行的工作并不涉及到编程，但是这个平凡的工作确实给了我很多，给了我很多的时间与精力去完成我自己想做的事情，有时候，看到开发中心的正在痛苦编程的人们，不由得苦笑一下，她们，可能永远都不知道身后站着一位与编程恋爱的人吧。直到现在，我还保持者一个习惯，经常打开我在的银行的所使用的系统，对里面的代码如数家珍，心里幻想一下，好像是我的孩子一样。
     最后，说一些最后的话语，StargazerProject给我最大的启示，那就是代码不是重要的东西，代码并不是你的成果，谁都可以写出来的，最重要的是你，是你书写代码的那种感觉，是你设计架构的那种泰然自信，是你那种真正爱他的这种灵魂，所以，我将我的书写过的全部代码开源，如果能在茫茫人海中与你相见，给看到这里的你一点启示，那便是我最大的快乐了。
-  最后的最后，非常感谢我的家人和未婚妻喵小姐在背后的支持和努力，StargazerProject顶级项目CloudSystem预计2018年上半年将开发出第一个测试版本，并用于承担StargazerProject项目组内所有的图像分析及计算任务。在2019年上线正式版本，用于进行超大规模系统构架测试。
+  最后的最后，StargazerProject顶级项目CloudSystem预计2018年上半年将开发出第一个测试版本，并用于承担StargazerProject项目组内所有的图像分析及计算任务。
   
-### StargazerProject首席设计师 FelixErio & 一直在背后努力的喵小姐
+  
+StargazerProject首席设计师 FelixErio & 一直在背后努力的喵小姐
