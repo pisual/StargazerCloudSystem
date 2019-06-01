@@ -1,6 +1,5 @@
 package com.stargazerproject.spring.context.initialization.test;
 
-import com.stargazer.segmentation.impl.EventSegmentation;
 import com.stargazerproject.analysis.impl.*;
 import com.stargazerproject.analysis.resources.shell.EventAssembleAnalysisShell;
 import com.stargazerproject.analysis.resources.shell.EventExecuteAnalysisShell;
@@ -12,10 +11,9 @@ import com.stargazerproject.annotations.server.impl.AnnotationsServer;
 import com.stargazerproject.annotations.server.listener.impl.AnnotationsServerListener;
 import com.stargazerproject.annotations.server.manage.AnnotationsServerManage;
 import com.stargazerproject.bus.impl.EventBus;
-import com.stargazerproject.bus.impl.EventBusObserver;
-import com.stargazerproject.bus.resources.EventBusBlockMethodCharacteristic;
-import com.stargazerproject.bus.resources.EventBusNoBlockMethodCharacteristic;
-import com.stargazerproject.bus.resources.shell.EventBusObserverShell;
+import com.stargazerproject.bus.resources.EventBusAsyncMethodMBassadorCharacteristic;
+import com.stargazerproject.bus.resources.EventBusBlockMethodMBassadorCharacteristic;
+import com.stargazerproject.bus.resources.EventBusListener;
 import com.stargazerproject.bus.resources.shell.EventBusResourcesShell;
 import com.stargazerproject.bus.server.impl.EventBusServer;
 import com.stargazerproject.bus.server.listener.impl.EventBusServerListener;
@@ -94,8 +92,6 @@ import com.stargazerproject.queue.server.manage.TransactionExportEventQueueServe
 import com.stargazerproject.resources.parameter.*;
 import com.stargazerproject.resources.service.SystemServiceParameterList;
 import com.stargazerproject.sequence.impl.StandardSequenceImpl;
-import com.stargazerproject.sequence.resources.ParallelSequenceEventsCharacteristic;
-import com.stargazerproject.sequence.resources.SequenceEventsCharacteristic;
 import com.stargazerproject.sequence.resources.shell.SequenceResourcesShell;
 import com.stargazerproject.sequence.server.impl.StandardSequenceServer;
 import com.stargazerproject.sequence.server.listener.impl.StandardServerListener;
@@ -138,7 +134,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		setProfiles();
 		GlobalAnnotationApplicationContext.ApplicationContextInitialize(
 	    args,
-	    
+
 		/**Depend SystemParameter **/
 		SystemParameterCahce.class,
 		SystemParameterCahceCharacteristic.class,
@@ -158,22 +154,22 @@ public class GlobalAnnotationApplicationContextInitialization {
 
 		/**Depend AggregateRootCache **/
 		AggregateRootCache.class,
-		
+
 		/**Depend SocketChannelCache **/
 		SocketChannelCache.class,
-		
+
 		/**Depend InterProcessSemaphoreMutexCache **/
 		InterProcessSemaphoreMutexCache.class,
-		
+
 		/**Depend LeaderLatchParameterCache **/
 		LeaderLatchParameterCache.class,
-		
+
 		/**Depend TreeCacheCache **/
 		TreeCacheCache.class,
-		
+
 		/**Depend ServerCache **/
 		ServerCache.class,
-		
+
 		/**Depend ServerListCache **/
 		ServerListCache.class,
 
@@ -195,7 +191,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 
 		/**Depend BaseDataStructureCache **/
 		BaseDataStructureCache.class,
-		
+
 		/**Depend OrderQueueMessage**/
 		TransactionMessageQueue.class,
 		TransactionMessageQueueServer.class,
@@ -206,13 +202,13 @@ public class GlobalAnnotationApplicationContextInitialization {
 		TransactionMessageQueuePushCharacteristic.class,
 		TransactionMessageQueueShall.class,
 		TransactionMessageQueueCallBackCharacteristic.class,
-		
+
 		/**Depend Service*/
 		ServiceInitializationCharacteristic.class,
 		ServiceControlCharacteristic.class,
 		ServerShell.class,
 		ServerDependDetectionAOPConfiguration.class,
-		
+
 		/**Depend nodenNegotiate*/
 		NodenNegotiateImpl.class,
 		ZoneNegotiateImpl.class,
@@ -234,7 +230,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 
 		/**Depend BigCacheIndexCahce**/
 		BigCacheIndexCahce.class,
-		
+
 		/**Depend ByteArrayCache**/
 		ByteArrayCache.class,
 		ByteArrayCacheCacheConfigurationCharacteristic.class,
@@ -255,7 +251,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		AggregateRootIndexCacheServer.class,
 		AggregateRootIndexCacheServerListener.class,
 		AggregateRootIndexCacheServerManage.class,
-		
+
 		/**Depend EventQueue**/
 		EventQueue.class,
 		EventDisruptorShell.class,
@@ -268,7 +264,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		EventConsumer.class,
 		EventResultMergeHandler.class,
 		CleanEventHandler.class,
-		
+
 		/**Depend EventBusQueue**/
 		EventBusQueue.class,
 		EventBusDisruptorShell.class,
@@ -277,7 +273,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		EventBusQueueServerManage.class,
 		EventBusConsumer.class,
 		EventBusHandler.class,
-		
+
 		/**Depend LogCache**/
 		LogQueue.class,
 		LogDisruptorShell.class,
@@ -288,7 +284,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		LogQueueServerListener.class,
 		LogQueueServerManage.class,
 		CleanLogHandler.class,
-		
+
 		/**Depend LogCache**/
 		TransactionExportQueue.class,
 		TransactionExportEventDisruptorShell.class,
@@ -299,7 +295,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		TransactionExportEventQueueServerListener.class,
 		TransactionExportEventQueueServerManage.class,
 		CleanTransactionExportEventHandler.class,
-		
+
 		/**Depend TransactionCache**/
 		TransactionCache.class,
 		TransactionCacheCacheLoaderCharacteristic.class,
@@ -309,7 +305,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		TransactionCacheServer.class,
 		TransactionCacheServerListener.class,
 		TransactionCacheServerManage.class,
-		
+
 		/**Depend Resources**/
 		CacheParameters.class,
 		QueueParameters.class,
@@ -321,15 +317,13 @@ public class GlobalAnnotationApplicationContextInitialization {
 		QueueParameters.class,
 		SequenceParameters.class,
 		SystemParameters.class,
-		
+
 		/**Depend Log**/
 		GroupLogConfiguration.class,
-		
+
 		/**Depend Service**/
 		GroupServiceConfiguration.class,
-		
-		EventSegmentation.class,
-		
+
 		/**User Interface Service**/
 		MainFrameBackgroundJlabelCharacteristic.class,
 		MainFrameConsoleTextPaneCharacteristic.class,
@@ -357,16 +351,14 @@ public class GlobalAnnotationApplicationContextInitialization {
 		FrameUserInterfaceServerManage.class,
 		LoadingJProgressBarUI.class,
 		FrameShell.class,
-		
-		/**Depend Sequence*/
+
+		/**Depend Sequence */
 		StandardSequenceImpl.class,
 		SequenceResourcesShell.class,
-		ParallelSequenceEventsCharacteristic.class,
-		SequenceEventsCharacteristic.class,
 		StandardSequenceServer.class,
 		StandardServerListener.class,
 		StandardServerManage.class,
-		
+
 		/**Depend AnnotationImpl*/
 		AnnotationsImpl.class,
 		AnnotationsScannerResourcesCharacteristic.class,
@@ -374,18 +366,18 @@ public class GlobalAnnotationApplicationContextInitialization {
 		AnnotationsServer.class,
 		AnnotationsServerListener.class,
 		AnnotationsServerManage.class,
-		
+
 		/**Depend Bus**/
 		EventBus.class,
-		EventBusObserver.class,
-		EventBusObserverShell.class,
 		EventBusResourcesShell.class,
-		EventBusBlockMethodCharacteristic.class,
-		EventBusNoBlockMethodCharacteristic.class,
+		EventBusResourcesShell.class,
+		EventBusAsyncMethodMBassadorCharacteristic.class,
+		EventBusBlockMethodMBassadorCharacteristic.class,
+		EventBusListener.class,
 		EventBusServer.class,
 		EventBusServerListener.class,
 		EventBusServerManage.class,
-//		
+//
 //		/**Depend Transmission Queue**/
 //		TransmissionConsumer.class,
 //		TransmissionQueue.class,
@@ -406,7 +398,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		InjectServer.class,
 		InjectServerListener.class,
 		InjectServerManage.class,
-		
+
 		/**Depend Analysis**/
 		EventResultAnalysisImpl.class,
         EventResultAnalysisShell.class,
@@ -417,7 +409,7 @@ public class GlobalAnnotationApplicationContextInitialization {
         LogAnalysisImpl.class,
 
 
-		
+
 //		/**Depend CellsInformation**/
 //		CellsInformation.class,
 //		CellsInformationByteToMessageDecoderHandlerCharacteristic.class,

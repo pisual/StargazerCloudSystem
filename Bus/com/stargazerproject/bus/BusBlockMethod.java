@@ -16,17 +16,9 @@ public interface BusBlockMethod<T> {
 	/**
 	* @name 置入
 	* @illustrate 阻塞置入方法，将阻塞直到结果返回
-	* @param <T> 指令， TimeUnit：寻轮的间隔时间 Integer寻轮的次数
+	* @param busEvent：指令，timeUnit：等待的时间单位， timeout：等待的时间长度
 	* @return 返回指令
 	* **/
-	public Optional<T> push(Optional<T> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout)throws BusEventTimeoutException;
-
-	/**
-	 * @name 置入
-	 * @illustrate 阻塞置入方法，将阻塞直到结果返回，将根据Event的内部注入方法制定间隔时间
-	 * @param <T> 指令
-	 * @return 返回指令
-	 * **/
-	public Optional<T> push(Optional<T> busEvent)throws BusEventTimeoutException;
+	public Optional<BusObserver<T>> push(Optional<T> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException;
 	
 }

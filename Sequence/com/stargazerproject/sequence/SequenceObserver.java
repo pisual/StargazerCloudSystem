@@ -2,26 +2,19 @@ package com.stargazerproject.sequence;
 
 import com.google.common.base.Optional;
 
-import java.util.List;
-
 /** 
- *  @name 并行序列方法的观测者
- *  @illustrate 并行序列结果分为两级状态
- *                             
- *      序列是否完成                    Complete（True） - OR - NoComplete（False）
- *                                       ／
- *      序列是否成功                  Success （True）- OR - NoSuccess（False）
- *      
+ *  @name 序列的结果观测者
+ *  @illustrate 序列的结果观测者
  *  @author Felixerio
  *  **/
 public interface SequenceObserver<T> {
-	
-	public boolean isComplete();
-	
-	public boolean isSuccess();
-	
-	public Optional<List<T>> failResultList();
-	
-	public Optional<List<T>> sequenceResultList();
+
+	public Optional<Boolean> isComplete();
+
+	public Optional<Boolean> isRunning();
+
+	public Optional<Boolean> hasError();
+
+	public Optional<Throwable> getError();
 	
 }

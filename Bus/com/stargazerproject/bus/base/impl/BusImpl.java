@@ -12,18 +12,13 @@ public abstract class BusImpl<T> implements Bus<T>{
 	protected Bus<T> bus;
 
 	@Override
-	public Optional<T> push(Optional<T> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException{
+	public Optional<BusObserver<T>> push(Optional<T> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException{
 		return bus.push(busEvent, timeUnit, timeout);
-	}
-	
-	@Override
-	public Optional<BusObserver<T>> pushNoBlock(Optional<T> busEvent) {
-		return bus.pushNoBlock(busEvent);
 	}
 
 	@Override
-	public Optional<T> push(Optional<T> busEvent) throws BusEventTimeoutException {
-		return bus.push(busEvent);
+	public Optional<BusObserver<T>> pushAsync(Optional<T> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) {
+		return bus.pushAsync(busEvent, timeUnit, timeout);
 	}
 
 	@Override

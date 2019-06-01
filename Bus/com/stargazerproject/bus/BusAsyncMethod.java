@@ -2,12 +2,14 @@ package com.stargazerproject.bus;
 
 import com.google.common.base.Optional;
 
+import java.util.concurrent.TimeUnit;
+
 /** 
  *  @name 总线非阻塞方法
  *  @illustrate 总线非阻塞方法
  *  @author Felixerio
  *  **/
-public interface BusNoBlockMethod<T> {
+public interface BusAsyncMethod<T> {
 	
 	/**
 	* @name 置入
@@ -15,6 +17,6 @@ public interface BusNoBlockMethod<T> {
 	* @param <BaseEvent> 事件
 	* @return 返回指令
 	* **/
-	public Optional<BusObserver<T>> pushNoBlock(Optional<T> busEvent);
+	public Optional<BusObserver<T>> pushAsync(Optional<T> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout);
 	
 }
