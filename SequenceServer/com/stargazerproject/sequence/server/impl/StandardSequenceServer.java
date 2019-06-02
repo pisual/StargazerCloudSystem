@@ -4,7 +4,7 @@ import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
 import com.stargazerproject.sequence.Sequence;
 import com.stargazerproject.service.baseinterface.StanderServiceShell;
-import com.stargazerproject.transaction.Event;
+import com.stargazerproject.transaction.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -22,12 +22,12 @@ import org.springframework.stereotype.Component;
 public class StandardSequenceServer implements StanderServiceShell{
 	
 	@Autowired
-	@Qualifier("standardSequence")
-	private StanderCharacteristicShell<Sequence<Event>> sequence;
+	@Qualifier("standardSequenceImpl")
+	private StanderCharacteristicShell<Sequence<Transaction>> sequence;
 
 	@Autowired
 	@Qualifier("sequenceResourcesShell")
-	private BaseCharacteristic<Sequence<Event>> sequenceCharacteristic;
+	private BaseCharacteristic<Sequence<Transaction>> sequenceCharacteristic;
 	
 	/** @construction 初始化构造 **/
 	private StandardSequenceServer() {}

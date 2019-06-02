@@ -8,7 +8,6 @@ import com.stargazerproject.analysis.handle.TransactionAssembleAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.transaction.Transaction;
-import com.stargazerproject.transaction.exception.TransactionException;
 
 public class BaseTransaction extends ID implements Transaction{
 
@@ -27,7 +26,7 @@ public class BaseTransaction extends ID implements Transaction{
 	}
 
 	@Override
-	public Optional<TransactionExecuteAnalysisHandle> transactionExecute(Optional<TransactionExecuteAnalysis> transactionExecuteAnalysis) throws TransactionException {
+	public Optional<TransactionExecuteAnalysisHandle> transactionExecute(Optional<TransactionExecuteAnalysis> transactionExecuteAnalysis){
 		return transaction.transactionExecute(transactionExecuteAnalysis);
 	}
 

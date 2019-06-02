@@ -57,8 +57,6 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 
 	/** 注入区 End **/
 
-	/**##########################################################################################**/
-
 	/** 变量区 Start **/
 
 	/** @illustrate Event列表**/
@@ -95,7 +93,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 			this.injectSequenceID(Optional.of(SequenceUtil.getUUIDSequence()));
 			transactionState = TransactionState.WAIT;
 		}
-		return transactionAssembleAnalysis.get().analysis(Optional.of(eventsList));
+		return transactionAssembleAnalysis.get().analysis(Optional.of(eventsList), Optional.of(interactionCache));
 	}
 
 	/**

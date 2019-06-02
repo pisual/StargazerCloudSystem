@@ -1,9 +1,7 @@
 package com.stargazerproject.spring.context.initialization.test;
 
 import com.stargazerproject.analysis.impl.*;
-import com.stargazerproject.analysis.resources.shell.EventAssembleAnalysisShell;
-import com.stargazerproject.analysis.resources.shell.EventExecuteAnalysisShell;
-import com.stargazerproject.analysis.resources.shell.EventResultAnalysisShell;
+import com.stargazerproject.analysis.resources.shell.*;
 import com.stargazerproject.annotation.impl.AnnotationsImpl;
 import com.stargazerproject.annotation.resources.AnnotationsScannerResourcesCharacteristic;
 import com.stargazerproject.annotation.resources.shell.AnnotationsShell;
@@ -11,13 +9,16 @@ import com.stargazerproject.annotations.server.impl.AnnotationsServer;
 import com.stargazerproject.annotations.server.listener.impl.AnnotationsServerListener;
 import com.stargazerproject.annotations.server.manage.AnnotationsServerManage;
 import com.stargazerproject.bus.impl.EventBus;
-import com.stargazerproject.bus.resources.EventBusAsyncMethodMBassadorCharacteristic;
-import com.stargazerproject.bus.resources.EventBusBlockMethodMBassadorCharacteristic;
-import com.stargazerproject.bus.resources.EventBusListener;
+import com.stargazerproject.bus.impl.TransactionBus;
+import com.stargazerproject.bus.resources.*;
 import com.stargazerproject.bus.resources.shell.EventBusResourcesShell;
+import com.stargazerproject.bus.resources.shell.TransactionBusResourcesShell;
 import com.stargazerproject.bus.server.impl.EventBusServer;
+import com.stargazerproject.bus.server.impl.TransactionBusServer;
 import com.stargazerproject.bus.server.listener.impl.EventBusServerListener;
+import com.stargazerproject.bus.server.listener.impl.TransactionBusServerListener;
 import com.stargazerproject.bus.server.manage.EventBusServerManage;
+import com.stargazerproject.bus.server.manage.TransactionBusServerManage;
 import com.stargazerproject.cache.aop.configuration.ParametersInjectAOPConfiguration;
 import com.stargazerproject.cache.datastructure.BaseDataStructureCache;
 import com.stargazerproject.cache.datastructure.impl.*;
@@ -92,6 +93,7 @@ import com.stargazerproject.queue.server.manage.TransactionExportEventQueueServe
 import com.stargazerproject.resources.parameter.*;
 import com.stargazerproject.resources.service.SystemServiceParameterList;
 import com.stargazerproject.sequence.impl.StandardSequenceImpl;
+import com.stargazerproject.sequence.resources.SequenceTransactionCharacteristic;
 import com.stargazerproject.sequence.resources.shell.SequenceResourcesShell;
 import com.stargazerproject.sequence.server.impl.StandardSequenceServer;
 import com.stargazerproject.sequence.server.listener.impl.StandardServerListener;
@@ -148,6 +150,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		InformationParameter.class,
 		ParametersInjectAOPConfiguration.class,
 		TransactionParameters.class,
+		BusParameters.class,
 
 		/**Depend ObjectParameterCache **/
 		ObjectParameterCache.class,
@@ -358,6 +361,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		StandardSequenceServer.class,
 		StandardServerListener.class,
 		StandardServerManage.class,
+		SequenceTransactionCharacteristic.class,
 
 		/**Depend AnnotationImpl*/
 		AnnotationsImpl.class,
@@ -377,6 +381,18 @@ public class GlobalAnnotationApplicationContextInitialization {
 		EventBusServer.class,
 		EventBusServerListener.class,
 		EventBusServerManage.class,
+
+
+		/**Depend EventBusQueue**/
+		TransactionBus.class,
+		TransactionBusResourcesShell.class,
+		TransactionBusAsyncMethodMBassadorCharacteristic.class,
+		TransactionBusBlockMethodMBassadorCharacteristic.class,
+		TransactionBusListener.class,
+		TransactionBusServer.class,
+		TransactionBusServerListener.class,
+		TransactionBusServerManage.class,
+
 //
 //		/**Depend Transmission Queue**/
 //		TransmissionConsumer.class,
@@ -407,6 +423,12 @@ public class GlobalAnnotationApplicationContextInitialization {
         EventExecuteAnalysisImpl.class,
         EventExecuteAnalysisShell.class,
         LogAnalysisImpl.class,
+		TransactionAssembleAnalysisImpl.class,
+		TransactionExecuteAnalysisImpl.class,
+		TransactionResultAnalysisImpl.class,
+		TransactionAssembleAnalysisShell.class,
+		TransactionExecuteAnalysisShell.class,
+		TransactionResultAnalysisShell.class,
 
 
 
@@ -438,7 +460,6 @@ public class GlobalAnnotationApplicationContextInitialization {
 		EventExecuteAnalysisImpl.class,
 		EventAssembleAnalysisShell.class,
 		EventExecuteAnalysisShell.class,
-		SequenceTransactionResultAnalysisImpl.class,
         EventBusResultAnalysisImpl.class,
 
 		/**Depend Transaction**/
@@ -452,7 +473,6 @@ public class GlobalAnnotationApplicationContextInitialization {
 
         /**Depend HystrixConfigurationS**/
         HystrixConfigurationS.class,
-
 
 		/**测试用方法，实际需要动态注入**/
 		InitializationCellsGroupModel.class,

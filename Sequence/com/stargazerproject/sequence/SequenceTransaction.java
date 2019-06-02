@@ -1,8 +1,7 @@
 package com.stargazerproject.sequence;
 
 import com.google.common.base.Optional;
-import com.stargazerproject.bus.exception.BusEventTimeoutException;
-import com.stargazerproject.bus.exception.EventException;
+import com.stargazerproject.sequence.exception.SequenceTimeOutException;
 
 /** 
  *  @name 顺序序列（单向序列）的事务接口
@@ -33,35 +32,16 @@ import com.stargazerproject.bus.exception.EventException;
 public interface SequenceTransaction<K>{
 	
 	/**
-	* @name 创建顺序序列
-	* @illustrate 创建顺序序列
-	* **/ 
-	public Optional<SequenceTransaction<K>> creatSequence();
-	
-	/**
-	* @name 添加事务组 Order到顺序序列
-	* @illustrate 添加事务组 Order
-	* @param Optional<K> order 事务组
-	* **/ 
-	public void addSequence(Optional<K> transaction);
-	
-	/**
-	* @name 清除Sequence队列
-	* @illustrate 清除Sequence序列已经添加的的全部事务组
-	* **/
-	public void clearSequence();
-	
-	/**
 	* @name 启动顺序序列
 	* @illustrate 启动指定的Sequence队列，并阻塞，直到序列全部完成后返回SequenceObserver结果
-	* @exception BusEventTimeoutException : 超时会抛出BusEventTimeoutException异常
+	* @exception SequenceTimeOutException : 超时会抛出SequenceTimeOutException异常
 	* **/
-	public Optional<SequenceObserver<K>> startBlockSequence() throws BusEventTimeoutException, EventException;
+	public Optional<SequenceObserver<K>> startBlockSequence(Optional<K> transaction) throws SequenceTimeOutException;
 	
 	/**
 	* @name 启动顺序序列
 	* @illustrate 启动指定的Sequence队列，非阻塞，执行后立即返回SequenceObserver结果观察对象，可以根据SequenceObserver来判断
 	*             序列是否完成
 	* **/
-	public Optional<SequenceObserver<K>> startSequence();
+	public Optional<SequenceObserver<K>> startSequence(Optional<K> transaction);
 }

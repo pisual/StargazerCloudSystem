@@ -6,6 +6,6 @@ import net.engio.mbassy.listener.Invoke;
 public interface BusListener<T> {
 
     @Handler(delivery = Invoke.Asynchronously)
-    public void asynchronousHandler(T t);
+    public void handler(T t);
 
 }

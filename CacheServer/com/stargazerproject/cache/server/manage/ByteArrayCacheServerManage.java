@@ -1,29 +1,23 @@
 package com.stargazerproject.cache.server.manage;
 
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.stargazerproject.service.annotation.ServiceZone;
-import com.stargazerproject.service.annotation.Services;
 import com.stargazerproject.service.baseinterface.StanderServiceShell;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import javax.annotation.PostConstruct;
 
 /** 
  *  @name ByteArrayCache服务集中托管
  *  @illustrate ByteArrayCache服务集中托管，继承于Guava的AbstractIdleService
  *  @author Felixerio
  *  **/
-@Component(value="byteArrayCacheServerManage")
-@Qualifier("byteArrayCacheServerManage")
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Services(name="byteArrayCacheServerManage", serviceZone = ServiceZone.System, layer = 5)
+//@Component(value="byteArrayCacheServerManage")
+//@Qualifier("byteArrayCacheServerManage")
+//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+//@Services(name="byteArrayCacheServerManage", serviceZone = ServiceZone.System, layer = 5)
 public class ByteArrayCacheServerManage extends AbstractIdleService{
 	
 	/** @illustrate orderCacheServer的ServiceShell接口 **/

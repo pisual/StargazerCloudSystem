@@ -23,7 +23,7 @@ public class EventBusListener implements BusListener<Optional<Event>>{
 
     @Handler(delivery = Invoke.Asynchronously)
     @Override
-    public void asynchronousHandler(Optional<Event> busEvent) {
+    public void handler(Optional<Event> busEvent) {
         busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis));
     }
 
