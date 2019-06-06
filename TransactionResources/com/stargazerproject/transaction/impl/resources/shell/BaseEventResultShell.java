@@ -33,15 +33,15 @@ public class BaseEventResultShell implements Result<EventResultAnalysis, EventRe
 	* @illustrate 事件结果内容Multimap缓存
 	* **/
 	@Autowired
-	@Qualifier("eventResultMultimapCache")
-	private MultimapCache<String, String> resultMultimapCache;
+	@Qualifier("eventResultCache")
+	private Cache<String, String> resultCache;
 
 	/**
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
 	* **/
-	public BaseEventResultShell(Optional<MultimapCache<String, String>> resultMultimapCacheArg) {
-		resultMultimapCache = resultMultimapCacheArg.get();
+	public BaseEventResultShell(Optional<Cache<String, String>> resultCacheArg) {
+		resultCache = resultCacheArg.get();
 	}
 	
 	/**
@@ -61,13 +61,12 @@ public class BaseEventResultShell implements Result<EventResultAnalysis, EventRe
 	/** @illustrate 事件结果内容分析器*/
 	@Override
 	public Optional<EventResultAnalysisHandle> resultResult(EventResultAnalysis eventResultAnalysis, Cache<String, String> interactionCacheArg) {
-		return eventResultAnalysis.analysis(Optional.of(resultMultimapCache), Optional.of(interactionCacheArg));
+		return eventResultAnalysis.analysis(Optional.of(resultCache), Optional.of(interactionCacheArg));
 	}
 
 	@Override
-	public Optional<ResultRecord> errorMessage(Optional<Exception> exception) {
-		resultMultimapCache.put(Optional.of("ErrorMessage"), Optional.of(exception.get().getMessage()));
-		return null;
+	public void errorMessage(Optional<Exception> exception) {
+		resultCache.put(Optional.of("ErrorMessage"), Optional.of(exception.get().getMessage()));
 	}
 	
 	@Override

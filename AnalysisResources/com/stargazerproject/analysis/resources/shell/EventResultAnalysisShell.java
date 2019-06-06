@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class EventResultAnalysisShell implements EventResultAnalysis, BaseCharacteristic<EventResultAnalysis> {
 
     @Override
-    public Optional<EventResultAnalysisHandle> analysis(Optional<MultimapCache<String, String>> resultCache, Optional<Cache<String, String>> interactionCache) {
+    public Optional<EventResultAnalysisHandle> analysis(Optional<Cache<String, String>> resultCache, Optional<Cache<String, String>> interactionCache) {
         return Optional.of(new EventResultAnalysisHandleResources(resultCache, interactionCache));
     }
 

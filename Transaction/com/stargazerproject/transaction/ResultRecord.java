@@ -18,6 +18,6 @@ public interface ResultRecord {
 	 *  	 *  @ThreadSafeMethodsLevel errorMessage的线程安全级别为ThreadSafeLevel.ThreadSafe，线程安全
 	 * **/
 	@ThreadSafeMethodsLevel(threadSafeLevel = ThreadSafeLevel.ThreadSafe)
-	public Optional<ResultRecord> errorMessage(Optional<Exception> exception);
+	public void errorMessage(Optional<Exception> exception);
 
 }

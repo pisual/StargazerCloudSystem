@@ -3,11 +3,10 @@ package com.stargazerproject.transaction.impl.resources.shell;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.TransactionResultAnalysis;
 import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
-import com.stargazerproject.cache.MultimapCache;
+import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Event;
 import com.stargazerproject.transaction.Result;
-import com.stargazerproject.transaction.ResultRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -30,19 +29,19 @@ public class BaseTransactionResultShell implements Result<TransactionResultAnaly
 	private static final long serialVersionUID = -4726816340050497590L;
 
 	/**
-	* @name 事件结果内容Multimap缓存
-	* @illustrate 事件结果内容Multimap缓存
+	* @name 事件结果内容resultCache缓存
+	* @illustrate 事件结果内容resultCache缓存
 	* **/
 	@Autowired
-	@Qualifier("transactionResultMultimapCache")
-	private MultimapCache<String, String> resultMultimapCache;
+	@Qualifier("transactionResultCache")
+	private Cache<String, String> resultCache;
 
 	/**
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
 	* **/
-	public BaseTransactionResultShell(Optional<MultimapCache<String, String>> resultMultimapCacheArg) {
-		resultMultimapCache = resultMultimapCacheArg.get();
+	public BaseTransactionResultShell(Optional<Cache<String, String>> cacheArg) {
+		resultCache = cacheArg.get();
 	}
 
 	/**
@@ -62,13 +61,12 @@ public class BaseTransactionResultShell implements Result<TransactionResultAnaly
 	/** @illustrate 事件结果内容分析器*/
 	@Override
 	public Optional<TransactionResultAnalysisHandle> resultResult(TransactionResultAnalysis transactionResultAnalysis, Collection<Event> eventList) {
-		return transactionResultAnalysis.analysis(Optional.of(resultMultimapCache), Optional.of(eventList));
+		return transactionResultAnalysis.analysis(Optional.of(resultCache), Optional.of(eventList));
 	}
 
 	@Override
-	public Optional<ResultRecord> errorMessage(Optional<Exception> exception) {
-		resultMultimapCache.put(Optional.of("ErrorMessage"), Optional.of(exception.get().getMessage()));
-		return null;
+	public void errorMessage(Optional<Exception> exception) {
+		resultCache.put(Optional.of("ErrorMessage"), Optional.of(exception.get().getMessage()));
 	}
 	
 	@Override

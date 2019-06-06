@@ -23,6 +23,7 @@ import com.stargazerproject.cache.aop.configuration.ParametersInjectAOPConfigura
 import com.stargazerproject.cache.datastructure.BaseDataStructureCache;
 import com.stargazerproject.cache.datastructure.impl.*;
 import com.stargazerproject.cache.impl.*;
+import com.stargazerproject.cache.impl.EventResultCache;
 import com.stargazerproject.cache.impl.resources.*;
 import com.stargazerproject.cache.impl.resources.shell.*;
 import com.stargazerproject.cache.server.impl.AggregateRootIndexCacheServer;
@@ -176,21 +177,21 @@ public class GlobalAnnotationApplicationContextInitialization {
 		/**Depend ServerListCache **/
 		ServerListCache.class,
 
-		/**Depend EventResultMultimapCache **/
-		EventResultMultimapCache.class,
+		/**Depend EventResultCache **/
+		EventResultCache.class,
 
 		/**Depend EventInteractionCache **/
 		EventInteractionCache.class,
 
-		/**Depend EventResultMultimapCache **/
+		/**Depend EventResultCache **/
 		ResultCacheMultimapCacheShell.class,
-		EventResultMultimapCache.class,
+		EventResultCache.class,
 
 		/**Depend TransactionInteractionCache **/
 		TransactionInteractionCache.class,
 
-		/**Depend TransactionResultMultimapCache **/
-		TransactionResultMultimapCache.class,
+		/**Depend TransactionResultCache **/
+		TransactionResultCache.class,
 
 		/**Depend BaseDataStructureCache **/
 		BaseDataStructureCache.class,

@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.stargazerproject.analysis.TransactionResultAnalysis;
 import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.analysis.resources.handle.TransactionResultAnalysisHandleResources;
-import com.stargazerproject.cache.MultimapCache;
+import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.Event;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -19,7 +19,7 @@ import java.util.Collection;
 public class TransactionResultAnalysisShell implements TransactionResultAnalysis {
 
     @Override
-    public Optional<TransactionResultAnalysisHandle> analysis(Optional<MultimapCache<String, String>> resultCache, Optional<Collection<Event>> interactionCache) {
+    public Optional<TransactionResultAnalysisHandle> analysis(Optional<Cache<String, String>> resultCache, Optional<Collection<Event>> interactionCache) {
         return Optional.of(new TransactionResultAnalysisHandleResources(resultCache, interactionCache));
     }
 

@@ -5,7 +5,6 @@ import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.Result;
-import com.stargazerproject.transaction.ResultRecord;
 
 
 /** 
@@ -31,8 +30,8 @@ public class BaseEventResult implements Result<EventResultAnalysis, EventResultA
 
 
 	@Override
-	public Optional<ResultRecord> errorMessage(Optional<Exception> exception) {
-		return result.errorMessage(exception);
+	public void errorMessage(Optional<Exception> exception) {
+		result.errorMessage(exception);
 	}
 
 	@Override
