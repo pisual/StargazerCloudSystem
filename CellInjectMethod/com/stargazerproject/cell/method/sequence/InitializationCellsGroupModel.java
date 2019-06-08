@@ -46,12 +46,12 @@ public class InitializationCellsGroupModel extends StandardCellsTransactionImpl 
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
 	@Event()
-	public void method(Optional<Cache<String, String>> interactionCache) {
-		super.method(interactionCache);
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
+		super.method(interactionCache, resultCache);
 		putAggregationRootCache(Optional.of("OrderID"), Optional.of(SequenceUtil.getUUID()));
 		log.INFO(this,"initializationCellsGroupModel Complete , OrderID : " + SequenceUtil.getUUID());
 		log.INFO(this,"initializationCellsGroupModel Complete , User: " + interactionCache.get().get(Optional.of("User")).get());
-		success(interactionCache);
+		success(resultCache);
 	}
 	
 	/**
@@ -61,8 +61,7 @@ public class InitializationCellsGroupModel extends StandardCellsTransactionImpl 
 	* @param : Throwable throwable
 	* **/
 	@Override
-	public void fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		super.fallBack(cache, throwable);
-    }
-	
+	public void fallBack(Optional<Cache<String, String>> cache, Optional<Cache<String, String>> resultCache, Throwable throwable){
+		super.fallBack(cache, resultCache, throwable);
+	}
 }

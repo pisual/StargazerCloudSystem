@@ -96,7 +96,7 @@ public class AcquireParameterBlockModel extends StandardCellsTransactionImpl imp
 	                threadPoolKey = "acquireParameterModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache){
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache){
 		try {
 			registeredNodeWatch();
 			registeredNode();
@@ -126,8 +126,8 @@ public class AcquireParameterBlockModel extends StandardCellsTransactionImpl imp
 	* @param : Optional<Cache<String, String>> cache
 	* @param : Throwable throwable
 	* **/
-	public void fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		super.fallBack(cache, throwable);
+	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache, Throwable throwable){
+		super.fallBack(interactionCache, resultCache, throwable);
     }
 	
 	private void registeredNodeWatch() throws Exception{

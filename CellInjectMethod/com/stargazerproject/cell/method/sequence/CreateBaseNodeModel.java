@@ -58,7 +58,7 @@ public class CreateBaseNodeModel extends StandardCellsTransactionImpl {
 	/**
 	* @name 熔断器包裹的方法
 	* @illustrate 熔断器包裹的方法
-	* @param Optional<Cache<String, String>> cache
+	* @param : Optional<Cache<String, String>> cache
 	* **/
 	@Override
 	@HystrixCommand(commandKey = "createBaseNodeModel", 
@@ -67,12 +67,12 @@ public class CreateBaseNodeModel extends StandardCellsTransactionImpl {
 	                threadPoolKey = "createBaseNodeModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache) {
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
 		try {
 			creatPersistentNode(Optional.of(Kernel_Negotiate_BasePath_RootPath));
 			creatPersistentNode(Optional.of(Kernel_Negotiate_BasePath_EdenNodePath));
 			creatPersistentNode(Optional.of(Kernel_Negotiate_BasePath_ZoneNodePath));
-			success(interactionCache);
+			success(resultCache);
 		} catch (Exception e) {
 			throw new RunException(e.getMessage());
 		}
@@ -84,8 +84,9 @@ public class CreateBaseNodeModel extends StandardCellsTransactionImpl {
 	* @param : Optional<Cache<String, String>> cache
 	* @param : Throwable throwable
 	* **/
-	public void fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		super.fallBack(cache, throwable);
+	@Override
+	public void fallBack(Optional<Cache<String, String>> cache, Optional<Cache<String, String>> resultCache, Throwable throwable){
+		super.fallBack(cache, resultCache, throwable);
     }
 	
 	private void creatPersistentNode(Optional<String> path) throws Exception{

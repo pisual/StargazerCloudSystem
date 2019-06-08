@@ -22,9 +22,12 @@ public class TransactionResultAnalysisHandleResources implements TransactionResu
 
     private Cache<String, String> resultCache;
 
-    public TransactionResultAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg, Optional<Collection<Event>> interactionCacheArg){
+    private Cache<String, String> resultInteractionCache;
+
+    public TransactionResultAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg, Optional<Collection<Event>> interactionCacheArg, Optional<Cache<String, String>> resultInteractionCacheArg){
         resultCache = resultCacheArg.get();
         eventResultList = interactionCacheArg.get();
+        resultInteractionCache = resultInteractionCacheArg.get();
     }
 
     @Override

@@ -15,7 +15,7 @@ import com.stargazerproject.transaction.Result;
  *  @author Felixerio
  *  @version 1.0.0
  *  **/
-public class BaseEventResult implements Result<EventResultAnalysis, EventResultAnalysisHandle, Cache<String, String>>{
+public class BaseEventResult implements Result<EventResultAnalysis, EventResultAnalysisHandle, Cache<String, String>, Cache<String, String>>{
 
 	private static final long serialVersionUID = -8725503398105907243L;
 	
@@ -24,8 +24,8 @@ public class BaseEventResult implements Result<EventResultAnalysis, EventResultA
 	protected BaseEventResult() {}
 	
 	@Override
-	public Optional<EventResultAnalysisHandle> resultResult(EventResultAnalysis eventResultAnalysis, Cache<String, String> cache) {
-		return result.resultResult(eventResultAnalysis, cache);
+	public Optional<EventResultAnalysisHandle> resultResult(EventResultAnalysis eventResultAnalysis, Cache<String, String> cache, Cache<String, String> resultCache) {
+		return result.resultResult(eventResultAnalysis, cache, resultCache);
 	}
 
 

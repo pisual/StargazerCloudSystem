@@ -1,0 +1,12 @@
+{"namespace": "com.stargazercloud",
+    "type": "array",
+    "items":{
+    "type":"record",
+    "name":"eventResultCache",
+      "fields": [
+             {"name": "ErrorMessage", "type": ["string","null"]},
+             {"name": "ResultState", "type": "string"},
+             {"name": "CompleteTime", "type": "string"},
+             {"name": "RetryTime", "type": "string"}]
+    }
+   }

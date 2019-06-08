@@ -1,0 +1,7 @@
+{"namespace": "com.stargazercloud",
+    "type": "record",
+    "name":"eventResult",
+      "fields": [
+             {"name": "eventResultCache", "type": [{"type":"map", "values": "string"}]}
+             ]
+   }

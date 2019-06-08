@@ -10,12 +10,12 @@ import com.stargazerproject.annotation.description.ThreadSafeMethodsLevel;
  *  @author Felixerio
  *  @version 1.0.0
  *  **/
-public interface ResultResult<ResultAnalysis, Handle, Cachetype> {
+public interface ResultResult<ResultAnalysis, Handle, ParametersCache, ResultCache> {
 	
 	/** @illustrate 结果分析器，分析者调用
 	 *  @ThreadSafeMethodsLevel resultResult的线程安全级别为ThreadSafeLevel.ThreadCompatible，非线程安全，只能单线程单次使用
 	 *  **/
 	@ThreadSafeMethodsLevel(threadSafeLevel = ThreadSafeLevel.ThreadCompatible)
-	public Optional<Handle> resultResult(ResultAnalysis resultAnalysis, Cachetype cache);
+	public Optional<Handle> resultResult(ResultAnalysis resultAnalysis, ParametersCache parametersCache, ResultCache resultCache);
 
 }

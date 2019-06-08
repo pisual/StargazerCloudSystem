@@ -5,7 +5,6 @@ import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.analysis.resources.handle.EventResultAnalysisHandleResources;
 import com.stargazerproject.cache.Cache;
-import com.stargazerproject.cache.MultimapCache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -18,8 +17,8 @@ import org.springframework.stereotype.Component;
 public class EventResultAnalysisShell implements EventResultAnalysis, BaseCharacteristic<EventResultAnalysis> {
 
     @Override
-    public Optional<EventResultAnalysisHandle> analysis(Optional<Cache<String, String>> resultCache, Optional<Cache<String, String>> interactionCache) {
-        return Optional.of(new EventResultAnalysisHandleResources(resultCache, interactionCache));
+    public Optional<EventResultAnalysisHandle> analysis(Optional<Cache<String, String>> resultCache, Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultInteractionCache) {
+        return Optional.of(new EventResultAnalysisHandleResources(resultCache, interactionCache, resultInteractionCache));
     }
 
     @Override

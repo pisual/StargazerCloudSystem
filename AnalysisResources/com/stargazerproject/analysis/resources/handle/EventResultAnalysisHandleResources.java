@@ -13,9 +13,12 @@ public class EventResultAnalysisHandleResources implements EventResultAnalysisHa
 
     private Cache<String, String> interactionCache;
 
-    public EventResultAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg, Optional<Cache<String, String>> interactionCacheArg){
+    private Cache<String, String> resultInteractionCache;
+
+    public EventResultAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg, Optional<Cache<String, String>> interactionCacheArg, Optional<Cache<String, String>> resultInteractionCacheArg){
         resultCache = resultCacheArg.get();
         interactionCache = interactionCacheArg.get();
+        resultInteractionCache = resultInteractionCacheArg.get();
     }
 
     @Override

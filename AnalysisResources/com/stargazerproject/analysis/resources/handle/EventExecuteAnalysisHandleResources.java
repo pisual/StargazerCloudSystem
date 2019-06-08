@@ -10,15 +10,18 @@ public class EventExecuteAnalysisHandleResources implements EventExecuteAnalysis
 
     private Cache<String, String> cache;
 
-    public EventExecuteAnalysisHandleResources(Optional<Cache<String, String>> cacheArg){
+    private Cache<String, String> resultCache;
+
+    public EventExecuteAnalysisHandleResources(Optional<Cache<String, String>> cacheArg, Optional<Cache<String, String>> resultCacheArg){
         cache = cacheArg.get();
+        resultCache = resultCacheArg.get();
     }
 
     @Override
     public void run() {
         CellsTransaction cellsTransaction = BeanContainer.instance().getBean(method(), CellsTransaction.class);
 //        System.out.println("###############        :   "+cellsTransaction.eventAnnotation().);
-        cellsTransaction.method(Optional.of(cache));
+        cellsTransaction.method(Optional.of(cache), Optional.of(resultCache));
     }
 
     private Optional<String> method(){

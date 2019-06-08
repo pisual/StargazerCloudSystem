@@ -65,10 +65,10 @@ public class ParameterInitializationModel extends StandardCellsTransactionImpl {
 	                threadPoolKey = "parameterInitializationModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache) {
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
 		try {
 			nodeNegotiate.registeredWatcher(Optional.of(""), Optional.of(Kernel_Negotiate_BasePath_EdenNodePath), Optional.of("parameterInitializationModel"), negotiateParametersInjectInitializationListenerCharacteristic.characteristic());
-			success(interactionCache);
+			success(resultCache);
 		} catch (Exception e) {
 			throw new RunException(e.getMessage());
 		}
@@ -80,8 +80,8 @@ public class ParameterInitializationModel extends StandardCellsTransactionImpl {
 	* @param : Optional<Cache<String, String>> cache
 	* @param : Throwable throwable
 	* **/
-	public void fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		super.fallBack(cache, throwable);
-    }
-	
+	@Override
+	public void fallBack(Optional<Cache<String, String>> cache, Optional<Cache<String, String>> resultCache, Throwable throwable){
+		super.fallBack(cache, resultCache, throwable);
+	}
 }

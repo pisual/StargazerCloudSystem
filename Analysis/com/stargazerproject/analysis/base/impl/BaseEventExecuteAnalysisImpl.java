@@ -10,7 +10,7 @@ public abstract class BaseEventExecuteAnalysisImpl implements EventExecuteAnalys
 	protected EventExecuteAnalysis eventExecuteAnalysis;
 	
 	@Override
-	public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache) {
-		return eventExecuteAnalysis.analysis(interactionCache);
+	public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
+		return eventExecuteAnalysis.analysis(interactionCache, resultCache);
 	}
 }

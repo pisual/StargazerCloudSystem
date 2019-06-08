@@ -63,12 +63,12 @@ public class InjectParameterModel extends StandardCellsTransactionImpl {
 	                threadPoolKey = "injectParameterModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache) {
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
 		try {
 			Optional<Object> parameterClass = getParameterClass();
 			Optional<Map<String, String>> paramentMap= getParamentMap(parameterClass);
 			injectParameter(paramentMap);
-			success(interactionCache);
+			success(resultCache);
 		} catch (Exception e) {
 			throw new RunException(e.getMessage());
 		}
@@ -80,10 +80,10 @@ public class InjectParameterModel extends StandardCellsTransactionImpl {
 	* @param : Optional <Cache<String, String>> cache
 	* @param : Throwable throwable
 	* **/
-	public void fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		super.fallBack(cache, throwable);
-    }
-	
+	@Override
+	public void fallBack(Optional<Cache<String, String>> cache, Optional<Cache<String, String>> resultCache, Throwable throwable){
+		super.fallBack(cache, resultCache, throwable);
+	}
 	/**
 	 * @illustrate 获取参数类
 	 * **/

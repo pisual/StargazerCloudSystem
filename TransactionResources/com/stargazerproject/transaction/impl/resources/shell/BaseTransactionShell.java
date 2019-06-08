@@ -126,7 +126,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	* **/
 	@Override
 	public Optional<TransactionResultAnalysisHandle> transactionResult(Optional<TransactionResultAnalysis> transactionResultAnalysisArg){
-		return result.resultResult(transactionResultAnalysisArg.get(), eventsList);
+		return result.resultResult(transactionResultAnalysisArg.get(), eventsList, interactionCache);
 	}
 	
 	/**

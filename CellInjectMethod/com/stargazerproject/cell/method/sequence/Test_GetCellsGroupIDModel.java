@@ -44,11 +44,11 @@ public class Test_GetCellsGroupIDModel extends StandardCellsTransactionImpl {
 			        ignoreExceptions = HystrixRuntimeException.class,
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache) {
-		super.method(interactionCache);
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
+		super.method(interactionCache, resultCache);
 		String OrderID = getAggregationRootCache(Optional.of("OrderID")).get();
 		log.INFO(this,"Test_GetCellsGroupIDModel Complete , OrderID : " + OrderID);
-		success(interactionCache);
+		success(resultCache);
 	}
 	
 	/**
@@ -58,8 +58,7 @@ public class Test_GetCellsGroupIDModel extends StandardCellsTransactionImpl {
 	* @param : Throwable throwable
 	* **/
 	@Override
-	public void fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		super.fallBack(cache, throwable);
-    }
-	
+	public void fallBack(Optional<Cache<String, String>> cache, Optional<Cache<String, String>> resultCache, Throwable throwable){
+		super.fallBack(cache, resultCache, throwable);
+	}
 }

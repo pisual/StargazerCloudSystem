@@ -46,9 +46,9 @@ public class Test_NowTimeModel extends StandardCellsTransactionImpl {
 			        ignoreExceptions = HystrixRuntimeException.class,
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache) {
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
 		log.INFO(this,"Test_NowTimeModel Complete , Time : " + LocalDateTime.now());
-		success(interactionCache);
+		success(resultCache);
 	}
 	
 	/**
@@ -58,8 +58,7 @@ public class Test_NowTimeModel extends StandardCellsTransactionImpl {
 	* @param : Throwable throwable
 	* **/
 	@Override
-	public void fallBack(Optional<Cache<String, String>> cache, Throwable throwable){
-		super.fallBack(cache, throwable);
-    }
-	
+	public void fallBack(Optional<Cache<String, String>> cache, Optional<Cache<String, String>> resultCache, Throwable throwable){
+		super.fallBack(cache, resultCache, throwable);
+	}
 }

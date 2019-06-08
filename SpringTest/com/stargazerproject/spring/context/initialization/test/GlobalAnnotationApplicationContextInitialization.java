@@ -461,7 +461,6 @@ public class GlobalAnnotationApplicationContextInitialization {
 		EventExecuteAnalysisImpl.class,
 		EventAssembleAnalysisShell.class,
 		EventExecuteAnalysisShell.class,
-        EventBusResultAnalysisImpl.class,
 
 		/**Depend Transaction**/
 		StandardEvent.class,

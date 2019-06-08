@@ -24,7 +24,7 @@ import java.util.Collection;
 @Component(value="baseTransactionResultShell")
 @Qualifier("baseTransactionResultShell")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class BaseTransactionResultShell implements Result<TransactionResultAnalysis, TransactionResultAnalysisHandle, Collection<Event>>, BaseCharacteristic<Result> {
+public class BaseTransactionResultShell implements Result<TransactionResultAnalysis, TransactionResultAnalysisHandle, Collection<Event>, Cache<String, String>>, BaseCharacteristic<Result> {
 
 	private static final long serialVersionUID = -4726816340050497590L;
 
@@ -60,8 +60,8 @@ public class BaseTransactionResultShell implements Result<TransactionResultAnaly
 
 	/** @illustrate 事件结果内容分析器*/
 	@Override
-	public Optional<TransactionResultAnalysisHandle> resultResult(TransactionResultAnalysis transactionResultAnalysis, Collection<Event> eventList) {
-		return transactionResultAnalysis.analysis(Optional.of(resultCache), Optional.of(eventList));
+	public Optional<TransactionResultAnalysisHandle> resultResult(TransactionResultAnalysis transactionResultAnalysis, Collection<Event> eventList, Cache<String, String> parametersCacheArg) {
+		return transactionResultAnalysis.analysis(Optional.of(resultCache), Optional.of(eventList), Optional.of(parametersCacheArg));
 	}
 
 	@Override

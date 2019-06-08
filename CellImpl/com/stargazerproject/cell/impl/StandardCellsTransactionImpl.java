@@ -12,7 +12,7 @@ import com.stargazerproject.transaction.ResultState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-public abstract class StandardCellsTransactionImpl extends BaseCellsTransaction<String, String>{
+public abstract class StandardCellsTransactionImpl extends BaseCellsTransaction<String, String, String, String>{
 
 	/** @illustrate 获取Log(日志)接口 **/
 	@Autowired
@@ -35,25 +35,25 @@ public abstract class StandardCellsTransactionImpl extends BaseCellsTransaction<
 	 * @return <Cache<String, String>> 聚合根，不同的方法通过聚合根缓存共享数据
 	 * @param <V> 缓存的Value值
 	 * **/
-	public void method(Optional<Cache<String, String>> interactionCache) {
-		aggregationRootCacheAcquire(interactionCache);
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
+		aggregationRootCacheAcquire(resultCache);
 	}
 	
-	public void fallBack(Optional<Cache<String, String>> interactionCache, Throwable throwable){
+	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache, Throwable throwable){
 		if(throwable instanceof HystrixTimeoutException){
 			log.WARN(this, HystrixTimeoutException.class.toString());
 		}
 		else{
-			faild(interactionCache, throwable.getMessage());
+			faild(resultCache, throwable.getMessage());
 		}
 	}
 
-    protected void success(Optional<Cache<String, String>> interactionCache){
-		interactionCache.get().put(Optional.of("ResultState"), Optional.of(ResultState.SUCCESS.toString()));
+    protected void success(Optional<Cache<String, String>> resultCache){
+		resultCache.get().put(Optional.of("ResultState"), Optional.of(ResultState.SUCCESS.toString()));
 	}
 
-	protected void faild(Optional<Cache<String, String>> interactionCache, String message){
-		interactionCache.get().put(Optional.of("ResultState"), Optional.of(ResultState.FAULT.toString()));
+	protected void faild(Optional<Cache<String, String>> resultCache, String message){
+		resultCache.get().put(Optional.of("ResultState"), Optional.of(ResultState.FAULT.toString()));
 		log.FATAL(this, message);
 	}
 
@@ -84,7 +84,7 @@ public abstract class StandardCellsTransactionImpl extends BaseCellsTransaction<
 			aggregateRootCache = aggregateRootIndexCache.get(aggregateRootCacheIndex).get();
 		}
 		else{
-			throw new RunException("依赖聚合根的方法序列必须采用单向Sequence，不能使用并行Sequence");
+			throw new RunException("没有启用聚合根索引");
 		}
 
 	}

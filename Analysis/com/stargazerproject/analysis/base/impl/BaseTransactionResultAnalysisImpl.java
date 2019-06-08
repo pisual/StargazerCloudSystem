@@ -13,8 +13,8 @@ public class BaseTransactionResultAnalysisImpl implements TransactionResultAnaly
 	protected TransactionResultAnalysis transactionResultAnalysis;
 
 	@Override
-	public Optional<TransactionResultAnalysisHandle> analysis(Optional<Cache<String, String>> resultCache, Optional<Collection<Event>> interactionCache) {
-		return transactionResultAnalysis.analysis(resultCache, interactionCache);
+	public Optional<TransactionResultAnalysisHandle> analysis(Optional<Cache<String, String>> resultCache, Optional<Collection<Event>> interactionCache, Optional<Cache<String, String>> resultinteractionCache) {
+		return transactionResultAnalysis.analysis(resultCache, interactionCache, resultinteractionCache);
 	}
 
 }

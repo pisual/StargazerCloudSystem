@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 public class EventExecuteAnalysisShell implements EventExecuteAnalysis, BaseCharacteristic<EventExecuteAnalysis> {
 
     @Override
-    public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> cacheArg) {
-        return Optional.of(new EventExecuteAnalysisHandleResources(cacheArg));
+    public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> cacheArg, Optional<Cache<String, String>> resultCacheArg) {
+        return Optional.of(new EventExecuteAnalysisHandleResources(cacheArg, resultCacheArg));
     }
 
     @Override

@@ -14,6 +14,6 @@ import com.stargazerproject.cache.Cache;
  *  **/
 public interface EventExecuteAnalysis {
 	
-	public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache);
+	public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache);
 	
 }

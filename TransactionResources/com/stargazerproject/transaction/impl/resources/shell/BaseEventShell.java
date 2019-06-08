@@ -47,6 +47,11 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	@Qualifier("eventInteractionCache")
 	public Cache<String, String> interactionCache;
 
+	/** @illustrate 结果缓存接口 **/
+	@Autowired
+	@Qualifier("eventInteractionCache")
+	public Cache<String, String> resultCache;
+
 	@Autowired
 	@Qualifier("baseEventResultShell")
 	private BaseCharacteristic<Result> baseEventResultShell;
@@ -104,7 +109,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 * **/
 	@Override
 	public Optional<EventExecuteAnalysisHandle> eventExecute(Optional<EventExecuteAnalysis> eventAnalysis) {
-		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(interactionCache)).get();
+		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(interactionCache), Optional.of(resultCache)).get();
 		if(EventState.WAIT == eventState){
 			eventState = EventState.RUN;
 			eventExecuteAnalysisHandle.run();
@@ -127,7 +132,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 * **/
 	@Override
 	public Optional<EventResultAnalysisHandle> eventResult(Optional<EventResultAnalysis> eventResultAnalysis){
-		return result.resultResult(eventResultAnalysis.get(), interactionCache);
+		return result.resultResult(eventResultAnalysis.get(), interactionCache, resultCache);
 	}
 	
 	/** @illustrate  跳过此事件
