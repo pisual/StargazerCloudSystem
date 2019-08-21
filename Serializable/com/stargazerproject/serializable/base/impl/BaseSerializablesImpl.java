@@ -1,22 +1,22 @@
 package com.stargazerproject.serializable.base.impl;
 
-import java.io.IOException;
-
 import com.google.common.base.Optional;
 import com.stargazerproject.serializable.Serializables;
 
-public class BaseSerializablesImpl implements Serializables{
+import java.io.IOException;
+
+public class BaseSerializablesImpl<SourceType, TransmissionType> implements Serializables<SourceType, TransmissionType>{
 
 	protected Serializables serializables;
 	
 	@Override
-	public Optional<byte[]> serialize(Optional<Object> object) throws IOException {
-		return serializables.serialize(object);
+	public Optional<TransmissionType> serialize(Optional<SourceType> source) throws IOException {
+		return serializables.serialize(source);
 	}
 
 	@Override
-	public Optional<Object> deserialize(Optional<byte[]> byteArray) throws ClassNotFoundException, IOException{
-		return serializables.deserialize(byteArray);
+	public Optional<SourceType> deserialize(Optional<TransmissionType> source) throws ClassNotFoundException, IOException{
+		return serializables.deserialize(source);
 	}
 
 }

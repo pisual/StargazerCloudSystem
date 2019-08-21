@@ -28,7 +28,7 @@ public class BaseEventResultShell implements Result<EventResultAnalysis, EventRe
 	
 	/**
 	* @name 事件结果内容缓存
-	* @illustrate 事件结果内容缓存
+	* @illustrate 事件结果缓存,用于存储Event 结果MAP数据
 	* **/
 	@Autowired
 	@Qualifier("eventResultCache")

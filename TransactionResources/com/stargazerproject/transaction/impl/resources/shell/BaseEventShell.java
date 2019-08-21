@@ -40,21 +40,23 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	/** @illustrate 日志接口 **/
 	@Autowired
 	@Qualifier("logRecord")
-	public LogMethod logMethod;
+	private LogMethod logMethod;
 
-	/** @illustrate 交互缓存接口 **/
+	/** @illustrate 结果缓存 **/
 	@Autowired
 	@Qualifier("eventInteractionCache")
-	public Cache<String, String> interactionCache;
+	private Cache<String, String> resultCache;
 
-	/** @illustrate 结果缓存接口 **/
+	/** @illustrate 参数缓存 **/
 	@Autowired
 	@Qualifier("eventInteractionCache")
-	public Cache<String, String> resultCache;
+	private Cache<String, String> parametersCache;
 
+	/** @illustrate Event Result实例**/
 	@Autowired
 	@Qualifier("baseEventResultShell")
 	private BaseCharacteristic<Result> baseEventResultShell;
+
 
 	/** @illustrate 事件结果接口 **/
 	private Result result;
@@ -66,10 +68,10 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
 	* **/
-	public BaseEventShell(Optional<Result> resultArg, Optional<Cache<String, String>> interactionCacheArg, Optional<LogMethod> logMethodArg){
+	public BaseEventShell(Optional<Result> resultArg, Optional<Cache<String, String>> parametersCacheArg, Optional<LogMethod> logMethodArg){
 		result = resultArg.get();
 		logMethod = logMethodArg.get();
-		interactionCache = interactionCacheArg.get();
+		parametersCache = parametersCacheArg.get();
 	}
 
 	/**
@@ -100,7 +102,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 			this.injectSequenceID(Optional.of(SequenceUtil.getUUIDSequence()));
 			eventState = EventState.WAIT;
 		}
-		return eventAssembleAnalysis.get().analysis(Optional.of(interactionCache));
+		return eventAssembleAnalysis.get().analysis(Optional.of(parametersCache));
 	}
 
 	/** @illustrate 开始执行事件, 执行者调用 执行者只有在Event处于EventState.WAIT的状态下才会启动事件运行分析接口，<P>
@@ -109,7 +111,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 * **/
 	@Override
 	public Optional<EventExecuteAnalysisHandle> eventExecute(Optional<EventExecuteAnalysis> eventAnalysis) {
-		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(interactionCache), Optional.of(resultCache)).get();
+		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(parametersCache), Optional.of(resultCache)).get();
 		if(EventState.WAIT == eventState){
 			eventState = EventState.RUN;
 			eventExecuteAnalysisHandle.run();
@@ -132,7 +134,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 * **/
 	@Override
 	public Optional<EventResultAnalysisHandle> eventResult(Optional<EventResultAnalysis> eventResultAnalysis){
-		return result.resultResult(eventResultAnalysis.get(), interactionCache, resultCache);
+		return result.resultResult(eventResultAnalysis.get(), parametersCache, resultCache);
 	}
 	
 	/** @illustrate  跳过此事件

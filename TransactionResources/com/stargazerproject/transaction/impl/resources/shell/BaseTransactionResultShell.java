@@ -26,22 +26,20 @@ import java.util.Collection;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class BaseTransactionResultShell implements Result<TransactionResultAnalysis, TransactionResultAnalysisHandle, Collection<Event>, Cache<String, String>>, BaseCharacteristic<Result> {
 
-	private static final long serialVersionUID = -4726816340050497590L;
-
 	/**
-	* @name 事件结果内容resultCache缓存
-	* @illustrate 事件结果内容resultCache缓存
+	* @name 事务结果内容缓存
+	* @illustrate 事务结果内容缓存
 	* **/
 	@Autowired
 	@Qualifier("transactionResultCache")
-	private Cache<String, String> resultCache;
+	private Cache<String, String> transactionResultCache;
 
 	/**
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
 	* **/
-	public BaseTransactionResultShell(Optional<Cache<String, String>> cacheArg) {
-		resultCache = cacheArg.get();
+	public BaseTransactionResultShell(Optional<Cache<String, String>> transactionResultCacheArg) {
+		transactionResultCache = transactionResultCacheArg.get();
 	}
 
 	/**
@@ -61,12 +59,12 @@ public class BaseTransactionResultShell implements Result<TransactionResultAnaly
 	/** @illustrate 事件结果内容分析器*/
 	@Override
 	public Optional<TransactionResultAnalysisHandle> resultResult(TransactionResultAnalysis transactionResultAnalysis, Collection<Event> eventList, Cache<String, String> parametersCacheArg) {
-		return transactionResultAnalysis.analysis(Optional.of(resultCache), Optional.of(eventList), Optional.of(parametersCacheArg));
+		return transactionResultAnalysis.analysis(Optional.of(transactionResultCache), Optional.of(eventList), Optional.of(parametersCacheArg));
 	}
 
 	@Override
 	public void errorMessage(Optional<Exception> exception) {
-		resultCache.put(Optional.of("ErrorMessage"), Optional.of(exception.get().getMessage()));
+		transactionResultCache.put(Optional.of("ErrorMessage"), Optional.of(exception.get().getMessage()));
 	}
 	
 	@Override

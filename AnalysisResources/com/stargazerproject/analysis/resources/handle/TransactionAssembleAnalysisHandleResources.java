@@ -19,6 +19,11 @@ public class TransactionAssembleAnalysisHandleResources implements TransactionAs
     }
 
     @Override
+    public void assembleFromJson(Optional<String> jsonData) {
+        System.out.println("等待书写assembleFromJson转换方法");
+    }
+
+    @Override
     public void addEvent(Optional<Event> eventArg) {
         eventList.add(eventArg.get());
     }

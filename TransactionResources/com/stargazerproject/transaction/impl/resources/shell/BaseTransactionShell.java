@@ -40,15 +40,15 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 
 	/** 注入区 Start **/
 
-	/**@illustrate 交互缓存接口**/
+	/**@illustrate 日志接口**/
 	@Autowired
 	@Qualifier("logRecord")
 	public LogMethod logMethod;
 
-	/** @illustrate 交互缓存接口 **/
+	/** @illustrate 参数缓存接口 **/
 	@Autowired
 	@Qualifier("transactionInteractionCache")
-	public Cache<String, String> interactionCache;
+	public Cache<String, String> parametersCache;
 
 	/** @illustrate Result接口实现类**/
 	@Autowired
@@ -93,7 +93,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 			this.injectSequenceID(Optional.of(SequenceUtil.getUUIDSequence()));
 			transactionState = TransactionState.WAIT;
 		}
-		return transactionAssembleAnalysis.get().analysis(Optional.of(eventsList), Optional.of(interactionCache));
+		return transactionAssembleAnalysis.get().analysis(Optional.of(eventsList), Optional.of(parametersCache));
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	 * **/
 	@Override
 	public Optional<TransactionExecuteAnalysisHandle> transactionExecute(Optional<TransactionExecuteAnalysis> transactionExecuteAnalysis) {
-		TransactionExecuteAnalysisHandle ransactionExecuteAnalysisHandle = transactionExecuteAnalysis.get().analysis(Optional.of(eventsList), Optional.of(interactionCache)).get();
+		TransactionExecuteAnalysisHandle ransactionExecuteAnalysisHandle = transactionExecuteAnalysis.get().analysis(Optional.of(eventsList), Optional.of(parametersCache)).get();
 		if(TransactionState.WAIT == transactionState){
 			ransactionExecuteAnalysisHandle.startTransaction();
 			transactionState = TransactionState.LINEUP;
@@ -126,7 +126,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	* **/
 	@Override
 	public Optional<TransactionResultAnalysisHandle> transactionResult(Optional<TransactionResultAnalysis> transactionResultAnalysisArg){
-		return result.resultResult(transactionResultAnalysisArg.get(), eventsList, interactionCache);
+		return result.resultResult(transactionResultAnalysisArg.get(), eventsList, parametersCache);
 	}
 	
 	/**

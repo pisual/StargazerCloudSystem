@@ -1,0 +1,7 @@
+{"namespace": "com.stargazercloud",
+ "type": "record",
+ "name":"TransactionResult",
+ "fields": [
+    {"name": "transactionResultCache", "type": [{"type":"map", "values": "string"}]}
+           ]
+}

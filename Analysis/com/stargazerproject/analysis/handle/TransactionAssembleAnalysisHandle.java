@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 public interface TransactionAssembleAnalysisHandle {
 
+    public void assembleFromJson (Optional<String> jsonData);
+
     public void addEvent(Optional<Event> event);
 
     public Optional<Integer> getTransactionTimeOut();

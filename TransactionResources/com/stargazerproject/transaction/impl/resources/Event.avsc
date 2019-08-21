@@ -1,12 +1,8 @@
 {"namespace": "com.stargazercloud",
-    "type": "array",
-    "items":{
-    "type":"record",
-    "name":"eventResultCache",
-      "fields": [
-             {"name": "ErrorMessage", "type": ["string","null"]},
-             {"name": "ResultState", "type": "string"},
-             {"name": "CompleteTime", "type": "string"},
-             {"name": "RetryTime", "type": "string"}]
-    }
-   }
+ "name": "event",
+ "type": "record",
+ "fields":[
+    {"name": "eventResultCache", "type": [{"type":"map", "values": "string"}]},
+    {"name": "eventParametersCache", "type": [{"type":"map", "values": "string"}]}
+          ]
+}

@@ -1,9 +1,14 @@
-{"namespace": "example.avro",
-        "type": "record",
-        "name": "User",
-        "fields": [
-            {"name": "name", "type": "string"},
-            {"name": "favorite_number",  "type": ["int", "null"]},
-            {"name": "favorite_color", "type": ["string", "null"]}
-        ]
-       }
+{"namespace": "com.stargazercloud",
+    "type": "record",
+    "name":"Transaction",
+    "fields": [
+             {"name": "transactionResultCache", "type": [{"type":"map", "values": "string"}]},
+             {"name": "transactionParametersCache", "type": [{"type":"map", "values": "string"}]},
+             {"name": "events", "type": [array], "items":{"name": "event", "type": "record", "fields":[
+                                                                           {"name": "eventResultCache", "type": [{"type":"map", "values": "string"}]},
+                                                                           {"name": "eventParametersCache", "type": [{"type":"map", "values": "string"}]}
+                                                                                                       ]
+                                                         }
+             }
+               ]
+}

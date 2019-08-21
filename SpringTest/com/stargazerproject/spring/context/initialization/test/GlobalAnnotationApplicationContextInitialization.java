@@ -22,8 +22,8 @@ import com.stargazerproject.bus.server.manage.TransactionBusServerManage;
 import com.stargazerproject.cache.aop.configuration.ParametersInjectAOPConfiguration;
 import com.stargazerproject.cache.datastructure.BaseDataStructureCache;
 import com.stargazerproject.cache.datastructure.impl.*;
-import com.stargazerproject.cache.impl.*;
 import com.stargazerproject.cache.impl.EventResultCache;
+import com.stargazerproject.cache.impl.*;
 import com.stargazerproject.cache.impl.resources.*;
 import com.stargazerproject.cache.impl.resources.shell.*;
 import com.stargazerproject.cache.server.impl.AggregateRootIndexCacheServer;
@@ -99,11 +99,9 @@ import com.stargazerproject.sequence.resources.shell.SequenceResourcesShell;
 import com.stargazerproject.sequence.server.impl.StandardSequenceServer;
 import com.stargazerproject.sequence.server.listener.impl.StandardServerListener;
 import com.stargazerproject.sequence.server.manage.StandardServerManage;
-import com.stargazerproject.serializable.impl.NetworkTransmissionSerializables;
 import com.stargazerproject.serializable.server.impl.SerializableServer;
 import com.stargazerproject.serializable.server.listener.impl.SerializableServerListener;
 import com.stargazerproject.serializable.server.manage.SerializableServerManage;
-import com.stargazerproject.serializable.shell.NetworkTransmissionSerializablesShell;
 import com.stargazerproject.service.aop.configuration.ServerDependDetectionAOPConfiguration;
 import com.stargazerproject.service.configuration.GroupServiceConfiguration;
 import com.stargazerproject.service.resources.ServiceControlCharacteristic;
@@ -450,8 +448,6 @@ public class GlobalAnnotationApplicationContextInitialization {
 //		CellsInformationServerManage.class,
 		
 		/**Depend Serializables**/
-		NetworkTransmissionSerializables.class,
-		NetworkTransmissionSerializablesShell.class,
 		SerializableServer.class,
 		SerializableServerListener.class,
 		SerializableServerManage.class,

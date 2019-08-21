@@ -1,12 +1,13 @@
 package com.stargazerproject.serializable;
 
-import java.io.IOException;
 
 import com.google.common.base.Optional;
 
-public interface Serializables {
+import java.io.IOException;
 
-	public Optional<byte[]> serialize(Optional<Object> object) throws IOException;
+public interface Serializables<SourceType, TransmissionType> {
+
+	public Optional<TransmissionType> serialize(Optional<SourceType> source) throws IOException;
 	
-	public Optional<Object> deserialize(Optional<byte[]> byteArray) throws ClassNotFoundException, IOException;
+	public Optional<SourceType> deserialize(Optional<TransmissionType> source) throws ClassNotFoundException, IOException;
 }
