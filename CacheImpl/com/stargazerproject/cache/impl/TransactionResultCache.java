@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Component(value="transactionResultCache")
 @Qualifier("transactionResultCache")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@NeedInitialization(content = "{\"ResultState\" : \"WAIT\"," /** @illustrate 结果状态（"Faile" Or "Success"） **/
+@NeedInitialization(content = "{\"EventResultState\" : \"WAIT\"," /** @illustrate 结果状态（"Faile" Or "Success"） **/
 		                    + " \"ErrorMessage\" : \"NULL\","      /** @illustrate 异常信息（NULL Or ExceptionMessage） **/
 		                    + " \"CompleteTime\" : \"0\","      /** @illustrate 完成时间（0 Or 格林威治时间（精确到微秒）） **/
 		                    + " \"RetryTime\":\"0\"}")         /** @illustrate 重试次数（0 Or Int） **/

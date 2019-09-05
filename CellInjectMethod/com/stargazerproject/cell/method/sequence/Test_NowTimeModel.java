@@ -4,9 +4,10 @@ import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
+import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
 import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.cache.Cache;
-import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
+import com.stargazerproject.cell.impl.CellsTransactionImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -23,7 +24,7 @@ import java.time.LocalDateTime;
 @Qualifier("test_NowTimeModel")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Event()
-public class Test_NowTimeModel extends StandardCellsTransactionImpl {
+public class Test_NowTimeModel extends CellsTransactionImpl {
 
 	public Test_NowTimeModel() {
 		super(); 
@@ -46,9 +47,9 @@ public class Test_NowTimeModel extends StandardCellsTransactionImpl {
 			        ignoreExceptions = HystrixRuntimeException.class,
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle) {
 		log.INFO(this,"Test_NowTimeModel Complete , Time : " + LocalDateTime.now());
-		success(resultCache);
+		success();
 	}
 	
 	/**
@@ -58,7 +59,7 @@ public class Test_NowTimeModel extends StandardCellsTransactionImpl {
 	* @param : Throwable throwable
 	* **/
 	@Override
-	public void fallBack(Optional<Cache<String, String>> cache, Optional<Cache<String, String>> resultCache, Throwable throwable){
-		super.fallBack(cache, resultCache, throwable);
+	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle, Throwable throwable){
+		super.fallBack(interactionCache, eventResultRecordAnalysisHandle, throwable);
 	}
 }

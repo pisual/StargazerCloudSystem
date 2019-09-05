@@ -2,9 +2,11 @@ package com.stargazerproject.transaction.base.impl;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventResultAnalysis;
+import com.stargazerproject.analysis.EventResultRecordAnalysis;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
 import com.stargazerproject.cache.Cache;
-import com.stargazerproject.transaction.Result;
+import com.stargazerproject.transaction.EventResults;
 
 
 /** 
@@ -15,28 +17,20 @@ import com.stargazerproject.transaction.Result;
  *  @author Felixerio
  *  @version 1.0.0
  *  **/
-public class BaseEventResult implements Result<EventResultAnalysis, EventResultAnalysisHandle, Cache<String, String>, Cache<String, String>>{
-
-	private static final long serialVersionUID = -8725503398105907243L;
+public class BaseEventResult implements EventResults<EventResultAnalysis, EventResultAnalysisHandle, EventResultRecordAnalysis, EventResultRecordAnalysisHandle, Cache<String, String>> {
 	
-	protected Result result;
+	protected EventResults eventResults;
 	
 	protected BaseEventResult() {}
 	
 	@Override
-	public Optional<EventResultAnalysisHandle> resultResult(EventResultAnalysis eventResultAnalysis, Cache<String, String> cache, Cache<String, String> resultCache) {
-		return result.resultResult(eventResultAnalysis, cache, resultCache);
-	}
-
-
-	@Override
-	public void errorMessage(Optional<Exception> exception) {
-		result.errorMessage(exception);
+	public Optional<EventResultAnalysisHandle> resultResult(Optional<EventResultAnalysis> eventResultAnalysis, Optional<Cache<String, String>> parametersCache) {
+		return eventResults.resultResult(eventResultAnalysis, parametersCache);
 	}
 
 	@Override
-	public boolean sameValueAs(Result other) {
-		return false;
+	public Optional<EventResultRecordAnalysisHandle> resultrRcord(Optional<EventResultRecordAnalysis> resultRecordAnalysis) {
+		return eventResults.resultrRcord(resultRecordAnalysis);
 	}
 
 }

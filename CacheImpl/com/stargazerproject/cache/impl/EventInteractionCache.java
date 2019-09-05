@@ -17,13 +17,14 @@ import org.springframework.stereotype.Component;
 @Component(value="eventInteractionCache")
 @Qualifier("eventInteractionCache")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@NeedInitialization(content = "{\"ResultState\" : \"WAIT\"," 			/** @illustrate 结果状态（"Faile" Or "Success"） **/
+@NeedInitialization(content = "{\"EventResultState\" : \"WAIT\"," 			/** @illustrate 结果状态（"Faile" Or "Success"） **/
 							+ " \"ErrorMessage\" : \"NULL\","		 	/** @illustrate 异常信息（NULL Or ExceptionMessage） **/
 							+ " \"waitTimeoutUnit\" : \"MILLISECONDS\","/** @illustrate 等待超时时间单位（TimeUnit类型，默认为MILLISECONDS） **/
 							+ " \"waitTimeout\" : \"500\","				/** @illustrate 等待超时时间（500 Or 其他数值） **/
 							+ " \"runTimeoutUnit\" : \"MILLISECONDS\","	/** @illustrate 运行超时时间单位（TimeUnit类型，默认为MILLISECONDS **/
 							+ " \"runTimeout\" : \"500\","				/** @illustrate 运行超时时间（500 Or 其他数值） **/
-							+ " \"Method\" : \"NULL\"}")      			/** @illustrate 调动方法（NULL Or 具体的方法） **/
+						    + " \"AggregateRoot\" : \"NULL\","			/** @illustrate 聚合跟ID，NULL或者具体的ID **/
+		     			    + " \"Method\" : \"NULL\"}")      			/** @illustrate 调动方法（NULL Or 具体的方法） **/
 @NoSpringDepend
 public final class EventInteractionCache extends BaseCacheImpl<String, String> implements StanderCharacteristicShell<Cache<String, String>> , BeforehandCharacteristicShell<Cache<String, String>> {
 

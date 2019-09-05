@@ -26,10 +26,10 @@ import org.springframework.stereotype.Component;
 @Component(value="eventResultCache")
 @Qualifier("eventResultCache")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@NeedInitialization(content = "{\"ResultState\" : \"WAIT\"," /** @illustrate 结果状态（"Faile" Or "Success"） **/
-		                    + " \"ErrorMessage\" : \"NULL\","      /** @illustrate 异常信息（NULL Or ExceptionMessage） **/
-		                    + " \"CompleteTime\" : \"0\","      /** @illustrate 完成时间（0 Or 格林威治时间（精确到微秒）） **/
-		                    + " \"RetryTime\":\"0\"}")         /** @illustrate 重试次数（0 Or Int） **/
+@NeedInitialization(content = "{\"EventResultState_0\" : \"WAIT\"," /** @illustrate 结果状态（"Faile" Or "Success"）,初始状态为第0次 **/
+		                    + " \"ErrorMessage_0\" : \"NULL\","      /** @illustrate 异常信息（NULL Or ExceptionMessage）,初始状态为第0次**/
+		                    + " \"CompleteTime_0\" : \"0\","      /** @illustrate 完成时间（0 Or 格林威治时间（精确到微秒）） ,初始状态为第0次**/
+		                    + " \"RetryTime\":\"0\"}")         /** @illustrate 重试次数（0 Or Int）,初始状态为0 **/
 public final class EventResultCache extends BaseCacheImpl<String, String> implements StanderCharacteristicShell<Cache<String, String>>, BeforehandCharacteristicShell<Cache<String, String>> {
 
 	private static final long serialVersionUID = 7696574737465211477L;

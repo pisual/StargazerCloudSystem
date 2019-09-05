@@ -3,7 +3,7 @@ package com.stargazerproject.analysis.resources.handle;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
-import com.stargazerproject.transaction.ResultState;
+import com.stargazerproject.transaction.EventResultState;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,17 +13,14 @@ public class EventResultAnalysisHandleResources implements EventResultAnalysisHa
 
     private Cache<String, String> interactionCache;
 
-    private Cache<String, String> resultInteractionCache;
-
-    public EventResultAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg, Optional<Cache<String, String>> interactionCacheArg, Optional<Cache<String, String>> resultInteractionCacheArg){
+    public EventResultAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg, Optional<Cache<String, String>> interactionCacheArg){
         resultCache = resultCacheArg.get();
         interactionCache = interactionCacheArg.get();
-        resultInteractionCache = resultInteractionCacheArg.get();
     }
 
     @Override
-    public Optional<ResultState> resultState() {
-        String resultState = interactionCache.get(Optional.of("ResultState")).get();
+    public Optional<EventResultState> resultState() {
+        String resultState = interactionCache.get(Optional.of("EventResultState")).get();
         return conversionResultState(resultState);
     }
 
@@ -52,20 +49,20 @@ public class EventResultAnalysisHandleResources implements EventResultAnalysisHa
         return interactionCache.get(Optional.of("Method"));
     }
 
-    private Optional<ResultState> conversionResultState(String result){
-        ResultState resultState;
+    private Optional<EventResultState> conversionResultState(String result){
+        EventResultState resultState;
         switch (result){
             case "SUCCESS":
-                resultState = ResultState.SUCCESS;
+                resultState = EventResultState.SUCCESS;
             break;
             case "FAULT":
-                resultState = ResultState.FAULT;
+                resultState = EventResultState.FAULT;
                 break;
             case "WAIT":
-                resultState = ResultState.WAIT;
+                resultState = EventResultState.WAIT;
                 break;
             default:
-                throw new NullPointerException("ResultState Error , ResultState : " + result);
+                throw new NullPointerException("EventResultState Error , EventResultState : " + result);
         }
         return Optional.of(resultState);
     }

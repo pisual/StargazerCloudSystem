@@ -21,4 +21,5 @@ public class EventExecuteAnalysisImpl extends BaseEventExecuteAnalysisImpl imple
 	public void initialize(BaseCharacteristic<EventExecuteAnalysis> eventExecuteAnalysisArg) {
 		eventExecuteAnalysis = eventExecuteAnalysisArg.characteristic().get();
 	}
+
 }

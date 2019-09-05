@@ -2,11 +2,14 @@ package com.stargazerproject.transaction.impl.resources.shell;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.TransactionResultAnalysis;
+import com.stargazerproject.analysis.TransactionResultRecordAnalysis;
 import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionResultRecordAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Event;
-import com.stargazerproject.transaction.Result;
+import com.stargazerproject.transaction.TransactionResults;
+import com.stargazerproject.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -24,7 +27,7 @@ import java.util.Collection;
 @Component(value="baseTransactionResultShell")
 @Qualifier("baseTransactionResultShell")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class BaseTransactionResultShell implements Result<TransactionResultAnalysis, TransactionResultAnalysisHandle, Collection<Event>, Cache<String, String>>, BaseCharacteristic<Result> {
+public class BaseTransactionResultShell implements TransactionResults<TransactionResultAnalysis, TransactionResultAnalysisHandle, TransactionResultRecordAnalysis, TransactionResultRecordAnalysisHandle, Cache<String, String>, Collection<Event>>, BaseCharacteristic<TransactionResults> {
 
 	/**
 	* @name 事务结果内容缓存
@@ -52,24 +55,22 @@ public class BaseTransactionResultShell implements Result<TransactionResultAnaly
 	private BaseTransactionResultShell(){}
 	
 	@Override
-	public Optional<Result> characteristic() {
+	public Optional<TransactionResults> characteristic() {
 		return Optional.of(this);
 	}
 
-	/** @illustrate 事件结果内容分析器*/
 	@Override
-	public Optional<TransactionResultAnalysisHandle> resultResult(TransactionResultAnalysis transactionResultAnalysis, Collection<Event> eventList, Cache<String, String> parametersCacheArg) {
-		return transactionResultAnalysis.analysis(Optional.of(transactionResultCache), Optional.of(eventList), Optional.of(parametersCacheArg));
+	public Optional<TransactionResultAnalysisHandle> resultResult(Optional<TransactionResultAnalysis> transactionResultAnalysis, Optional<Cache<String, String>> parametersCacheArg, Optional<Collection<Event>> eventList) {
+		return transactionResultAnalysis.get().analysis(Optional.of(transactionResultCache), parametersCacheArg, eventList);
 	}
 
 	@Override
-	public void errorMessage(Optional<Exception> exception) {
-		transactionResultCache.put(Optional.of("ErrorMessage"), Optional.of(exception.get().getMessage()));
-	}
-	
-	@Override
-	public boolean sameValueAs(Result other) {
-		return false;
+	public Optional<TransactionResultRecordAnalysisHandle> resultrRcord(Optional<TransactionResultRecordAnalysis> transactionResultRecordAnalysis) {
+		return transactionResultRecordAnalysis.get().analysis(Optional.of(transactionResultCache));
 	}
 
+	@Override
+	public String toString() {
+		return JsonUtil.cacheToJson(Optional.of(transactionResultCache), Optional.of("transactionResultCache")).toString();
+	}
 }

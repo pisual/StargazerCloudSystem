@@ -32,8 +32,8 @@ public class CellsInformationMessageToByteEncoderHandlerCharacteristic extends M
 
 	@Override
 	protected void encode(ChannelHandlerContext ctx, Object object, ByteBuf out) throws Exception {
-		byte[] bytes = serializables.serialize(Optional.of(object)).get();
-		out.writeInt(bytes.length);
-		out.writeBytes(bytes);
+//		编码编码 方法 编码编码
+//		out.writeInt(bytes.length);
+//		out.writeBytes(bytes);
 	}
 }

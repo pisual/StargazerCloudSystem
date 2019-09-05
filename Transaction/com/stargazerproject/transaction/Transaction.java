@@ -10,4 +10,6 @@ public interface Transaction extends TransactionAssemble,
                                      TransactionResult, 
                                      TransactionExecute, 
                                      Entity<String>{
+
+    public String toString();
 }

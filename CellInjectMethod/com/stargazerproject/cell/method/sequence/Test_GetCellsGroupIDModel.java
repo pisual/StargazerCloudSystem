@@ -4,9 +4,10 @@ import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
+import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
 import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.cache.Cache;
-import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
+import com.stargazerproject.cell.impl.CellsTransactionImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Component;
 @Qualifier("test_GetCellsGroupIDModel")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Event()
-public class Test_GetCellsGroupIDModel extends StandardCellsTransactionImpl {
+public class Test_GetCellsGroupIDModel extends CellsTransactionImpl {
 
 	public Test_GetCellsGroupIDModel() {
 		super(); 
@@ -44,11 +45,11 @@ public class Test_GetCellsGroupIDModel extends StandardCellsTransactionImpl {
 			        ignoreExceptions = HystrixRuntimeException.class,
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
-		super.method(interactionCache, resultCache);
-		String OrderID = getAggregationRootCache(Optional.of("OrderID")).get();
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle) {
+		super.method(interactionCache, eventResultRecordAnalysisHandle);
+		String OrderID = eventResultRecordAnalysisHandle.get().getAggregationRootCache(Optional.of("OrderID")).get();
 		log.INFO(this,"Test_GetCellsGroupIDModel Complete , OrderID : " + OrderID);
-		success(resultCache);
+		success();
 	}
 	
 	/**
@@ -58,7 +59,7 @@ public class Test_GetCellsGroupIDModel extends StandardCellsTransactionImpl {
 	* @param : Throwable throwable
 	* **/
 	@Override
-	public void fallBack(Optional<Cache<String, String>> cache, Optional<Cache<String, String>> resultCache, Throwable throwable){
-		super.fallBack(cache, resultCache, throwable);
+	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle, Throwable throwable){
+		super.fallBack(interactionCache, eventResultRecordAnalysisHandle, throwable);
 	}
 }

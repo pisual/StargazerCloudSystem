@@ -19,7 +19,7 @@ import java.util.Collection;
 public class TransactionResultAnalysisShell implements TransactionResultAnalysis {
 
     @Override
-    public Optional<TransactionResultAnalysisHandle> analysis(Optional<Cache<String, String>> resultCache, Optional<Collection<Event>> interactionCache, Optional<Cache<String, String>> resultInteractionCache) {
+    public Optional<TransactionResultAnalysisHandle> analysis(Optional<Cache<String, String>> resultCache, Optional<Cache<String, String>> resultInteractionCache, Optional<Collection<Event>> interactionCache) {
         return Optional.of(new TransactionResultAnalysisHandleResources(resultCache, interactionCache, resultInteractionCache));
     }
 

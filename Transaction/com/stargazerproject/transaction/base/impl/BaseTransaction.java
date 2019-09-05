@@ -34,5 +34,10 @@ public class BaseTransaction extends ID implements Transaction{
 	public void skipTransaction() {
 		transaction.skipTransaction();
 	}
+
+	@Override
+	public String toString(){
+		return transaction.toString();
+	}
 	
 }

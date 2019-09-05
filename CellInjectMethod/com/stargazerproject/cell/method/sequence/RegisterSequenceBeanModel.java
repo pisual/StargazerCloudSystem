@@ -3,9 +3,10 @@ package com.stargazerproject.cell.method.sequence;
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
 import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.cache.Cache;
-import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
+import com.stargazerproject.cell.impl.CellsTransactionImpl;
 import com.stargazerproject.cell.method.exception.RunException;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.spring.container.impl.BeanContainer;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component(value="registerSequenceBeanModel")
 @Qualifier("registerSequenceBeanModel")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class RegisterSequenceBeanModel extends StandardCellsTransactionImpl {
+public class RegisterSequenceBeanModel extends CellsTransactionImpl {
 
 	@Autowired
 	@Qualifier("systemParameterCahce")
@@ -51,7 +52,7 @@ public class RegisterSequenceBeanModel extends StandardCellsTransactionImpl {
 	                threadPoolKey = "registerSequenceBeanModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle) {
 		try{
 
 			//**模拟远程注入 Start**//
@@ -60,7 +61,7 @@ public class RegisterSequenceBeanModel extends StandardCellsTransactionImpl {
 
 			BeanContainer.instance().setBean(Optional.of(initializationCellsGroupModel.getClass()));
 
-			success(resultCache);
+			success();
 		} catch(Exception e){
 			throw new RunException(e.getMessage());
 		}
@@ -74,7 +75,7 @@ public class RegisterSequenceBeanModel extends StandardCellsTransactionImpl {
 	* @param : Throwable throwable
 	* **/
 	@Override
-	public void fallBack(Optional<Cache<String, String>> cache, Optional<Cache<String, String>> resultCache, Throwable throwable){
-		super.fallBack(cache, resultCache, throwable);
+	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle, Throwable throwable){
+		super.fallBack(interactionCache, eventResultRecordAnalysisHandle, throwable);
 	}
 }

@@ -3,12 +3,13 @@ package com.stargazerproject.cell.method.sequence;
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
 import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.cache.BigCache;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.CellsBlockMethod;
-import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
+import com.stargazerproject.cell.impl.CellsTransactionImpl;
 import com.stargazerproject.cell.method.exception.RunException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
@@ -23,7 +24,7 @@ import org.springframework.stereotype.Component;
 @Component(value="acquireParameterBlockModel")
 @Qualifier("acquireParameterBlockModel")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AcquireParameterBlockModel extends StandardCellsTransactionImpl implements CellsBlockMethod{
+public class AcquireParameterBlockModel extends CellsTransactionImpl implements CellsBlockMethod{
 	
 	/** @name 聚合根ID **/
 	@NeedInject(type="TransactionCache")
@@ -96,13 +97,13 @@ public class AcquireParameterBlockModel extends StandardCellsTransactionImpl imp
 	                threadPoolKey = "acquireParameterModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache){
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle){
 		try {
 			registeredNodeWatch();
 			registeredNode();
 			blockMethod();
 			deleteNodeWatch();
-			success(interactionCache);
+			success();
 		} catch (Exception e) {
 			throw new RunException(e.getMessage());
 		}
@@ -126,8 +127,8 @@ public class AcquireParameterBlockModel extends StandardCellsTransactionImpl imp
 	* @param : Optional<Cache<String, String>> cache
 	* @param : Throwable throwable
 	* **/
-	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache, Throwable throwable){
-		super.fallBack(interactionCache, resultCache, throwable);
+	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle, Throwable throwable){
+		super.fallBack(interactionCache, eventResultRecordAnalysisHandle, throwable);
     }
 	
 	private void registeredNodeWatch() throws Exception{

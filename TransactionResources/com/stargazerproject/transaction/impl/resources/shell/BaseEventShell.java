@@ -1,23 +1,24 @@
 package com.stargazerproject.transaction.impl.resources.shell;
 
-import com.google.common.base.MoreObjects;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventAssembleAnalysis;
 import com.stargazerproject.analysis.EventExecuteAnalysis;
 import com.stargazerproject.analysis.EventResultAnalysis;
+import com.stargazerproject.analysis.EventResultRecordAnalysis;
 import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
 import com.stargazerproject.annotation.description.NoSpringDepend;
-import com.stargazerproject.bus.exception.EventException;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.Event;
+import com.stargazerproject.transaction.EventResults;
 import com.stargazerproject.transaction.EventState;
-import com.stargazerproject.transaction.Result;
 import com.stargazerproject.transaction.base.impl.ID;
 import com.stargazerproject.util.CloneUtil;
+import com.stargazerproject.util.JsonUtil;
 import com.stargazerproject.util.SequenceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,33 +43,31 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	@Qualifier("logRecord")
 	private LogMethod logMethod;
 
-	/** @illustrate 结果缓存 **/
-	@Autowired
-	@Qualifier("eventInteractionCache")
-	private Cache<String, String> resultCache;
-
 	/** @illustrate 参数缓存 **/
 	@Autowired
 	@Qualifier("eventInteractionCache")
 	private Cache<String, String> parametersCache;
 
-	/** @illustrate Event Result实例**/
+	/** @illustrate eventResultRecordAnalysis实例**/
+	@Autowired
+	@Qualifier("eventResultRecordAnalysis")
+	private EventResultRecordAnalysis eventResultRecordAnalysis;
+
+	/** @illustrate Result **/
+	private EventResults<EventResultAnalysis, EventResultAnalysisHandle, EventResultRecordAnalysis, EventResultRecordAnalysisHandle, Cache<String, String>> result;
+
+	/** @illustrate Event Result Shell 实例**/
 	@Autowired
 	@Qualifier("baseEventResultShell")
-	private BaseCharacteristic<Result> baseEventResultShell;
+	private BaseCharacteristic<EventResults<EventResultAnalysis, EventResultAnalysisHandle, EventResultRecordAnalysis, EventResultRecordAnalysisHandle, Cache<String, String>>> baseEventResultShell;
 
-
-	/** @illustrate 事件结果接口 **/
-	private Result result;
-	
 	/** @illustrate 事件状态, 初始状态为初始态**/
 	private EventState eventState = EventState.INIT;
-	
 	/**
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
 	* **/
-	public BaseEventShell(Optional<Result> resultArg, Optional<Cache<String, String>> parametersCacheArg, Optional<LogMethod> logMethodArg){
+	public BaseEventShell(Optional<EventResults> resultArg, Optional<Cache<String, String>> parametersCacheArg, Optional<LogMethod> logMethodArg){
 		result = resultArg.get();
 		logMethod = logMethodArg.get();
 		parametersCache = parametersCacheArg.get();
@@ -111,14 +110,13 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 * **/
 	@Override
 	public Optional<EventExecuteAnalysisHandle> eventExecute(Optional<EventExecuteAnalysis> eventAnalysis) {
-		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(parametersCache), Optional.of(resultCache)).get();
+		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(parametersCache), result.resultrRcord(Optional.of(eventResultRecordAnalysis))).get();
 		if(EventState.WAIT == eventState){
 			eventState = EventState.RUN;
 			eventExecuteAnalysisHandle.run();
 			eventState = EventState.COMPLETE;
 		}
 		else if(EventState.PASS == eventState){
-			result.errorMessage(Optional.of(new EventException("事件处于PASS状态，将快速失败此事务")));
 			logMethod.INFO(this, "事件处于PASS状态，将快速失败此事务");
 		}
 		else{
@@ -134,7 +132,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 * **/
 	@Override
 	public Optional<EventResultAnalysisHandle> eventResult(Optional<EventResultAnalysis> eventResultAnalysis){
-		return result.resultResult(eventResultAnalysis.get(), parametersCache, resultCache);
+		return result.resultResult(eventResultAnalysis, Optional.of(parametersCache));
 	}
 	
 	/** @illustrate  跳过此事件
@@ -162,8 +160,13 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	
 	@Override
 	public String toString() {
-        return MoreObjects.toStringHelper(this)
-                          .add("EventState", eventState).toString();
+		StringBuffer jsonResult = JsonUtil.cacheToJson(Optional.of(parametersCache), Optional.of("eventInteractionCache"))
+							              .append(",")
+				                          .append(baseEventResultShell.characteristic().get().toString())
+									      .append(",")
+				                          .append(JsonUtil.StringToJson(Optional.of("EventState"), Optional.of(eventState.toString())));
+		return jsonResult.toString();
 	}
+
 
 }

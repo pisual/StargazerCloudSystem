@@ -58,5 +58,9 @@ public class BaseEvent extends ID implements Event{
 	public void injectSequenceID(Optional<String> idArg) {
 		event.injectSequenceID(idArg);
 	}
-	
+
+
+	public String toString(){
+		return event.toString();
+	}
 }

@@ -34,7 +34,7 @@ public class ClassUtil {
 //			url1 = new URL("file:/Users/Felixerio/Desktop/TestJar.jar");
 //	        URLClassLoader myClassLoader1 = new URLClassLoader(new URL[] { url1 }, Thread.currentThread()  
 //	                .getContextClassLoader());  
-//	        Class<?> myClass1 = myClassLoader1.loadClass("com.stargazerproject.cell.impl.StandardCellsTransactionImpl");
+//	        Class<?> myClass1 = myClassLoader1.loadClass("com.stargazerproject.cell.impl.CellsTransactionImpl");
 //		} catch (MalformedURLException | ClassNotFoundException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();

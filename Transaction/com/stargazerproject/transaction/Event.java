@@ -19,4 +19,6 @@ public interface Event extends EventAssemble, EventExecute, EventResult, Entity<
 	@ThreadSafeMethodsLevel(threadSafeLevel = ThreadSafeLevel.ThreadSafe)
 	public Optional<EventState> eventState();
 
+	public String toString();
+
 }

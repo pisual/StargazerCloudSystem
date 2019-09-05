@@ -1,23 +1,22 @@
 package com.stargazerproject.transaction.impl.resources.shell;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Optional;
+import com.stargazerproject.analysis.EventAssembleAnalysis;
 import com.stargazerproject.analysis.TransactionAssembleAnalysis;
 import com.stargazerproject.analysis.TransactionExecuteAnalysis;
 import com.stargazerproject.analysis.TransactionResultAnalysis;
 import com.stargazerproject.analysis.handle.TransactionAssembleAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
-import com.stargazerproject.bus.exception.EventException;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.Event;
-import com.stargazerproject.transaction.Result;
 import com.stargazerproject.transaction.Transaction;
+import com.stargazerproject.transaction.TransactionResults;
 import com.stargazerproject.transaction.TransactionState;
 import com.stargazerproject.transaction.base.impl.ID;
+import com.stargazerproject.util.JsonUtil;
 import com.stargazerproject.util.SequenceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,7 +52,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	/** @illustrate Result接口实现类**/
 	@Autowired
 	@Qualifier("baseTransactionResultShell")
-	private BaseCharacteristic<Result> baseTransactionResultShell;
+	private BaseCharacteristic<TransactionResults> baseTransactionResultShell;
 
 	/** 注入区 End **/
 
@@ -63,7 +62,11 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	private Collection<Event> eventsList;
 
 	/** @illustrate Result接口**/
-	private Result result;
+	private TransactionResults transactionResults;
+
+	@Autowired
+	@Qualifier("eventAssembleAnalysisImpl")
+	public EventAssembleAnalysis eventAssembleAnalysis;
 
 	/** @illustrate 事件状态, 初始状态为初始态**/
 	private TransactionState transactionState = TransactionState.INIT;
@@ -74,7 +77,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	
 	@Override
 	public Optional<Transaction> characteristic() {
-		result = baseTransactionResultShell.characteristic().get();
+		transactionResults = baseTransactionResultShell.characteristic().get();
 		return Optional.of(this);
 	}
 	
@@ -109,7 +112,6 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 			transactionState = TransactionState.LINEUP;
 		}
 		else if(TransactionState.PASS == transactionState){
-			result.errorMessage(Optional.of(new EventException("事务处于PASS状态，将快速失败此事务")));
 			logMethod.INFO(this, "事务处于PASS状态，将快速失败此事务");
 		}
 		else{
@@ -126,7 +128,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	* **/
 	@Override
 	public Optional<TransactionResultAnalysisHandle> transactionResult(Optional<TransactionResultAnalysis> transactionResultAnalysisArg){
-		return result.resultResult(transactionResultAnalysisArg.get(), eventsList, parametersCache);
+		return transactionResults.resultResult(transactionResultAnalysisArg, Optional.of(parametersCache), Optional.of(eventsList));
 	}
 	
 	/**
@@ -140,9 +142,19 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	
 	@Override
 	public String toString() {
-		ToStringHelper toStringHelper = MoreObjects.toStringHelper(this);
-		eventsList.forEach(x -> toStringHelper.add("Events : ", x.toString()));
-        return toStringHelper.toString();
+		StringBuffer jsonResult = JsonUtil.cacheToJson(Optional.of(parametersCache), Optional.of("transactionInteractionCache"))
+				.append(",")
+				.append(baseTransactionResultShell.characteristic().get().toString())
+				.append(",")
+				.append(JsonUtil.StringToJson(Optional.of("TransactionState"), Optional.of(transactionState.toString())));
+
+		if(eventsList != null && eventsList.size() >0){
+			eventsList.stream().map(event -> event.toString())
+					           .forEach(json -> jsonResult.append(json + "\","));
+			jsonResult.deleteCharAt(jsonResult.lastIndexOf(","));
+		}
+
+		return jsonResult.toString();
 	}
 
 	

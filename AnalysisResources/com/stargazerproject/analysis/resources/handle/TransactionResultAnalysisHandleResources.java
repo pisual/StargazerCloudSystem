@@ -6,7 +6,7 @@ import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.Event;
 import com.stargazerproject.transaction.EventResult;
-import com.stargazerproject.transaction.ResultState;
+import com.stargazerproject.transaction.EventResultState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -31,7 +31,7 @@ public class TransactionResultAnalysisHandleResources implements TransactionResu
     }
 
     @Override
-    public Optional<ResultState> resultState() {
+    public Optional<EventResultState> resultState() {
         //TODO 分析结果状态 未完成
         for (EventResult eventResult : eventResultList) {
             eventResult.eventResult(Optional.of(eventResultAnalysis));

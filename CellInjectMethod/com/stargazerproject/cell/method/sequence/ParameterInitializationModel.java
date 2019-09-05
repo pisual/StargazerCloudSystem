@@ -3,10 +3,11 @@ package com.stargazerproject.cell.method.sequence;
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
 import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.cache.Cache;
-import com.stargazerproject.cell.impl.StandardCellsTransactionImpl;
+import com.stargazerproject.cell.impl.CellsTransactionImpl;
 import com.stargazerproject.cell.method.exception.RunException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Component;
 @Component(value="parameterInitializationModel")
 @Qualifier("parameterInitializationModel")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ParameterInitializationModel extends StandardCellsTransactionImpl {
+public class ParameterInitializationModel extends CellsTransactionImpl {
 	
 	/** @name 新生区路径 **/
 	@NeedInject(type="SystemParametersCache")
@@ -65,10 +66,10 @@ public class ParameterInitializationModel extends StandardCellsTransactionImpl {
 	                threadPoolKey = "parameterInitializationModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle) {
 		try {
 			nodeNegotiate.registeredWatcher(Optional.of(""), Optional.of(Kernel_Negotiate_BasePath_EdenNodePath), Optional.of("parameterInitializationModel"), negotiateParametersInjectInitializationListenerCharacteristic.characteristic());
-			success(resultCache);
+			success();
 		} catch (Exception e) {
 			throw new RunException(e.getMessage());
 		}
@@ -81,7 +82,7 @@ public class ParameterInitializationModel extends StandardCellsTransactionImpl {
 	* @param : Throwable throwable
 	* **/
 	@Override
-	public void fallBack(Optional<Cache<String, String>> cache, Optional<Cache<String, String>> resultCache, Throwable throwable){
-		super.fallBack(cache, resultCache, throwable);
+	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle, Throwable throwable){
+		super.fallBack(interactionCache, eventResultRecordAnalysisHandle, throwable);
 	}
 }

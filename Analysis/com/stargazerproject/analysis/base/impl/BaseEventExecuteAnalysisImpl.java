@@ -3,6 +3,7 @@ package com.stargazerproject.analysis.base.impl;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventExecuteAnalysis;
 import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 
 public abstract class BaseEventExecuteAnalysisImpl implements EventExecuteAnalysis {
@@ -10,7 +11,7 @@ public abstract class BaseEventExecuteAnalysisImpl implements EventExecuteAnalys
 	protected EventExecuteAnalysis eventExecuteAnalysis;
 	
 	@Override
-	public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache, Optional<Cache<String, String>> resultCache) {
-		return eventExecuteAnalysis.analysis(interactionCache, resultCache);
+	public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle) {
+		return eventExecuteAnalysis.analysis(interactionCache, eventResultRecordAnalysisHandle);
 	}
 }
