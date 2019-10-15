@@ -3,7 +3,7 @@ package com.stargazerproject.cell.method.sequence;
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.cache.BigCache;
@@ -97,7 +97,7 @@ public class AcquireParameterBlockModel extends CellsTransactionImpl implements 
 	                threadPoolKey = "acquireParameterModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle){
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle){
 		try {
 			registeredNodeWatch();
 			registeredNode();
@@ -127,8 +127,8 @@ public class AcquireParameterBlockModel extends CellsTransactionImpl implements 
 	* @param : Optional<Cache<String, String>> cache
 	* @param : Throwable throwable
 	* **/
-	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle, Throwable throwable){
-		super.fallBack(interactionCache, eventResultRecordAnalysisHandle, throwable);
+	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle, Throwable throwable){
+		super.fallBack(interactionCache, eventResultsExecuteAnalysisHandle, throwable);
     }
 	
 	private void registeredNodeWatch() throws Exception{

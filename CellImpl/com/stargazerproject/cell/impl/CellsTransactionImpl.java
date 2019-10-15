@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.exception.HystrixTimeoutException;
-import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.CellsTransaction;
 import com.stargazerproject.log.LogMethod;
@@ -12,14 +12,14 @@ import com.stargazerproject.transaction.EventResultState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-public abstract class CellsTransactionImpl implements CellsTransaction<String, String, EventResultRecordAnalysisHandle> {
+public abstract class CellsTransactionImpl implements CellsTransaction<String, String> {
 
 	/** @illustrate 获取Log(日志)接口 **/
 	@Autowired
 	@Qualifier("logRecord")
 	protected LogMethod log;
 
-	private EventResultRecordAnalysisHandle eventResultRecordAnalysisHandle;
+	private EventResultsExecuteAnalysisHandle eventResultsExecuteAnalysisHandle;
 
 	/**
 	 * @name 调用方法
@@ -30,11 +30,11 @@ public abstract class CellsTransactionImpl implements CellsTransaction<String, S
 	@Override
 	@HystrixCommand(fallbackMethod = "fallBack", groupKey="TestMethod", commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "200")})
-	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandleArg) {
-		eventResultRecordAnalysisHandle = eventResultRecordAnalysisHandleArg.get();
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandleArg) {
+		eventResultsExecuteAnalysisHandle = eventResultsExecuteAnalysisHandleArg.get();
 	}
 	
-	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle, Throwable throwable){
+	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandleArg, Throwable throwable){
 		if(throwable instanceof HystrixTimeoutException){
 			log.WARN(this, HystrixTimeoutException.class.toString());
 		}
@@ -44,12 +44,12 @@ public abstract class CellsTransactionImpl implements CellsTransaction<String, S
 	}
 
     protected void success(){
-		eventResultRecordAnalysisHandle.EventResultState(Optional.of(EventResultState.SUCCESS));
+		eventResultsExecuteAnalysisHandle.EventResultState(Optional.of(EventResultState.SUCCESS));
 	}
 
 	protected void fail(Throwable throwable){
-		eventResultRecordAnalysisHandle.EventResultState(Optional.of(EventResultState.FAULT));
-		eventResultRecordAnalysisHandle.errorMessage(Optional.of(throwable));
+		eventResultsExecuteAnalysisHandle.EventResultState(Optional.of(EventResultState.FAULT));
+		eventResultsExecuteAnalysisHandle.errorMessage(Optional.of(throwable));
 	}
 
 }

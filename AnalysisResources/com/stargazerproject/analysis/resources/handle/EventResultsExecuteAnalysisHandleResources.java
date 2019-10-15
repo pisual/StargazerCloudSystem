@@ -1,7 +1,7 @@
 package com.stargazerproject.analysis.resources.handle;
 
 import com.google.common.base.Optional;
-import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.EventResultState;
@@ -11,31 +11,31 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.time.Instant;
 
-public class EventResultRecordAnalysisHandleResources implements EventResultRecordAnalysisHandle {
+public class EventResultsExecuteAnalysisHandleResources implements EventResultsExecuteAnalysisHandle {
 
     /** @illustrate 获取Log(日志)接口 **/
     @Autowired
     @Qualifier("logRecord")
     protected LogMethod log;
 
-    /** @illustrate 聚合根索引缓存，包含所有的聚合根缓存 **/
-    @Autowired
-    @Qualifier("aggregateRootIndexCache")
-    private Cache<String, Cache<String, String>> aggregateRootIndexCache;
-
     /** @illustrate 聚合根缓存 **/
     @Autowired
     @Qualifier("aggregateRootCache")
     private Cache<String, String> aggregateRootCache;
 
+    /** @illustrate 聚合根索引缓存，包含所有的聚合根缓存 **/
+    @Autowired
+    @Qualifier("aggregateRootIndexCache")
+    private Cache<String, Cache<String, String>> aggregateRootIndexCache;
+
     private Cache<String, String> resultCache;
 
-    public EventResultRecordAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg, Optional<String> aggregationRootIDArg){
+    public EventResultsExecuteAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg, Optional<String> aggregationRootIDArg){
         resultCache = resultCacheArg.get();
         aggregationRootCacheInitialization(aggregationRootIDArg);
     }
 
-    public EventResultRecordAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg){
+    public EventResultsExecuteAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg){
         resultCache = resultCacheArg.get();
         aggregationRootCacheInitialization(Optional.of(SequenceUtil.getUUIDSequence()));
     }

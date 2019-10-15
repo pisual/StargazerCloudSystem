@@ -3,7 +3,7 @@ package com.stargazerproject.cell.method.sequence;
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.cache.BigCache;
 import com.stargazerproject.cache.Cache;
@@ -64,7 +64,7 @@ public class InjectParameterModel extends CellsTransactionImpl {
 	                threadPoolKey = "injectParameterModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle) {
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle) {
 		try {
 			Optional<Object> parameterClass = getParameterClass();
 			Optional<Map<String, String>> paramentMap= getParamentMap(parameterClass);
@@ -82,8 +82,8 @@ public class InjectParameterModel extends CellsTransactionImpl {
 	* @param : Throwable throwable
 	* **/
 	@Override
-	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle, Throwable throwable){
-		super.fallBack(interactionCache, eventResultRecordAnalysisHandle, throwable);
+	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle, Throwable throwable){
+		super.fallBack(interactionCache, eventResultsExecuteAnalysisHandle, throwable);
 	}
 	/**
 	 * @illustrate 获取参数类

@@ -1,10 +1,12 @@
 package com.stargazerproject.transaction.impl.resources.shell;
 
 import com.google.common.base.Optional;
-import com.stargazerproject.analysis.EventResultAnalysis;
-import com.stargazerproject.analysis.EventResultRecordAnalysis;
-import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
-import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
+import com.stargazerproject.analysis.EventResultsAssembleAnalysis;
+import com.stargazerproject.analysis.EventResultsExecuteAnalysis;
+import com.stargazerproject.analysis.EventResultsResultAnalysis;
+import com.stargazerproject.analysis.handle.EventResultsAssembleAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.EventResults;
@@ -25,7 +27,7 @@ import org.springframework.stereotype.Component;
 @Component(value="baseEventResultShell")
 @Qualifier("baseEventResultShell")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class BaseEventResultShell implements EventResults<EventResultAnalysis, EventResultAnalysisHandle, EventResultRecordAnalysis, EventResultRecordAnalysisHandle, Cache<String, String>>, BaseCharacteristic<EventResults>{
+public class BaseEventResultShell implements EventResults, BaseCharacteristic<EventResults>{
 	
 	/**
 	* @name 事件结果内容缓存
@@ -57,17 +59,21 @@ public class BaseEventResultShell implements EventResults<EventResultAnalysis, E
 		return Optional.of(this);
 	}
 
-	/** @illustrate 事件结果内容分析器*/
 	@Override
-	public Optional<EventResultAnalysisHandle> resultResult(Optional<EventResultAnalysis> eventResultAnalysis, Optional<Cache<String, String>> patametersCacheArg) {
-		return eventResultAnalysis.get().analysis(Optional.of(resultCache), patametersCacheArg);
+	public Optional<EventResultsAssembleAnalysisHandle> resultAssemble(Optional<EventResultsAssembleAnalysis> eventResultAssembleAnalysis) {
+		return eventResultAssembleAnalysis.get().analysis(Optional.of(resultCache));
+	}
+
+	/** @illustrate 事件结果内容记录器*/
+	@Override
+	public Optional<EventResultsExecuteAnalysisHandle> resultsExecute(Optional<EventResultsExecuteAnalysis> eventResultsExecuteAnalysis) {
+		return eventResultsExecuteAnalysis.get().analysis(Optional.of(resultCache));
 	}
 
 	@Override
-	public Optional<EventResultRecordAnalysisHandle> resultrRcord(Optional<EventResultRecordAnalysis> eventResultRecordAnalysis) {
-		return eventResultRecordAnalysis.get().analysis(Optional.of(resultCache));
+	public Optional<EventResultsResultAnalysisHandle> resultsResult(Optional<EventResultsResultAnalysis> eventResultsResultAnalysis) {
+		return eventResultsResultAnalysis.get().analysis(Optional.of(resultCache));
 	}
-
 
 	@Override
 	public String toString() {

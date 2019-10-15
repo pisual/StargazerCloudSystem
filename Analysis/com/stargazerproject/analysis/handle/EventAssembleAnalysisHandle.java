@@ -10,7 +10,7 @@ public interface EventAssembleAnalysisHandle {
 
     public void injecrParametersFromJson(Optional<String> json);
 
-    public Optional<String> eventToJson();
+    //public Optional<String> eventToJson();
 
     public Optional<Integer> getEventTimeOut();
 

@@ -1,14 +1,10 @@
 package com.stargazerproject.transaction.impl.resources.shell;
 
 import com.google.common.base.Optional;
-import com.stargazerproject.analysis.EventAssembleAnalysis;
-import com.stargazerproject.analysis.EventExecuteAnalysis;
-import com.stargazerproject.analysis.EventResultAnalysis;
-import com.stargazerproject.analysis.EventResultRecordAnalysis;
+import com.stargazerproject.analysis.*;
 import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
-import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
 import com.stargazerproject.annotation.description.NoSpringDepend;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
@@ -48,27 +44,37 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	@Qualifier("eventInteractionCache")
 	private Cache<String, String> parametersCache;
 
-	/** @illustrate eventResultRecordAnalysis实例**/
-	@Autowired
-	@Qualifier("eventResultRecordAnalysis")
-	private EventResultRecordAnalysis eventResultRecordAnalysis;
-
-	/** @illustrate Result **/
-	private EventResults<EventResultAnalysis, EventResultAnalysisHandle, EventResultRecordAnalysis, EventResultRecordAnalysisHandle, Cache<String, String>> result;
-
 	/** @illustrate Event Result Shell 实例**/
 	@Autowired
 	@Qualifier("baseEventResultShell")
-	private BaseCharacteristic<EventResults<EventResultAnalysis, EventResultAnalysisHandle, EventResultRecordAnalysis, EventResultRecordAnalysisHandle, Cache<String, String>>> baseEventResultShell;
+	private BaseCharacteristic<EventResults> baseEventResultShell;
+
+    @Autowired
+    @Qualifier("eventResultsAssembleAnalysis")
+    private EventResultsAssembleAnalysis eventResultsAssembleAnalysis;
+
+	/** @illustrate eventResultRecordAnalysis实例**/
+	@Autowired
+	@Qualifier("eventResultsExecuteAnalysis")
+	private EventResultsExecuteAnalysis eventResultsExecuteAnalysis;
+
+	@Autowired
+	@Qualifier("eventResultsResultAnalysis")
+	private EventResultsResultAnalysis eventResultsResultAnalysis;
+
+
+	private EventResults eventResults;
 
 	/** @illustrate 事件状态, 初始状态为初始态**/
 	private EventState eventState = EventState.INIT;
+
+
 	/**
 	* @name 常规初始化构造
 	* @illustrate 基于外部参数进行注入
 	* **/
 	public BaseEventShell(Optional<EventResults> resultArg, Optional<Cache<String, String>> parametersCacheArg, Optional<LogMethod> logMethodArg){
-		result = resultArg.get();
+		eventResults = resultArg.get();
 		logMethod = logMethodArg.get();
 		parametersCache = parametersCacheArg.get();
 	}
@@ -84,7 +90,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	
 	@Override
 	public Optional<Event> characteristic() {
-		result = baseEventResultShell.characteristic().get();
+		eventResults = baseEventResultShell.characteristic().get();
 		return Optional.of(this);
 	}
 	
@@ -101,7 +107,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 			this.injectSequenceID(Optional.of(SequenceUtil.getUUIDSequence()));
 			eventState = EventState.WAIT;
 		}
-		return eventAssembleAnalysis.get().analysis(Optional.of(parametersCache));
+		return eventAssembleAnalysis.get().analysis(Optional.of(parametersCache), eventResults.resultAssemble(Optional.of(eventResultsAssembleAnalysis)));
 	}
 
 	/** @illustrate 开始执行事件, 执行者调用 执行者只有在Event处于EventState.WAIT的状态下才会启动事件运行分析接口，<P>
@@ -110,7 +116,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 * **/
 	@Override
 	public Optional<EventExecuteAnalysisHandle> eventExecute(Optional<EventExecuteAnalysis> eventAnalysis) {
-		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(parametersCache), result.resultrRcord(Optional.of(eventResultRecordAnalysis))).get();
+		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(parametersCache), eventResults.resultsExecute(Optional.of(eventResultsExecuteAnalysis))).get();
 		if(EventState.WAIT == eventState){
 			eventState = EventState.RUN;
 			eventExecuteAnalysisHandle.run();
@@ -132,7 +138,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 * **/
 	@Override
 	public Optional<EventResultAnalysisHandle> eventResult(Optional<EventResultAnalysis> eventResultAnalysis){
-		return result.resultResult(eventResultAnalysis, Optional.of(parametersCache));
+		return eventResultAnalysis.get().analysis(Optional.of(parametersCache), eventResults.resultsResult(Optional.of(eventResultsResultAnalysis)));
 	}
 	
 	/** @illustrate  跳过此事件
@@ -162,7 +168,7 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	public String toString() {
 		StringBuffer jsonResult = JsonUtil.cacheToJson(Optional.of(parametersCache), Optional.of("eventInteractionCache"))
 							              .append(",")
-				                          .append(baseEventResultShell.characteristic().get().toString())
+				                          .append(eventResults.toString())
 									      .append(",")
 				                          .append(JsonUtil.StringToJson(Optional.of("EventState"), Optional.of(eventState.toString())));
 		return jsonResult.toString();

@@ -1,13 +1,14 @@
 package com.stargazerproject.transaction.impl.resources.shell;
 
 import com.google.common.base.Optional;
-import com.stargazerproject.analysis.TransactionResultAnalysis;
-import com.stargazerproject.analysis.TransactionResultRecordAnalysis;
-import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
-import com.stargazerproject.analysis.handle.TransactionResultRecordAnalysisHandle;
+import com.stargazerproject.analysis.TransactionResultsAssembleAnalysis;
+import com.stargazerproject.analysis.TransactionResultsExecuteAnalysis;
+import com.stargazerproject.analysis.TransactionResultsResultAnalysis;
+import com.stargazerproject.analysis.handle.TransactionResultsAssembleAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionResultsExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionResultsResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
-import com.stargazerproject.transaction.Event;
 import com.stargazerproject.transaction.TransactionResults;
 import com.stargazerproject.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.util.Collection;
 
 /** 
  *  @name 事务结果（baseTransactionResultShell）实现
@@ -27,7 +26,7 @@ import java.util.Collection;
 @Component(value="baseTransactionResultShell")
 @Qualifier("baseTransactionResultShell")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class BaseTransactionResultShell implements TransactionResults<TransactionResultAnalysis, TransactionResultAnalysisHandle, TransactionResultRecordAnalysis, TransactionResultRecordAnalysisHandle, Cache<String, String>, Collection<Event>>, BaseCharacteristic<TransactionResults> {
+public class BaseTransactionResultShell implements TransactionResults, BaseCharacteristic<TransactionResults> {
 
 	/**
 	* @name 事务结果内容缓存
@@ -60,13 +59,18 @@ public class BaseTransactionResultShell implements TransactionResults<Transactio
 	}
 
 	@Override
-	public Optional<TransactionResultAnalysisHandle> resultResult(Optional<TransactionResultAnalysis> transactionResultAnalysis, Optional<Cache<String, String>> parametersCacheArg, Optional<Collection<Event>> eventList) {
-		return transactionResultAnalysis.get().analysis(Optional.of(transactionResultCache), parametersCacheArg, eventList);
+	public Optional<TransactionResultsAssembleAnalysisHandle> resultAssemble(Optional<TransactionResultsAssembleAnalysis> transactionResultAssembleAnalysis) {
+		return transactionResultAssembleAnalysis.get().analysis(Optional.of(transactionResultCache));
 	}
 
 	@Override
-	public Optional<TransactionResultRecordAnalysisHandle> resultrRcord(Optional<TransactionResultRecordAnalysis> transactionResultRecordAnalysis) {
-		return transactionResultRecordAnalysis.get().analysis(Optional.of(transactionResultCache));
+	public Optional<TransactionResultsExecuteAnalysisHandle> resultsExecute(Optional<TransactionResultsExecuteAnalysis> transactionResultsExecuteAnalysis) {
+		return transactionResultsExecuteAnalysis.get().analysis(Optional.of(transactionResultCache));
+	}
+
+	@Override
+	public Optional<TransactionResultsResultAnalysisHandle> resultsResult(Optional<TransactionResultsResultAnalysis> transactionResultsResultAnalysis) {
+		return transactionResultsResultAnalysis.get().analysis(Optional.of(transactionResultCache));
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.stargazerproject.analysis;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
-import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 
 /** 
@@ -15,6 +15,6 @@ import com.stargazerproject.cache.Cache;
  *  **/
 public interface EventExecuteAnalysis {
 	
-	public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle);
+	public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle);
 	
 }

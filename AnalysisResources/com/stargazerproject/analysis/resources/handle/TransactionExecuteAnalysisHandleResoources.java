@@ -3,6 +3,7 @@ package com.stargazerproject.analysis.resources.handle;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventExecuteAnalysis;
 import com.stargazerproject.analysis.handle.TransactionExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionResultsExecuteAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.impl.CellsTransactionImpl;
 import com.stargazerproject.log.LogMethod;
@@ -35,12 +36,15 @@ public class TransactionExecuteAnalysisHandleResoources implements TransactionEx
 
     private Collection<Event> eventList;
 
+    private TransactionResultsExecuteAnalysisHandle transactionResultsExecuteAnalysisHandle;
+
     /** @illustrate Transaction交互缓存接口 **/
     public Cache<String, String> interactionCache;
 
-    public TransactionExecuteAnalysisHandleResoources(Optional<Collection<Event>> eventListArg, Optional<Cache<String, String>> transactionInteractionCacheArg){
+    public TransactionExecuteAnalysisHandleResoources(Optional<Collection<Event>> eventListArg, Optional<Cache<String, String>> transactionInteractionCacheArg, Optional<TransactionResultsExecuteAnalysisHandle> transactionResultsExecuteAnalysisHandleArg){
         eventList = eventListArg.get();
         interactionCache = transactionInteractionCacheArg.get();
+        transactionResultsExecuteAnalysisHandle = transactionResultsExecuteAnalysisHandleArg.get();
     }
 
     /**

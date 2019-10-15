@@ -3,7 +3,7 @@ package com.stargazerproject.cell.method.sequence;
 import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.cache.Cache;
@@ -66,7 +66,7 @@ public class ParameterInitializationModel extends CellsTransactionImpl {
 	                threadPoolKey = "parameterInitializationModel",
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
-	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle) {
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle) {
 		try {
 			nodeNegotiate.registeredWatcher(Optional.of(""), Optional.of(Kernel_Negotiate_BasePath_EdenNodePath), Optional.of("parameterInitializationModel"), negotiateParametersInjectInitializationListenerCharacteristic.characteristic());
 			success();
@@ -82,7 +82,7 @@ public class ParameterInitializationModel extends CellsTransactionImpl {
 	* @param : Throwable throwable
 	* **/
 	@Override
-	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle, Throwable throwable){
-		super.fallBack(interactionCache, eventResultRecordAnalysisHandle, throwable);
+	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle, Throwable throwable){
+		super.fallBack(interactionCache, eventResultsExecuteAnalysisHandle, throwable);
 	}
 }

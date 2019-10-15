@@ -1,20 +1,14 @@
 package com.stargazerproject.transaction.impl.resources.shell;
 
 import com.google.common.base.Optional;
-import com.stargazerproject.analysis.EventAssembleAnalysis;
-import com.stargazerproject.analysis.TransactionAssembleAnalysis;
-import com.stargazerproject.analysis.TransactionExecuteAnalysis;
-import com.stargazerproject.analysis.TransactionResultAnalysis;
+import com.stargazerproject.analysis.*;
 import com.stargazerproject.analysis.handle.TransactionAssembleAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
-import com.stargazerproject.transaction.Event;
-import com.stargazerproject.transaction.Transaction;
-import com.stargazerproject.transaction.TransactionResults;
-import com.stargazerproject.transaction.TransactionState;
+import com.stargazerproject.transaction.*;
 import com.stargazerproject.transaction.base.impl.ID;
 import com.stargazerproject.util.JsonUtil;
 import com.stargazerproject.util.SequenceUtil;
@@ -49,10 +43,23 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	@Qualifier("transactionInteractionCache")
 	public Cache<String, String> parametersCache;
 
-	/** @illustrate Result接口实现类**/
+	/** @illustrate Event Result Shell 实例**/
 	@Autowired
-	@Qualifier("baseTransactionResultShell")
-	private BaseCharacteristic<TransactionResults> baseTransactionResultShell;
+	@Qualifier("baseTransactionResultsShell")
+	private BaseCharacteristic<TransactionResults> baseTransactionResultsShell;
+
+	@Autowired
+	@Qualifier("transactionResultsAssembleAnalysis")
+	private TransactionResultsAssembleAnalysis transactionResultsAssembleAnalysis;
+
+	/** @illustrate eventResultRecordAnalysis实例**/
+	@Autowired
+	@Qualifier("transactionResultsExecuteAnalysis")
+	private TransactionResultsExecuteAnalysis transactionResultsExecuteAnalysis;
+
+	@Autowired
+	@Qualifier("transactionResultsResultAnalysis")
+	private TransactionResultsResultAnalysis transactionResultsResultAnalysis;
 
 	/** 注入区 End **/
 
@@ -64,10 +71,6 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	/** @illustrate Result接口**/
 	private TransactionResults transactionResults;
 
-	@Autowired
-	@Qualifier("eventAssembleAnalysisImpl")
-	public EventAssembleAnalysis eventAssembleAnalysis;
-
 	/** @illustrate 事件状态, 初始状态为初始态**/
 	private TransactionState transactionState = TransactionState.INIT;
 
@@ -77,7 +80,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	
 	@Override
 	public Optional<Transaction> characteristic() {
-		transactionResults = baseTransactionResultShell.characteristic().get();
+		transactionResults = baseTransactionResultsShell.characteristic().get();
 		return Optional.of(this);
 	}
 	
@@ -96,7 +99,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 			this.injectSequenceID(Optional.of(SequenceUtil.getUUIDSequence()));
 			transactionState = TransactionState.WAIT;
 		}
-		return transactionAssembleAnalysis.get().analysis(Optional.of(eventsList), Optional.of(parametersCache));
+		return transactionAssembleAnalysis.get().analysis(Optional.of(eventsList), Optional.of(parametersCache), transactionResults.resultAssemble(Optional.of(transactionResultsAssembleAnalysis)));
 	}
 
 	/**
@@ -106,7 +109,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	 * **/
 	@Override
 	public Optional<TransactionExecuteAnalysisHandle> transactionExecute(Optional<TransactionExecuteAnalysis> transactionExecuteAnalysis) {
-		TransactionExecuteAnalysisHandle ransactionExecuteAnalysisHandle = transactionExecuteAnalysis.get().analysis(Optional.of(eventsList), Optional.of(parametersCache)).get();
+		TransactionExecuteAnalysisHandle ransactionExecuteAnalysisHandle = transactionExecuteAnalysis.get().analysis(Optional.of(eventsList), Optional.of(parametersCache), transactionResults.resultsExecute(Optional.of(transactionResultsExecuteAnalysis))).get();
 		if(TransactionState.WAIT == transactionState){
 			ransactionExecuteAnalysisHandle.startTransaction();
 			transactionState = TransactionState.LINEUP;
@@ -128,7 +131,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	* **/
 	@Override
 	public Optional<TransactionResultAnalysisHandle> transactionResult(Optional<TransactionResultAnalysis> transactionResultAnalysisArg){
-		return transactionResults.resultResult(transactionResultAnalysisArg, Optional.of(parametersCache), Optional.of(eventsList));
+		return transactionResultAnalysisArg.get().analysis(Optional.of(parametersCache), Optional.of(eventsList), transactionResults.resultsResult(Optional.of(transactionResultsResultAnalysis)));
 	}
 	
 	/**
@@ -144,7 +147,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	public String toString() {
 		StringBuffer jsonResult = JsonUtil.cacheToJson(Optional.of(parametersCache), Optional.of("transactionInteractionCache"))
 				.append(",")
-				.append(baseTransactionResultShell.characteristic().get().toString())
+				.append(transactionResults.toString())
 				.append(",")
 				.append(JsonUtil.StringToJson(Optional.of("TransactionState"), Optional.of(transactionState.toString())));
 

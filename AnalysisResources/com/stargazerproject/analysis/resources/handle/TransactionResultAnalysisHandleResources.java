@@ -3,10 +3,9 @@ package com.stargazerproject.analysis.resources.handle;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionResultsResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.Event;
-import com.stargazerproject.transaction.EventResult;
-import com.stargazerproject.transaction.EventResultState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -20,22 +19,14 @@ public class TransactionResultAnalysisHandleResources implements TransactionResu
 
     private Collection<Event> eventResultList;
 
-    private Cache<String, String> resultCache;
+    private Cache<String, String> parametersCache;
 
-    private Cache<String, String> resultInteractionCache;
+    private TransactionResultsResultAnalysisHandle transactionResultsResultAnalysisHandle;
 
-    public TransactionResultAnalysisHandleResources(Optional<Cache<String, String>> resultCacheArg, Optional<Collection<Event>> interactionCacheArg, Optional<Cache<String, String>> resultInteractionCacheArg){
-        resultCache = resultCacheArg.get();
-        eventResultList = interactionCacheArg.get();
-        resultInteractionCache = resultInteractionCacheArg.get();
+    public TransactionResultAnalysisHandleResources(Optional<Collection<Event>> eventListArg, Optional<Cache<String, String>> parametersCacheArg, Optional<TransactionResultsResultAnalysisHandle> transactionResultsResultAnalysisHandleArg){
+        eventResultList = eventListArg.get();
+        parametersCache = parametersCacheArg.get();
+        transactionResultsResultAnalysisHandle = transactionResultsResultAnalysisHandleArg.get();
     }
 
-    @Override
-    public Optional<EventResultState> resultState() {
-        //TODO 分析结果状态 未完成
-        for (EventResult eventResult : eventResultList) {
-            eventResult.eventResult(Optional.of(eventResultAnalysis));
-        }
-        return null;
-    }
 }

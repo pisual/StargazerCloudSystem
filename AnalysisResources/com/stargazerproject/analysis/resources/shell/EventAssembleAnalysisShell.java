@@ -3,6 +3,7 @@ package com.stargazerproject.analysis.resources.shell;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventAssembleAnalysis;
 import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsAssembleAnalysisHandle;
 import com.stargazerproject.analysis.resources.handle.EventAssembleAnalysisHandleResources;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
@@ -22,8 +23,8 @@ public class EventAssembleAnalysisShell implements EventAssembleAnalysis, BaseCh
 	}
 	
 	@Override
-	public Optional<EventAssembleAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache) {
-		return Optional.of(new EventAssembleAnalysisHandleResources(interactionCache));
+	public Optional<EventAssembleAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache, Optional<EventResultsAssembleAnalysisHandle> eventResultsAssembleAnalysisHandleArg) {
+		return Optional.of(new EventAssembleAnalysisHandleResources(interactionCache, eventResultsAssembleAnalysisHandleArg));
 	}
 
 }

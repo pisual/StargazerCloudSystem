@@ -3,7 +3,7 @@ package com.stargazerproject.analysis.handle;
 import com.google.common.base.Optional;
 import com.stargazerproject.transaction.EventResultState;
 
-public interface EventResultRecordAnalysisHandle {
+public interface EventResultsExecuteAnalysisHandle {
 
     public void EventResultState(Optional<EventResultState> eventResultState);
 

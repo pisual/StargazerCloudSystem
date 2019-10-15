@@ -1,5 +1,10 @@
 package com.stargazerproject.analysis.handle;
 
+import com.google.common.base.Optional;
+import com.stargazerproject.transaction.EventResultState;
+
+import java.util.concurrent.TimeUnit;
+
 /**
  *  @name Event Execute Analysis Handle的接口
  *  @illustrate Event Execute Analysis Handle的接口
@@ -13,5 +18,11 @@ public interface EventExecuteAnalysisHandle {
      * @illustrate 事件具体运行方法
      * **/
     public void run();
+
+    public Optional<TimeUnit> waitTimeoutUnit();
+
+    public Optional<Integer> waitTimeout();
+
+    public Optional<EventResultState> resultState();
 
 }

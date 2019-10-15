@@ -3,7 +3,7 @@ package com.stargazerproject.analysis.resources.shell;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventExecuteAnalysis;
 import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
-import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.analysis.resources.handle.EventExecuteAnalysisHandleResources;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 public class EventExecuteAnalysisShell implements EventExecuteAnalysis, BaseCharacteristic<EventExecuteAnalysis> {
 
     @Override
-    public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> cacheArg, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandleArg) {
-        return Optional.of(new EventExecuteAnalysisHandleResources(cacheArg, eventResultRecordAnalysisHandleArg));
+    public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> cacheArg, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandleArg) {
+        return Optional.of(new EventExecuteAnalysisHandleResources(cacheArg, eventResultsExecuteAnalysisHandleArg));
     }
 
     @Override

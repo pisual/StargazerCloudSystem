@@ -3,8 +3,10 @@ package com.stargazerproject.analysis.resources.shell;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.TransactionResultAnalysis;
 import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionResultsResultAnalysisHandle;
 import com.stargazerproject.analysis.resources.handle.TransactionResultAnalysisHandleResources;
 import com.stargazerproject.cache.Cache;
+import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Event;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -16,11 +18,15 @@ import java.util.Collection;
 @Component(value="transactionResultAnalysisShell")
 @Qualifier("transactionResultAnalysisShell")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class TransactionResultAnalysisShell implements TransactionResultAnalysis {
+public class TransactionResultAnalysisShell implements TransactionResultAnalysis, BaseCharacteristic<TransactionResultAnalysis> {
 
     @Override
-    public Optional<TransactionResultAnalysisHandle> analysis(Optional<Cache<String, String>> resultCache, Optional<Cache<String, String>> resultInteractionCache, Optional<Collection<Event>> interactionCache) {
-        return Optional.of(new TransactionResultAnalysisHandleResources(resultCache, interactionCache, resultInteractionCache));
+    public Optional<TransactionResultAnalysisHandle> analysis(Optional<Cache<String, String>> parametersCache, Optional<Collection<Event>> eventList,  Optional<TransactionResultsResultAnalysisHandle> transactionResultsResultAnalysisHandle) {
+        return Optional.of(new TransactionResultAnalysisHandleResources(eventList, parametersCache, transactionResultsResultAnalysisHandle));
     }
 
+    @Override
+    public Optional<TransactionResultAnalysis> characteristic() {
+        return null;
+    }
 }

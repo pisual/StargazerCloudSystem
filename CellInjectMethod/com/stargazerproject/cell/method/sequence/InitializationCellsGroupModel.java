@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.exception.HystrixRuntimeException;
-import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.impl.CellsTransactionImpl;
@@ -47,9 +47,9 @@ public class InitializationCellsGroupModel extends CellsTransactionImpl {
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
 	@Event()
-	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle) {
-		super.method(interactionCache, eventResultRecordAnalysisHandle);
-		eventResultRecordAnalysisHandle.get().putAggregationRootCache(Optional.of("OrderID"), Optional.of(SequenceUtil.getUUID()));
+	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle) {
+		super.method(interactionCache, eventResultsExecuteAnalysisHandle);
+		eventResultsExecuteAnalysisHandle.get().putAggregationRootCache(Optional.of("OrderID"), Optional.of(SequenceUtil.getUUID()));
 		log.INFO(this,"initializationCellsGroupModel Complete , OrderID : " + SequenceUtil.getUUID());
 		log.INFO(this,"initializationCellsGroupModel Complete , User: " + interactionCache.get().get(Optional.of("User")).get());
 		success();
@@ -62,7 +62,7 @@ public class InitializationCellsGroupModel extends CellsTransactionImpl {
 	* @param : Throwable throwable
 	* **/
 	@Override
-	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultRecordAnalysisHandle> eventResultRecordAnalysisHandle, Throwable throwable){
-		super.fallBack(interactionCache, eventResultRecordAnalysisHandle, throwable);
+	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle, Throwable throwable){
+		super.fallBack(interactionCache, eventResultsExecuteAnalysisHandle, throwable);
 	}
 }

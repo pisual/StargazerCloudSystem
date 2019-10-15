@@ -3,6 +3,7 @@ package com.stargazerproject.analysis.base.impl;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.TransactionExecuteAnalysis;
 import com.stargazerproject.analysis.handle.TransactionExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionResultsExecuteAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.Event;
 
@@ -13,8 +14,8 @@ public abstract class BaseTransactionExecuteAnalysisImpl implements TransactionE
 	protected TransactionExecuteAnalysis transactionExecuteAnalysis;
 
 	@Override
-	public Optional<TransactionExecuteAnalysisHandle> analysis(Optional<Collection<Event>> eventList, Optional<Cache<String, String>> transactionInteractionCache) {
-		return transactionExecuteAnalysis.analysis(eventList, transactionInteractionCache);
+	public Optional<TransactionExecuteAnalysisHandle> analysis(Optional<Collection<Event>> eventList, Optional<Cache<String, String>> transactionInteractionCache, Optional<TransactionResultsExecuteAnalysisHandle> transactionResultsExecuteAnalysisHandle) {
+		return transactionExecuteAnalysis.analysis(eventList, transactionInteractionCache, transactionResultsExecuteAnalysisHandle);
 	}
 
 }

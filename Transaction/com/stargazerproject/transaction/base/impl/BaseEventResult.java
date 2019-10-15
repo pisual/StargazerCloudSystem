@@ -1,11 +1,12 @@
 package com.stargazerproject.transaction.base.impl;
 
 import com.google.common.base.Optional;
-import com.stargazerproject.analysis.EventResultAnalysis;
-import com.stargazerproject.analysis.EventResultRecordAnalysis;
-import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
-import com.stargazerproject.analysis.handle.EventResultRecordAnalysisHandle;
-import com.stargazerproject.cache.Cache;
+import com.stargazerproject.analysis.EventResultsAssembleAnalysis;
+import com.stargazerproject.analysis.EventResultsExecuteAnalysis;
+import com.stargazerproject.analysis.EventResultsResultAnalysis;
+import com.stargazerproject.analysis.handle.EventResultsAssembleAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsResultAnalysisHandle;
 import com.stargazerproject.transaction.EventResults;
 
 
@@ -17,20 +18,24 @@ import com.stargazerproject.transaction.EventResults;
  *  @author Felixerio
  *  @version 1.0.0
  *  **/
-public class BaseEventResult implements EventResults<EventResultAnalysis, EventResultAnalysisHandle, EventResultRecordAnalysis, EventResultRecordAnalysisHandle, Cache<String, String>> {
+public class BaseEventResult implements EventResults{
 	
 	protected EventResults eventResults;
 	
 	protected BaseEventResult() {}
-	
+
 	@Override
-	public Optional<EventResultAnalysisHandle> resultResult(Optional<EventResultAnalysis> eventResultAnalysis, Optional<Cache<String, String>> parametersCache) {
-		return eventResults.resultResult(eventResultAnalysis, parametersCache);
+	public Optional<EventResultsAssembleAnalysisHandle> resultAssemble(Optional<EventResultsAssembleAnalysis> eventResultAssembleAnalysis) {
+		return eventResults.resultAssemble(eventResultAssembleAnalysis);
 	}
 
 	@Override
-	public Optional<EventResultRecordAnalysisHandle> resultrRcord(Optional<EventResultRecordAnalysis> resultRecordAnalysis) {
-		return eventResults.resultrRcord(resultRecordAnalysis);
+	public Optional<EventResultsExecuteAnalysisHandle> resultsExecute(Optional<EventResultsExecuteAnalysis> eventResultsExecuteAnalysis) {
+		return eventResults.resultsExecute(eventResultsExecuteAnalysis);
 	}
 
+	@Override
+	public Optional<EventResultsResultAnalysisHandle> resultsResult(Optional<EventResultsResultAnalysis> eventResultsResultAnalysis) {
+		return eventResults.resultsResult(eventResultsResultAnalysis);
+	}
 }
