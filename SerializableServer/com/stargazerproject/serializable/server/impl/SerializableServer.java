@@ -1,5 +1,6 @@
 package com.stargazerproject.serializable.server.impl;
 
+import com.stargazerproject.transaction.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -22,12 +23,12 @@ import com.stargazerproject.service.baseinterface.StanderServiceShell;
 public class SerializableServer implements StanderServiceShell{
 	
 	@Autowired
-	@Qualifier("networkTransmissionSerializables")
-	private StanderCharacteristicShell<Serializables> networkTransmissionSerializables;
+	@Qualifier("transactionTransmissionSerializables")
+	private StanderCharacteristicShell<Serializables<Transaction, byte[]>> networkTransmissionSerializables;
 	
 	@Autowired
-	@Qualifier("networkTransmissionSerializablesShell")
-	private BaseCharacteristic<Serializables> networkTransmissionSerializablesShell;
+	@Qualifier("transactionTransmissionSerializablesShell")
+	private BaseCharacteristic<Serializables<Transaction, byte[]>> networkTransmissionSerializablesShell;
 	
 	/** @construction 初始化构造 **/
 	private SerializableServer() {}

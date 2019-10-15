@@ -99,9 +99,11 @@ import com.stargazerproject.sequence.resources.shell.SequenceResourcesShell;
 import com.stargazerproject.sequence.server.impl.StandardSequenceServer;
 import com.stargazerproject.sequence.server.listener.impl.StandardServerListener;
 import com.stargazerproject.sequence.server.manage.StandardServerManage;
+import com.stargazerproject.serializable.impl.TransactionTransmissionSerializables;
 import com.stargazerproject.serializable.server.impl.SerializableServer;
 import com.stargazerproject.serializable.server.listener.impl.SerializableServerListener;
 import com.stargazerproject.serializable.server.manage.SerializableServerManage;
+import com.stargazerproject.serializable.shell.TransactionTransmissionSerializablesShell;
 import com.stargazerproject.service.aop.configuration.ServerDependDetectionAOPConfiguration;
 import com.stargazerproject.service.configuration.GroupServiceConfiguration;
 import com.stargazerproject.service.resources.ServiceControlCharacteristic;
@@ -319,6 +321,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		QueueParameters.class,
 		SequenceParameters.class,
 		SystemParameters.class,
+		SchemaParameters.class,
 
 		/**Depend Log**/
 		GroupLogConfiguration.class,
@@ -469,6 +472,11 @@ public class GlobalAnnotationApplicationContextInitialization {
 
         /**Depend HystrixConfigurationS**/
         HystrixConfigurationS.class,
+
+		/**Depend Serializables**/
+		TransactionTransmissionSerializables.class,
+		TransactionTransmissionSerializablesShell.class,
+
 
 		/**测试用方法，实际需要动态注入**/
 		InitializationCellsGroupModel.class,

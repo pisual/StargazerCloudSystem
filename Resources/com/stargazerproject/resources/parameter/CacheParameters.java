@@ -16,7 +16,6 @@ import com.stargazerproject.resources.annotation.Parameters;
 @Qualifier("cacheParameters")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Parameters(value="cacheParameters")
-@SuppressWarnings("unused")
 public class CacheParameters {
 	
 	public CacheParameters() {}
