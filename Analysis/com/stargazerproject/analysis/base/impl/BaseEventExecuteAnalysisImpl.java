@@ -2,8 +2,8 @@ package com.stargazerproject.analysis.base.impl;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventExecuteAnalysis;
-import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 
 public abstract class BaseEventExecuteAnalysisImpl implements EventExecuteAnalysis {

@@ -2,8 +2,8 @@ package com.stargazerproject.analysis.resources.handle;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventExecuteAnalysis;
-import com.stargazerproject.analysis.handle.TransactionExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionResultsExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionExecuteAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.impl.CellsTransactionImpl;
 import com.stargazerproject.log.LogMethod;

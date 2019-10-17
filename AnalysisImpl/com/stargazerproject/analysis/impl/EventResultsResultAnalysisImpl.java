@@ -12,8 +12,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component(value="eventResultResultAnalysisImpl")
-@Qualifier("eventResultRecordAnalysisImpl")
+@Component(value="eventResultsResultAnalysisImpl")
+@Qualifier("eventResultsResultAnalysisImpl")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class EventResultsResultAnalysisImpl extends BaseEventResultsResultAnalysisImpl implements StanderCharacteristicShell<EventResultsResultAnalysis>, BeforehandCharacteristicShell<EventResultsResultAnalysis> {
 

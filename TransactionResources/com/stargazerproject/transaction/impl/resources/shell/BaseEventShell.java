@@ -50,16 +50,16 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	private BaseCharacteristic<EventResults> baseEventResultShell;
 
     @Autowired
-    @Qualifier("eventResultsAssembleAnalysis")
+    @Qualifier("eventResultsAssembleAnalysisImpl")
     private EventResultsAssembleAnalysis eventResultsAssembleAnalysis;
 
 	/** @illustrate eventResultRecordAnalysis实例**/
 	@Autowired
-	@Qualifier("eventResultsExecuteAnalysis")
+	@Qualifier("eventResultsExecuteAnalysisImpl")
 	private EventResultsExecuteAnalysis eventResultsExecuteAnalysis;
 
 	@Autowired
-	@Qualifier("eventResultsResultAnalysis")
+	@Qualifier("eventResultsResultAnalysisImpl")
 	private EventResultsResultAnalysis eventResultsResultAnalysis;
 
 
@@ -166,11 +166,14 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	
 	@Override
 	public String toString() {
-		StringBuffer jsonResult = JsonUtil.cacheToJson(Optional.of(parametersCache), Optional.of("eventInteractionCache"))
-							              .append(",")
-				                          .append(eventResults.toString())
-									      .append(",")
-				                          .append(JsonUtil.StringToJson(Optional.of("EventState"), Optional.of(eventState.toString())));
+		StringBuffer jsonResult = new StringBuffer()
+					 .append("{")
+				     .append(JsonUtil.cacheToJson(Optional.of(parametersCache), Optional.of("eventInteractionCache")))
+					 .append(",")
+				     .append(eventResults.toString())
+					 .append(",")
+				     .append(JsonUtil.StringToJson(Optional.of("EventState"), Optional.of(eventState.toString())))
+				     .append("}");
 		return jsonResult.toString();
 	}
 

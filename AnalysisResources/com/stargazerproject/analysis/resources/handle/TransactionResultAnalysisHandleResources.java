@@ -2,8 +2,8 @@ package com.stargazerproject.analysis.resources.handle;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventResultAnalysis;
-import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionResultsResultAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.Event;
 import org.springframework.beans.factory.annotation.Autowired;

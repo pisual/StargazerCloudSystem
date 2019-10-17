@@ -45,20 +45,20 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 
 	/** @illustrate Event Result Shell 实例**/
 	@Autowired
-	@Qualifier("baseTransactionResultsShell")
-	private BaseCharacteristic<TransactionResults> baseTransactionResultsShell;
+	@Qualifier("baseTransactionResultShell")
+	private BaseCharacteristic<TransactionResults> baseTransactionResultShell;
 
 	@Autowired
-	@Qualifier("transactionResultsAssembleAnalysis")
+	@Qualifier("transactionResultsAssembleAnalysisImpl")
 	private TransactionResultsAssembleAnalysis transactionResultsAssembleAnalysis;
 
 	/** @illustrate eventResultRecordAnalysis实例**/
 	@Autowired
-	@Qualifier("transactionResultsExecuteAnalysis")
+	@Qualifier("transactionResultsExecuteAnalysisImpl")
 	private TransactionResultsExecuteAnalysis transactionResultsExecuteAnalysis;
 
 	@Autowired
-	@Qualifier("transactionResultsResultAnalysis")
+	@Qualifier("transactionResultsResultAnalysisImpl")
 	private TransactionResultsResultAnalysis transactionResultsResultAnalysis;
 
 	/** 注入区 End **/
@@ -80,7 +80,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	
 	@Override
 	public Optional<Transaction> characteristic() {
-		transactionResults = baseTransactionResultsShell.characteristic().get();
+		transactionResults = baseTransactionResultShell.characteristic().get();
 		return Optional.of(this);
 	}
 	
@@ -145,7 +145,9 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	
 	@Override
 	public String toString() {
-		StringBuffer jsonResult = JsonUtil.cacheToJson(Optional.of(parametersCache), Optional.of("transactionInteractionCache"))
+		StringBuffer jsonResult = new StringBuffer()
+				.append("{")
+				.append(JsonUtil.cacheToJson(Optional.of(parametersCache), Optional.of("transactionInteractionCache")))
 				.append(",")
 				.append(transactionResults.toString())
 				.append(",")
@@ -157,6 +159,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 			jsonResult.deleteCharAt(jsonResult.lastIndexOf(","));
 		}
 
+		jsonResult.append("}");
 		return jsonResult.toString();
 	}
 

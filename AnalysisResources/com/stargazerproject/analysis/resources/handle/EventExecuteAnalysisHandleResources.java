@@ -1,8 +1,8 @@
 package com.stargazerproject.analysis.resources.handle;
 
 import com.google.common.base.Optional;
-import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.CellsTransaction;
 import com.stargazerproject.spring.container.impl.BeanContainer;

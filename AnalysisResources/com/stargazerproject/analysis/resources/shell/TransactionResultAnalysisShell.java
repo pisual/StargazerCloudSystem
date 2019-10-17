@@ -2,9 +2,9 @@ package com.stargazerproject.analysis.resources.shell;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.TransactionResultAnalysis;
-import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionResultsResultAnalysisHandle;
 import com.stargazerproject.analysis.resources.handle.TransactionResultAnalysisHandleResources;
+import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Event;

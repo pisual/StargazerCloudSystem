@@ -1,7 +1,10 @@
 package com.stargazerproject.spring.context.initialization.test;
 
-import com.stargazerproject.analysis.impl.*;
-import com.stargazerproject.analysis.resources.shell.*;
+import com.stargazerproject.analysis.configuration.GroupAnalysisConfiguration;
+import com.stargazerproject.analysis.impl.EventAssembleAnalysisImpl;
+import com.stargazerproject.analysis.impl.EventExecuteAnalysisImpl;
+import com.stargazerproject.analysis.resources.shell.EventAssembleAnalysisShell;
+import com.stargazerproject.analysis.resources.shell.EventExecuteAnalysisShell;
 import com.stargazerproject.annotation.impl.AnnotationsImpl;
 import com.stargazerproject.annotation.resources.AnnotationsScannerResourcesCharacteristic;
 import com.stargazerproject.annotation.resources.shell.AnnotationsShell;
@@ -417,20 +420,21 @@ public class GlobalAnnotationApplicationContextInitialization {
 		InjectServerListener.class,
 		InjectServerManage.class,
 
-		/**Depend Analysis**/
-		EventResultAnalysisImpl.class,
-        EventResultAnalysisShell.class,
-        EventAssembleAnalysisImpl.class,
-        EventAssembleAnalysisShell.class,
-        EventExecuteAnalysisImpl.class,
-        EventExecuteAnalysisShell.class,
-        LogAnalysisImpl.class,
-		TransactionAssembleAnalysisImpl.class,
-		TransactionExecuteAnalysisImpl.class,
-		TransactionResultAnalysisImpl.class,
-		TransactionAssembleAnalysisShell.class,
-		TransactionExecuteAnalysisShell.class,
-		TransactionResultAnalysisShell.class,
+//		/**Depend Analysis**/
+//		EventResultAnalysisImpl.class,
+//        EventResultAnalysisShell.class,
+//        EventAssembleAnalysisImpl.class,
+//        EventAssembleAnalysisShell.class,
+//        EventExecuteAnalysisImpl.class,
+//        EventExecuteAnalysisShell.class,
+//        LogAnalysisImpl.class,
+//		TransactionAssembleAnalysisImpl.class,
+//		TransactionExecuteAnalysisImpl.class,
+//		TransactionResultAnalysisImpl.class,
+//		TransactionAssembleAnalysisShell.class,
+//		TransactionExecuteAnalysisShell.class,
+//		TransactionResultAnalysisShell.class,
+		GroupAnalysisConfiguration.class,
 
 
 

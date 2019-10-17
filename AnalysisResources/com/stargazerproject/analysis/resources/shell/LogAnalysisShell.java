@@ -2,8 +2,8 @@ package com.stargazerproject.analysis.resources.shell;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.LogAnalysis;
-import com.stargazerproject.analysis.handle.LogAnalysisHandle;
 import com.stargazerproject.analysis.resources.handle.LogAnalysisHandleResources;
+import com.stargazerproject.analysis.handle.LogAnalysisHandle;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.model.LogData;
 
