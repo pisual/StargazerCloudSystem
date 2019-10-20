@@ -44,13 +44,13 @@ public class TransactionBusBlockMethodMBassadorCharacteristic implements BusBloc
 
 	@Autowired
 	@Qualifier("logRecord")
-	protected static LogMethod log;
+	protected LogMethod log;
 
 	@Autowired
 	@Qualifier("transactionBusListener")
 	private BusListener<Optional<Transaction>> transactionBusListener;
 
-	private static MBassador bus;
+	private MBassador bus;
 
 	public TransactionBusBlockMethodMBassadorCharacteristic() {
 		super();
@@ -62,8 +62,8 @@ public class TransactionBusBlockMethodMBassadorCharacteristic implements BusBloc
 				.addFeature(Feature.SyncPubSub.Default())
 				.addFeature(Feature.AsynchronousHandlerInvocation.Default(minThreadCount(), maxThreadCount()))
 				.addFeature(Feature.AsynchronousMessageDispatch.Default())
-				.addPublicationErrorHandler(publicationError -> log.ERROR(publicationError, publicationError.getMessage()))
-				.setProperty(IBusConfiguration.Properties.BusId, "EventBus"));
+				.addPublicationErrorHandler(publicationError -> log.ERROR("transactionBusBlockMethodMBassadorCharacteristic ErrorMessage ", publicationError.getMessage()))
+				.setProperty(IBusConfiguration.Properties.BusId, "TransactionBus"));
 		bus.subscribe(transactionBusListener);
 		return Optional.of(this);
 	}

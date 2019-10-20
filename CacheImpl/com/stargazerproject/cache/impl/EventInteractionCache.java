@@ -19,10 +19,10 @@ import org.springframework.stereotype.Component;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @NeedInitialization(content = "{\"EventResultState\" : \"WAIT\"," 			/** @illustrate 结果状态（"Faile" Or "Success"） **/
 							+ " \"ErrorMessage\" : \"NULL\","		 	/** @illustrate 异常信息（NULL Or ExceptionMessage） **/
-							+ " \"waitTimeoutUnit\" : \"MILLISECONDS\","/** @illustrate 等待超时时间单位（TimeUnit类型，默认为MILLISECONDS） **/
-							+ " \"waitTimeout\" : \"500\","				/** @illustrate 等待超时时间（500 Or 其他数值） **/
-							+ " \"runTimeoutUnit\" : \"MILLISECONDS\","	/** @illustrate 运行超时时间单位（TimeUnit类型，默认为MILLISECONDS **/
-							+ " \"runTimeout\" : \"500\","				/** @illustrate 运行超时时间（500 Or 其他数值） **/
+							+ " \"WaitTimeoutUnit\" : \"MILLISECONDS\","/** @illustrate 等待超时时间单位（TimeUnit类型，默认为MILLISECONDS） **/
+							+ " \"WaitTimeout\" : \"500\","				/** @illustrate 等待超时时间（500 Or 其他数值） **/
+							+ " \"RunTimeoutUnit\" : \"MILLISECONDS\","	/** @illustrate 运行超时时间单位（TimeUnit类型，默认为MILLISECONDS **/
+							+ " \"RunTimeout\" : \"500\","				/** @illustrate 运行超时时间（500 Or 其他数值） **/
 						    + " \"AggregateRoot\" : \"NULL\","			/** @illustrate 聚合跟ID，NULL或者具体的ID **/
 		     			    + " \"Method\" : \"NULL\"}")      			/** @illustrate 调动方法（NULL Or 具体的方法） **/
 @NoSpringDepend
@@ -50,4 +50,5 @@ public final class EventInteractionCache extends BaseCacheImpl<String, String> i
 		cache = cacheArg.characteristic().get();
 		initiationParameters(this.getClass());
 	}
+
 }

@@ -12,4 +12,9 @@ public class EventResultsAssembleAnalysisHandleResources implements EventResults
         resultCache = resultCacheArg.get();
     }
 
+    @Override
+    public EventResultsAssembleAnalysisHandle injectEventResultsParameter(Optional<String> key, Optional<String> value) {
+        resultCache.put(key, value);
+        return this;
+    }
 }

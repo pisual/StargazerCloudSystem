@@ -18,6 +18,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /** 
@@ -81,6 +82,7 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	@Override
 	public Optional<Transaction> characteristic() {
 		transactionResults = baseTransactionResultShell.characteristic().get();
+		eventsList = new ArrayList<>();
 		return Optional.of(this);
 	}
 	
@@ -111,7 +113,6 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	public Optional<TransactionExecuteAnalysisHandle> transactionExecute(Optional<TransactionExecuteAnalysis> transactionExecuteAnalysis) {
 		TransactionExecuteAnalysisHandle ransactionExecuteAnalysisHandle = transactionExecuteAnalysis.get().analysis(Optional.of(eventsList), Optional.of(parametersCache), transactionResults.resultsExecute(Optional.of(transactionResultsExecuteAnalysis))).get();
 		if(TransactionState.WAIT == transactionState){
-			ransactionExecuteAnalysisHandle.startTransaction();
 			transactionState = TransactionState.LINEUP;
 		}
 		else if(TransactionState.PASS == transactionState){

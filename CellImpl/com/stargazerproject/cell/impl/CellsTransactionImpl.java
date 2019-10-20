@@ -9,6 +9,7 @@ import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.CellsTransaction;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.EventResultState;
+import com.stargazerproject.transaction.date.EventDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -18,6 +19,16 @@ public abstract class CellsTransactionImpl implements CellsTransaction<String, S
 	@Autowired
 	@Qualifier("logRecord")
 	protected LogMethod log;
+
+	/** @illustrate 聚合根缓存 **/
+	@Autowired
+	@Qualifier("aggregateRootCache")
+	private Cache<String, String> aggregateRootCache;
+
+	/** @illustrate 聚合根索引缓存，包含所有的聚合根缓存 **/
+	@Autowired
+	@Qualifier("aggregateRootIndexCache")
+	private Cache<String, Cache<String, String>> aggregateRootIndexCache;
 
 	private EventResultsExecuteAnalysisHandle eventResultsExecuteAnalysisHandle;
 
@@ -32,6 +43,10 @@ public abstract class CellsTransactionImpl implements CellsTransaction<String, S
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "200")})
 	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandleArg) {
 		eventResultsExecuteAnalysisHandle = eventResultsExecuteAnalysisHandleArg.get();
+		Optional AggregateRootID = interactionCache.get().get(Optional.of(EventDate.AggregateRoot.toString()));
+		if(AggregateRootID.get() != "NULL"){
+			aggregationRootCacheInitialization(AggregateRootID);
+		}
 	}
 	
 	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandleArg, Throwable throwable){
@@ -40,6 +55,7 @@ public abstract class CellsTransactionImpl implements CellsTransaction<String, S
 		}
 		else{
 			fail(throwable);
+			log.ERROR(this, throwable.getMessage());
 		}
 	}
 
@@ -52,4 +68,35 @@ public abstract class CellsTransactionImpl implements CellsTransaction<String, S
 		eventResultsExecuteAnalysisHandle.errorMessage(Optional.of(throwable));
 	}
 
+	@Override
+	public void putAggregationRootCache(Optional<String> key, Optional<String> value){
+		if(null == aggregateRootCache){
+			log.ERROR(this, "aggregateRootCache未初始化， 子类Method方法需要继承父类方法{super.method(Optional<Cache<String, String>> interactionCache)}");
+			throw new NullPointerException("aggregateRootCache未初始化， 子类Method方法需要继承父类方法{super.method(Optional<Cache<String, String>> interactionCache)}");
+		}
+		else{
+			aggregateRootCache.put(key, value);
+		}
+	}
+
+	@Override
+	public Optional<String> getAggregationRootCache(Optional<String> key){
+		if(null == aggregateRootCache){
+			log.ERROR(this, "aggregateRootCache未初始化， 子类Method方法需要继承父类方法{super.method(Optional<Cache<String, String>> interactionCache)}");
+			throw new NullPointerException("aggregateRootCache未初始化， 子类Method方法需要继承父类方法{super.method(Optional<Cache<String, String>> interactionCache)}");
+		}
+		else{
+			return aggregateRootCache.get(key);
+		}
+	}
+
+	/**
+	 * @name 聚合根初始化
+	 * @illustrate 聚合根初始化
+	 * @return Optional<String> AggregationRootID 聚合根，不同的方法通过聚合根缓存共享数据
+	 * @param : <String> 聚合跟的Value值
+	 * **/
+	private void aggregationRootCacheInitialization(Optional<String> AggregationRootID){
+		aggregateRootIndexCache.put(AggregationRootID, Optional.of(aggregateRootCache));
+	}
 }

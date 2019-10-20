@@ -44,13 +44,13 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 
 	@Autowired
 	@Qualifier("logRecord")
-	protected static LogMethod log;
+	protected LogMethod log;
 
 	@Autowired
 	@Qualifier("eventBusListener")
 	private BusListener<Optional<Event>> eventBusListener;
 
-	private static MBassador bus;
+	private MBassador bus;
 
 	public EventBusBlockMethodMBassadorCharacteristic() {
 		super();
@@ -62,7 +62,7 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 				.addFeature(Feature.SyncPubSub.Default())
 				.addFeature(Feature.AsynchronousHandlerInvocation.Default(minThreadCount(), maxThreadCount()))
 				.addFeature(Feature.AsynchronousMessageDispatch.Default())
-				.addPublicationErrorHandler(publicationError -> log.ERROR(publicationError, publicationError.getMessage()))
+				.addPublicationErrorHandler(publicationError ->  log.ERROR("eventBusBlockMethodMBassadorCharacteristic publicationError", publicationError.getMessage()))
 				.setProperty(IBusConfiguration.Properties.BusId, "EventBus"));
 		bus.subscribe(eventBusListener);
 		return Optional.of(this);

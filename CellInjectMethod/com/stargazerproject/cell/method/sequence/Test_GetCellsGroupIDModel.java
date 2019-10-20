@@ -47,7 +47,7 @@ public class Test_GetCellsGroupIDModel extends CellsTransactionImpl {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
 	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle) {
 		super.method(interactionCache, eventResultsExecuteAnalysisHandle);
-		String OrderID = eventResultsExecuteAnalysisHandle.get().getAggregationRootCache(Optional.of("OrderID")).get();
+		String OrderID = getAggregationRootCache(Optional.of("OrderID")).get();
 		log.INFO(this,"Test_GetCellsGroupIDModel Complete , OrderID : " + OrderID);
 		success();
 	}

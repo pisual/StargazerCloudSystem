@@ -2,12 +2,12 @@ package com.stargazerproject.analysis.resources.handle;
 
 import com.google.common.base.Optional;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventResultsAssembleAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.date.EventDate;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class EventAssembleAnalysisHandleResources implements EventAssembleAnalysisHandle {
@@ -29,19 +29,32 @@ public class EventAssembleAnalysisHandleResources implements EventAssembleAnalys
 
     @Override
     public void injecrParametersFromJson(Optional<String> json){
-        Map<String, String> map = new Gson().fromJson(json.get(), Map.class);
-        map.entrySet().stream().forEach(parameter -> injectEventParameter(Optional.of(parameter.getKey()), Optional.of(parameter.getValue())));
+        LinkedTreeMap map = new Gson().fromJson(json.get(), LinkedTreeMap.class);
+        map.forEach((key, value) -> {
+            if(EventDate.eventInteractionCache.toString().equals(key.toString())){
+                LinkedTreeMap eventInteractionCacheLinkedTreeMap = (LinkedTreeMap) value;
+                eventInteractionCacheLinkedTreeMap.forEach((eKey,eValue) -> {
+                cacheAssemble.put(Optional.of(eKey.toString()), Optional.of(eValue.toString()));
+                });
+            }
+            else if(EventDate.eventResultCache.toString().equals(key.toString())){
+                LinkedTreeMap eventResultCacheLinkedTreeMap = (LinkedTreeMap) value;
+                eventResultCacheLinkedTreeMap.forEach((erKey, erValue) -> {
+                eventResultsAssembleAnalysisHandle.injectEventResultsParameter(Optional.of(erKey.toString()), Optional.of(erValue.toString()));
+                });
+            }
+        });
     }
 
     @Override
     public Optional<Integer> getEventTimeOut() {
-        Optional<Integer> eventTimeOut = stringToInteger(cacheAssemble.get(Optional.of(EventDate.EventTimeOut.toString())));
+        Optional<Integer> eventTimeOut = stringToInteger(cacheAssemble.get(Optional.of(EventDate.WaitTimeout.toString())));
         return eventTimeOut;
     }
 
     @Override
     public Optional<TimeUnit> getEventTimeOutTimeUnit() {
-        Optional<String> eventTimeOutTimeUnit = cacheAssemble.get(Optional.of(EventDate.EventTimeOutTimeUnit.toString()));
+        Optional<String> eventTimeOutTimeUnit = cacheAssemble.get(Optional.of(EventDate.WaitTimeoutUnit.toString()));
         return stringToTimeUnit(eventTimeOutTimeUnit);
     }
 
@@ -89,5 +102,4 @@ public class EventAssembleAnalysisHandleResources implements EventAssembleAnalys
         }
         return Optional.of(timeUnit);
     }
-
 }

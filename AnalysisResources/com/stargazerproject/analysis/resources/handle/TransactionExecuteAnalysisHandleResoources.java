@@ -2,14 +2,10 @@ package com.stargazerproject.analysis.resources.handle;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventExecuteAnalysis;
-import com.stargazerproject.analysis.handle.TransactionResultsExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionResultsExecuteAnalysisHandle;
 import com.stargazerproject.cache.Cache;
-import com.stargazerproject.cell.impl.CellsTransactionImpl;
-import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.Event;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Collection;
 
@@ -21,18 +17,7 @@ import java.util.Collection;
  *  **/
 public class TransactionExecuteAnalysisHandleResoources implements TransactionExecuteAnalysisHandle {
 
-    /** @illustrate 获取Log(日志)接口 **/
-    @Autowired
-    @Qualifier("logRecord")
-    private LogMethod logMethod;
-
-    @Autowired
-    @Qualifier("eventExecuteAnalysisImpl")
     private EventExecuteAnalysis eventExecuteAnalysis;
-
-    @Autowired
-    @Qualifier("initializationAggregationRootModel")
-    private CellsTransactionImpl initializationAggregationRootModel;
 
     private Collection<Event> eventList;
 
@@ -41,8 +26,9 @@ public class TransactionExecuteAnalysisHandleResoources implements TransactionEx
     /** @illustrate Transaction交互缓存接口 **/
     public Cache<String, String> interactionCache;
 
-    public TransactionExecuteAnalysisHandleResoources(Optional<Collection<Event>> eventListArg, Optional<Cache<String, String>> transactionInteractionCacheArg, Optional<TransactionResultsExecuteAnalysisHandle> transactionResultsExecuteAnalysisHandleArg){
+    public TransactionExecuteAnalysisHandleResoources(Optional<Collection<Event>> eventListArg, Optional<Cache<String, String>> transactionInteractionCacheArg, Optional<TransactionResultsExecuteAnalysisHandle> transactionResultsExecuteAnalysisHandleArg, Optional<EventExecuteAnalysis> eventExecuteAnalysisArg){
         eventList = eventListArg.get();
+        eventExecuteAnalysis = eventExecuteAnalysisArg.get();
         interactionCache = transactionInteractionCacheArg.get();
         transactionResultsExecuteAnalysisHandle = transactionResultsExecuteAnalysisHandleArg.get();
     }

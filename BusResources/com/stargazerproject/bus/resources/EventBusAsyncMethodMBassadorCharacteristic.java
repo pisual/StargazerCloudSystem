@@ -43,13 +43,13 @@ public class EventBusAsyncMethodMBassadorCharacteristic implements BusAsyncMetho
 
 	@Autowired
 	@Qualifier("logRecord")
-	protected static LogMethod log;
+	protected LogMethod log;
 
 	@Autowired
 	@Qualifier("eventBusListener")
 	private BusListener<Optional<Event>> eventBusListener;
 
-	private static MBassador bus;
+	private MBassador bus;
 
 	public EventBusAsyncMethodMBassadorCharacteristic() {
 		super();

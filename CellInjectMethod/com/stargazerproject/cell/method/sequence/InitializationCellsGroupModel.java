@@ -49,7 +49,7 @@ public class InitializationCellsGroupModel extends CellsTransactionImpl {
 	@Event()
 	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle) {
 		super.method(interactionCache, eventResultsExecuteAnalysisHandle);
-		eventResultsExecuteAnalysisHandle.get().putAggregationRootCache(Optional.of("OrderID"), Optional.of(SequenceUtil.getUUID()));
+		putAggregationRootCache(Optional.of("OrderID"), Optional.of(SequenceUtil.getUUID()));
 		log.INFO(this,"initializationCellsGroupModel Complete , OrderID : " + SequenceUtil.getUUID());
 		log.INFO(this,"initializationCellsGroupModel Complete , User: " + interactionCache.get().get(Optional.of("User")).get());
 		success();

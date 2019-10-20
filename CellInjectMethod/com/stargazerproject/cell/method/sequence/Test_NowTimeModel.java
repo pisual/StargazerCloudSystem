@@ -8,6 +8,8 @@ import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.annotation.description.Event;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.impl.CellsTransactionImpl;
+import com.stargazerproject.log.LogMethod;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -25,6 +27,11 @@ import java.time.LocalDateTime;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Event()
 public class Test_NowTimeModel extends CellsTransactionImpl {
+
+	/** @illustrate 获取Log(日志)接口 **/
+	@Autowired
+	@Qualifier("logRecord")
+	protected LogMethod log;
 
 	public Test_NowTimeModel() {
 		super(); 
@@ -48,7 +55,8 @@ public class Test_NowTimeModel extends CellsTransactionImpl {
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
 	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle) {
-		log.INFO(this,"Test_NowTimeModel Complete , Time : " + LocalDateTime.now());
+		super.method(interactionCache, eventResultsExecuteAnalysisHandle);
+		log.INFO("test_NowTimeModel ","Test_NowTimeModel Complete , Time : " + LocalDateTime.now());
 		success();
 	}
 	

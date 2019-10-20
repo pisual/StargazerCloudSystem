@@ -1,7 +1,21 @@
 package com.stargazerproject.transaction.date;
 
 public enum EventDate {
-    EventTimeOut,
-    EventTimeOutTimeUnit
+    WaitTimeout,
+    WaitTimeoutUnit,
+    RunTimeout,
+    RunTimeoutUnit,
+    AggregateRoot,
+    ErrorMessage,
+    EventResultState,
+    Method,
+
+    EventResultState_$N$,
+    ErrorMessage_$0$,
+    CompleteTime_$0$,
+    RetryTime,
+
+    eventInteractionCache,
+    eventResultCache
 
 }

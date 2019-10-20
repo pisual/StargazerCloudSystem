@@ -1,7 +1,6 @@
 package com.staragzerproject.transaction.factory.test;
 
 import com.google.common.base.Optional;
-import com.google.gson.JsonSyntaxException;
 import com.stargazerproject.analysis.EventAssembleAnalysis;
 import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
 import com.stargazerproject.spring.context.initialization.test.BaseJunitTest;
@@ -26,65 +25,48 @@ public class EventTest extends BaseJunitTest {
 
     private static EventAssembleAnalysis eventAssembleAnalysis;
 
+    private static String jsonData;
 
     @Rule
     public ExpectedException expection = ExpectedException.none();
 
     @Test
-    public void test_0_getInitiationEvent(){
+    public void test_0_initiation(){
         eventAssembleAnalysis = initializationElement("eventAssembleAnalysisImpl", EventAssembleAnalysis.class);
     }
 
     @Test
     public void test_1_getInitiationEvent(){
         event = super.initializationElement("standardEvent", Event.class);
-        System.out.println(event.toString());
+        jsonData = event.toString();
     }
 
     @Test
     public void test_2_InjectEventFromJson(){
-        String json = "{\"StartSystemTest\":\"Test1\",\"StartSystemTest2\":\"Test2\"}";
         EventAssembleAnalysisHandle eventAssembleAnalysisHandle = event.eventAssemble(Optional.of(eventAssembleAnalysis)).get();
-        eventAssembleAnalysisHandle.injecrParametersFromJson(Optional.of(json));
-        System.out.println(event.toString());
+        eventAssembleAnalysisHandle.injecrParametersFromJson(Optional.of(jsonData));
     }
 
     /**
-     * @name 测试嵌套Json
-     * @illustrate eventAssembleAnalysisHandle.injecrParametersFromJson不支持嵌套Json数据
-     * @Exception ClassCastException  ErrorMessage：com.google.gson.internal.LinkedTreeMap cannot be cast to java.lang.String
+     * @name 测试常规注入参数
+     * @illustrate 通过eventAssembleAnalysisHandle.injectEventParameter测试常规注入参数
      * **/
     @Test
-    public void test_3_InjectEventFromNestJson(){
-        expection.expect(ClassCastException.class);
-        expection.expectMessage("com.google.gson.internal.LinkedTreeMap cannot be cast to java.lang.String");
-
-        String nestJson = "{\"Test2\":{\"StartSystemTest\":\"Test1\",\"StartSystemTest2\":\"Test1\",\"StartSystemTest3\":\"Test1\",\"StartSystemTest4\":\"Test1\"}}\n";
-        EventAssembleAnalysisHandle eventAssembleAnalysisHandle = event.eventAssemble(Optional.of(eventAssembleAnalysis)).get();
-        eventAssembleAnalysisHandle.injecrParametersFromJson(Optional.of(nestJson));
-        System.out.println(event.toString());
-    }
-
-    /**
-     * @name 测试错误的Json
-     * @illustrate eventAssembleAnalysisHandle.injecrParametersFromJson不支持嵌套Json数据
-     * @Exception ClassCastException  ErrorMessage：com.google.gson.internal.LinkedTreeMap cannot be cast to java.lang.String
-     * **/
-    @Test
-    public void test_4_InjectEventFromErroeJson(){
-        expection.expect(JsonSyntaxException.class);
-
-        String errorJson = "{\"sss,Test2\"，:{\"StartSys，temTest\":\"Tes」」t1\",\"StartSystemTest2\":\"Test1\",\"StartSystemTest3\":\"Test1\",\"StartSystemTest4\":\"Test1\"}}\n";
-        EventAssembleAnalysisHandle eventAssembleAnalysisHandle = event.eventAssemble(Optional.of(eventAssembleAnalysis)).get();
-        eventAssembleAnalysisHandle.injecrParametersFromJson(Optional.of(errorJson));
-        System.out.println(event.toString());
-    }
-
-    @Test
-    public void test_5_InjectEvent(){
+    public void test_3_InjectEvent(){
         EventAssembleAnalysisHandle eventAssembleAnalysisHandle = event.eventAssemble(Optional.of(eventAssembleAnalysis)).get();
         eventAssembleAnalysisHandle.injectEventParameter(Optional.of("StartSystemTest_test_5_InjectEvent"), Optional.of("test_5_InjectEventValue"));
-        System.out.println(event.toString());
     }
 
+    @Test
+    public void test_4_getEventTimeOut(){
+        EventAssembleAnalysisHandle eventAssembleAnalysisHandle = event.eventAssemble(Optional.of(eventAssembleAnalysis)).get();
+        System.out.println(event.toString());
+        eventAssembleAnalysisHandle.getEventTimeOut();
+    }
+
+    @Test
+    public void test_5_getEventTimeOutTimeUnit(){
+        EventAssembleAnalysisHandle eventAssembleAnalysisHandle = event.eventAssemble(Optional.of(eventAssembleAnalysis)).get();
+        eventAssembleAnalysisHandle.getEventTimeOutTimeUnit();
+    }
 }

@@ -9,4 +9,6 @@ public interface CellsTransaction<ParameterKey, ParameterValue> {
 	public void method(Optional<Cache<ParameterKey, ParameterValue>> cache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle);
 	public void fallBack(Optional<Cache<ParameterKey, ParameterValue>> cache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle, Throwable throwable);
 	public Event eventAnnotation();
+	public Optional<String> getAggregationRootCache(Optional<String> key);
+	public void putAggregationRootCache(Optional<String> key, Optional<String> value);
 }
