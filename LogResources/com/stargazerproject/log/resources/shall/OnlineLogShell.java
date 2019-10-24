@@ -46,27 +46,27 @@ public class OnlineLogShell implements Log, BaseCharacteristic<Log>{
 	
 	@Override
 	public void DEBUG(Object object, String message) {
-		queue.producer(Optional.of(new LogData(Optional.of(object.toString()), Optional.of(message), Optional.of(LogLevel.DEBUG))));
+		queue.producer(Optional.of(new LogData(Optional.fromNullable(object.toString()), Optional.fromNullable(message), Optional.of(LogLevel.DEBUG))));
 	}
 
 	@Override
 	public void INFO(Object object, String message) {
-		queue.producer(Optional.of(new LogData(Optional.of(object.toString()), Optional.of(message), Optional.of(LogLevel.INFO))));
+		queue.producer(Optional.of(new LogData(Optional.fromNullable(object.toString()), Optional.fromNullable(message), Optional.of(LogLevel.INFO))));
 	}
 
 	@Override
 	public void WARN(Object object, String message) {
-		queue.producer(Optional.of(new LogData(Optional.of(object.toString()), Optional.of(message), Optional.of(LogLevel.WARN))));
+		queue.producer(Optional.of(new LogData(Optional.fromNullable(object.toString()), Optional.fromNullable(message), Optional.of(LogLevel.WARN))));
 	}
 
 	@Override
 	public void ERROR(Object object, String message) {
-		queue.producer(Optional.of(new LogData(Optional.of(object.toString()), Optional.of(message), Optional.of(LogLevel.ERROR))));
+		queue.producer(Optional.of(new LogData(Optional.fromNullable(object.toString()), Optional.fromNullable(message), Optional.of(LogLevel.ERROR))));
 	}
 
 	@Override
 	public void FATAL(Object object, String message) {
-		queue.producer(Optional.of(new LogData(Optional.of(object.toString()), Optional.of(message), Optional.of(LogLevel.FATAL))));
+		queue.producer(Optional.of(new LogData(Optional.fromNullable(object.toString()), Optional.fromNullable(message), Optional.of(LogLevel.FATAL))));
 	}
 
 }

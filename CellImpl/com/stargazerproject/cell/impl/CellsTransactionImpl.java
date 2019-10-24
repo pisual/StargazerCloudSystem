@@ -51,11 +51,12 @@ public abstract class CellsTransactionImpl implements CellsTransaction<String, S
 	
 	public void fallBack(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandleArg, Throwable throwable){
 		if(throwable instanceof HystrixTimeoutException){
-			log.WARN(this, HystrixTimeoutException.class.toString());
+			log.WARN(this, interactionCache.get().get(Optional.of(EventDate.Method.toString())).get()+" : Run Timeout");
+			fail(new HystrixTimeoutException());
 		}
 		else{
-			fail(throwable);
 			log.ERROR(this, throwable.getMessage());
+			fail(throwable);
 		}
 	}
 
@@ -64,8 +65,8 @@ public abstract class CellsTransactionImpl implements CellsTransaction<String, S
 	}
 
 	protected void fail(Throwable throwable){
-		eventResultsExecuteAnalysisHandle.EventResultState(Optional.of(EventResultState.FAULT));
 		eventResultsExecuteAnalysisHandle.errorMessage(Optional.of(throwable));
+		eventResultsExecuteAnalysisHandle.EventResultState(Optional.of(EventResultState.FAULT));
 	}
 
 	@Override

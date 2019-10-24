@@ -14,13 +14,16 @@ import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.bus.config.BusConfiguration;
 import net.engio.mbassy.bus.config.Feature;
 import net.engio.mbassy.bus.config.IBusConfiguration;
+import net.engio.mbassy.bus.error.IPublicationErrorHandler;
+import net.engio.mbassy.bus.error.PublicationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *  @name eventBus NoBlockMethod RxJava版本
@@ -46,7 +49,7 @@ public class EventBusAsyncMethodMBassadorCharacteristic implements BusAsyncMetho
 	protected LogMethod log;
 
 	@Autowired
-	@Qualifier("eventBusListener")
+	@Qualifier("eventBusListenerAsynchronously")
 	private BusListener<Optional<Event>> eventBusListener;
 
 	private MBassador bus;
@@ -55,13 +58,56 @@ public class EventBusAsyncMethodMBassadorCharacteristic implements BusAsyncMetho
 		super();
 		}
 
+	protected static final ThreadFactory MessageDispatchThreadFactory = new ThreadFactory() {
+
+		private final AtomicInteger threadID = new AtomicInteger(0);
+
+		@Override
+		public Thread newThread(Runnable r) {
+			Thread thread = Executors.defaultThreadFactory().newThread(r);
+			thread.setDaemon(true);// do not prevent the JVM from exiting
+			thread.setName("Dispatcher-" + threadID.getAndIncrement());
+			return thread;
+		}
+	};
+
+
+	static final IPublicationErrorHandler illustrativeHandler =  new IPublicationErrorHandler() {
+		@Override
+		public void handleError(PublicationError error) {
+
+			System.out.println(error.getMessage()); // An error message to describe what went wrong
+			System.out.println(error.getCause()); // The underlying exception
+			System.out.println(error.getPublishedMessage()); // The message that was published (can be null)
+			System.out.println(error.getListener()); // The listener that was invoked when the execption was thrown (can be null)
+			System.out.println(error.getHandler()); // The message handler (Method) that was invoked when the execption was thrown (can be null)
+		}
+	};
+
+	protected static final ThreadFactory MessageHandlerThreadFactory = new ThreadFactory() {
+
+		private final AtomicInteger threadID = new AtomicInteger(0);
+
+		@Override
+		public Thread newThread(Runnable r) {
+			Thread thread = Executors.defaultThreadFactory().newThread(r);
+			thread.setName("AsyncHandler-" + threadID.getAndIncrement());
+			thread.setDaemon(true);
+			return thread;
+		}
+	};
+
 	@Override
 	public Optional<BusAsyncMethod<Event>> characteristic() {
 		bus = new MBassador(new BusConfiguration()
 				.addFeature(Feature.SyncPubSub.Default())
-				.addFeature(Feature.AsynchronousHandlerInvocation.Default(minThreadCount(), maxThreadCount()))
-				.addFeature(Feature.AsynchronousMessageDispatch.Default())
-				.addPublicationErrorHandler(publicationError -> log.ERROR(publicationError, publicationError.getMessage()))
+				.addFeature(new Feature.AsynchronousHandlerInvocation().setExecutor(new ThreadPoolExecutor(minThreadCount(), maxThreadCount(), 100,
+						TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(100), MessageHandlerThreadFactory)))
+				.addFeature(new Feature.AsynchronousMessageDispatch()
+						.setNumberOfMessageDispatchers(2)
+						.setDispatcherThreadFactory(MessageDispatchThreadFactory)
+						.setMessageQueue(new LinkedBlockingQueue<IMessagePublication>(2)))
+				.addPublicationErrorHandler(illustrativeHandler)
 				.setProperty(IBusConfiguration.Properties.BusId, "EventBus"));
 		bus.subscribe(eventBusListener);
 		return Optional.of(this);

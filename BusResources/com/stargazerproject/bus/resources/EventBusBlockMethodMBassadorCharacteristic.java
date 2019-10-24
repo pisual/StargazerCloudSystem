@@ -21,7 +21,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  *  @name eventBus BlockMethod MBassador
@@ -47,7 +48,7 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 	protected LogMethod log;
 
 	@Autowired
-	@Qualifier("eventBusListener")
+	@Qualifier("eventBusListenerSynchronously")
 	private BusListener<Optional<Event>> eventBusListener;
 
 	private MBassador bus;
@@ -56,12 +57,42 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 		super();
 		}
 
+	protected static final ThreadFactory MessageHandlerThreadFactory = new ThreadFactory() {
+
+		private final AtomicInteger threadID = new AtomicInteger(0);
+
+		@Override
+		public Thread newThread(Runnable r) {
+			Thread thread = Executors.defaultThreadFactory().newThread(r);
+			thread.setName("AsyncHandler-" + threadID.getAndIncrement());
+			thread.setDaemon(true);
+			return thread;
+		}
+	};
+
+	protected static final ThreadFactory MessageDispatchThreadFactory = new ThreadFactory() {
+
+		private final AtomicInteger threadID = new AtomicInteger(0);
+
+		@Override
+		public Thread newThread(Runnable r) {
+			Thread thread = Executors.defaultThreadFactory().newThread(r);
+			thread.setDaemon(true);// do not prevent the JVM from exiting
+			thread.setName("Dispatcher-" + threadID.getAndIncrement());
+			return thread;
+		}
+	};
+
 	@Override
 	public Optional<BusBlockMethod<Event>> characteristic() {
 		bus = new MBassador(new BusConfiguration()
 				.addFeature(Feature.SyncPubSub.Default())
-				.addFeature(Feature.AsynchronousHandlerInvocation.Default(minThreadCount(), maxThreadCount()))
-				.addFeature(Feature.AsynchronousMessageDispatch.Default())
+				.addFeature(new Feature.AsynchronousHandlerInvocation().setExecutor(new ThreadPoolExecutor(minThreadCount(), maxThreadCount(), 100,
+						TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), MessageHandlerThreadFactory)))
+				.addFeature(new Feature.AsynchronousMessageDispatch()
+						.setNumberOfMessageDispatchers(2)
+						.setDispatcherThreadFactory(MessageDispatchThreadFactory)
+						.setMessageQueue(new LinkedBlockingQueue<IMessagePublication>(10)))
 				.addPublicationErrorHandler(publicationError ->  log.ERROR("eventBusBlockMethodMBassadorCharacteristic publicationError", publicationError.getMessage()))
 				.setProperty(IBusConfiguration.Properties.BusId, "EventBus"));
 		bus.subscribe(eventBusListener);
@@ -76,7 +107,7 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 
 	private void wait(IMessagePublication iMessagePublication, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException{
 		for(int i=0; i<timeout.get(); i++){
-			if(iMessagePublication.isFinished()){
+			if(iMessagePublication.isRunning()){
 				return;
 			}
 			else{
@@ -84,8 +115,8 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 				continue;
 			}
 		}
-		log.WARN(iMessagePublication, "Event没有在指定时间内完成任务 : BaseEvent Not completed at the specified time");
-		throw new BusEventTimeoutException("Event没有在指定时间内完成任务 : BaseEvent Not completed at the specified time : " + iMessagePublication.toString());
+		log.WARN(iMessagePublication, "Event没有在指定时间内开始执行任务 : BaseEvent Not start at the specified time");
+		throw new BusEventTimeoutException("Event没有在指定时间内开始执行任务 : BaseEvent Not completed at the specified time : " + iMessagePublication.toString());
 	}
 
 	private static int minThreadCount(){

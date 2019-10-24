@@ -18,15 +18,22 @@ public class EventBusObserver implements BusObserver<Event>{
 	}
 
 	public Optional<Boolean> isRunning(){
+		System.out.println("iMessagePublication.getMessage()  "+iMessagePublication.getMessage());
+		System.out.println("iMessagePublication.isDeadMessage()  "+iMessagePublication.isDeadMessage());
+		System.out.println("iMessagePublication.isFilteredMessage() "+iMessagePublication.isFilteredMessage());
+		System.out.println("iMessagePublication.hasError()"+iMessagePublication.hasError());
+		System.out.println("iMessagePublication.isScheduled() "+iMessagePublication.isScheduled());
+		System.out.println("isFinished() "+iMessagePublication.isFinished());
 		return Optional.of(iMessagePublication.isRunning());
 	}
 
 	public Optional<Boolean> hasError(){
-		return Optional.of(iMessagePublication.isFinished());
+		return Optional.of(iMessagePublication.hasError());
 	}
 
 	public Optional<Throwable> getError(){
-		return Optional.of(iMessagePublication.getError().getCause());
+
+		return Optional.fromNullable(iMessagePublication.getError().getCause());
 	}
 
 }

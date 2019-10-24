@@ -14,11 +14,11 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component(value="eventBusListener")
-@Qualifier("eventBusListener")
+@Component(value="eventBusListenerAsynchronously")
+@Qualifier("eventBusListenerAsynchronously")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Listener(references = References.Strong)
-public class EventBusListener implements BusListener<Optional<Event>>{
+public class EventBusListenerAsynchronously implements BusListener<Optional<Event>>{
 
     @Autowired
     @Qualifier("eventExecuteAnalysisImpl")
@@ -27,7 +27,12 @@ public class EventBusListener implements BusListener<Optional<Event>>{
     @Handler(delivery = Invoke.Asynchronously)
     @Override
     public void handler(Optional<Event> busEvent) {
-        busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis));
+        try {
+            busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 }

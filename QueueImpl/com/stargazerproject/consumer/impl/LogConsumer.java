@@ -33,6 +33,9 @@ public class LogConsumer implements QueueConsumer<LogData>{
 		if(logData.get().logLevel().get().equals(LogLevel.ERROR) || (logData.get().logLevel().get().equals(LogLevel.FATAL))){
 			System.err.println(ansi().eraseScreen().fgRed().a("Stargazer System Report : ").fgBrightRed().a(logData.get().logLevel().get()+"		").fgYellow().a(logData.get().logContent().get()).reset());
 		}
+		else if (logData.get().logLevel().get().equals(LogLevel.WARN)){
+			System.err.println(ansi().eraseScreen().fgGreen().a("Stargazer System Report : ").fgRed().a(logData.get().logLevel().get()+"		").fgYellow().a(logData.get().logContent().get()).reset());
+		}
 		else{
 			System.err.println(ansi().eraseScreen().fgGreen().a("Stargazer System Report : ").fgBlue().a(logData.get().logLevel().get()+"		").fgYellow().a(logData.get().logContent().get()).reset());
 		}

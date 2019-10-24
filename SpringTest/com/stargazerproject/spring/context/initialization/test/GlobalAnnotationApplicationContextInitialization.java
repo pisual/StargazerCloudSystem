@@ -42,9 +42,7 @@ import com.stargazerproject.cache.server.manage.ByteArrayCacheServerManage;
 import com.stargazerproject.cache.server.manage.SystemParameterCacheServerManage;
 import com.stargazerproject.cache.server.manage.TransactionCacheServerManage;
 import com.stargazerproject.cell.aop.configuration.HystrixConfigurationS;
-import com.stargazerproject.cell.method.sequence.InitializationCellsGroupModel;
-import com.stargazerproject.cell.method.sequence.Test_GetCellsGroupIDModel;
-import com.stargazerproject.cell.method.sequence.Test_NowTimeModel;
+import com.stargazerproject.cell.method.sequence.*;
 import com.stargazerproject.consumer.impl.EventBusConsumer;
 import com.stargazerproject.consumer.impl.EventConsumer;
 import com.stargazerproject.inject.impl.InjectImpl;
@@ -382,10 +380,13 @@ public class GlobalAnnotationApplicationContextInitialization {
 		EventBusResourcesShell.class,
 		EventBusAsyncMethodMBassadorCharacteristic.class,
 		EventBusBlockMethodMBassadorCharacteristic.class,
-		EventBusListener.class,
+		EventBusListenerAsynchronously.class,
 		EventBusServer.class,
 		EventBusServerListener.class,
 		EventBusServerManage.class,
+		EventBusListenerSynchronously.class,
+		EventBusListenerAsynchronously.class,
+
 
 
 		/**Depend EventBusQueue**/
@@ -485,7 +486,9 @@ public class GlobalAnnotationApplicationContextInitialization {
 		/**测试用方法，实际需要动态注入**/
 		InitializationCellsGroupModel.class,
 		Test_GetCellsGroupIDModel.class,
-        Test_NowTimeModel.class
+        Test_NowTimeModel.class,
+		Test_TimeOutMethod_WhileWait_HystrixTimeOut.class,
+		Test_TimeOutMethod_WhileWait.class
 
 		);
 	} 

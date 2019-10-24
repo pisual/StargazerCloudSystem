@@ -5,6 +5,7 @@ import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.EventResultState;
+import com.stargazerproject.transaction.date.EventDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -25,14 +26,19 @@ public class EventResultsExecuteAnalysisHandleResources implements EventResultsE
 
     @Override
     public void EventResultState(Optional<EventResultState> eventResultState) {
-        increaseRetryTime();
+
+        if(eventResultState.get().equals(EventResultState.FAULT.toString())){
+            increaseRetryTime();
+        }
+
         setCompleteTime();
         resultCache.put(Optional.of("EventResultState_" + getRetryTime()), Optional.of(eventResultState.get().toString()));
     }
 
     @Override
     public void errorMessage(Optional<Throwable> throwable) {
-        resultCache.put(Optional.of("ErrorMessage_" + getRetryTime()), Optional.of(throwable.get().getMessage()));
+        String errorMessage = throwable.get().toString();
+        resultCache.put(Optional.of("ErrorMessage_" + getRetryTime()), Optional.of(errorMessage));
     }
 
     @Override
@@ -47,11 +53,11 @@ public class EventResultsExecuteAnalysisHandleResources implements EventResultsE
     }
 
     private int getRetryTime(){
-        return Integer.parseInt(resultCache.get(Optional.of("RetryTime")).get());
+        return Integer.parseInt(resultCache.get(Optional.of(EventDate.RetryTime.toString())).get());
     }
 
     private void increaseRetryTime(){
         int newRetryTime = getRetryTime() + 1;
-        resultCache.put(Optional.of("RetryTime"), Optional.of(newRetryTime + ""));
+        resultCache.put(Optional.of(EventDate.RetryTime.toString()), Optional.of(newRetryTime + ""));
     }
 }
