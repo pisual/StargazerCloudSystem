@@ -19,13 +19,13 @@ import org.springframework.stereotype.Component;
 @Qualifier("transactionBusListener")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Listener(references = References.Strong)
-public class TransactionBusListener implements BusListener<Optional<Transaction>>{
+public class TransactionBusListenerSynchronously implements BusListener<Optional<Transaction>>{
 
     @Autowired
     @Qualifier("transactionExecuteAnalysisImpl")
     private TransactionExecuteAnalysis transactionExecuteAnalysis;
 
-    @Handler(delivery = Invoke.Asynchronously)
+    @Handler(delivery = Invoke.Synchronously)
     @Override
     public void handler(Optional<Transaction> busTransaction) {
         try {

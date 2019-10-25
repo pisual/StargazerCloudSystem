@@ -15,7 +15,6 @@ import net.engio.mbassy.bus.config.BusConfiguration;
 import net.engio.mbassy.bus.config.Feature;
 import net.engio.mbassy.bus.config.IBusConfiguration;
 import net.engio.mbassy.bus.error.IPublicationErrorHandler;
-import net.engio.mbassy.bus.error.PublicationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -44,6 +43,22 @@ public class EventBusAsyncMethodMBassadorCharacteristic implements BusAsyncMetho
 	@NeedInject(type="SystemParametersCache")
 	private static String Parameters_Module_Kernel_Bus_EventBus_MBassador_HandlerInvocation_MaxThreadCount;
 
+	/** @name 异步处理器中当线程的数量大于内核时，多余的空闲线程在终止之前等待新任务的最大时间。 **/
+	@NeedInject(type="SystemParametersCache")
+	private static String Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousHandlerInvocation_keepAliveTime;
+
+	/** @name 异步处理器队列的最大容量。 **/
+	@NeedInject(type="SystemParametersCache")
+	private static String Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousHandlerInvocation_QueueMaxNumber;
+
+	/** @name 消息调度器的线程数目 **/
+	@NeedInject(type="SystemParametersCache")
+	private static String Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousMessageDispatch_NumberOfMessageDispatchers;
+
+	/** @name 缓存队列的最大数目 **/
+	@NeedInject(type="SystemParametersCache")
+	private static String Parameters_Module_Kernel_Bus_EventBus_MBassador_MessageQueue;
+
 	@Autowired
 	@Qualifier("logRecord")
 	protected LogMethod log;
@@ -52,11 +67,16 @@ public class EventBusAsyncMethodMBassadorCharacteristic implements BusAsyncMetho
 	@Qualifier("eventBusListenerAsynchronously")
 	private BusListener<Optional<Event>> eventBusListener;
 
+	@Autowired
+	@Qualifier("eventBusIPublicationErrorHandler")
+	private IPublicationErrorHandler eventBusIPublicationErrorHandler;
+
 	private MBassador bus;
 
 	public EventBusAsyncMethodMBassadorCharacteristic() {
 		super();
 		}
+
 
 	protected static final ThreadFactory MessageDispatchThreadFactory = new ThreadFactory() {
 
@@ -71,18 +91,6 @@ public class EventBusAsyncMethodMBassadorCharacteristic implements BusAsyncMetho
 		}
 	};
 
-
-	static final IPublicationErrorHandler illustrativeHandler =  new IPublicationErrorHandler() {
-		@Override
-		public void handleError(PublicationError error) {
-
-			System.out.println(error.getMessage()); // An error message to describe what went wrong
-			System.out.println(error.getCause()); // The underlying exception
-			System.out.println(error.getPublishedMessage()); // The message that was published (can be null)
-			System.out.println(error.getListener()); // The listener that was invoked when the execption was thrown (can be null)
-			System.out.println(error.getHandler()); // The message handler (Method) that was invoked when the execption was thrown (can be null)
-		}
-	};
 
 	protected static final ThreadFactory MessageHandlerThreadFactory = new ThreadFactory() {
 
@@ -101,14 +109,20 @@ public class EventBusAsyncMethodMBassadorCharacteristic implements BusAsyncMetho
 	public Optional<BusAsyncMethod<Event>> characteristic() {
 		bus = new MBassador(new BusConfiguration()
 				.addFeature(Feature.SyncPubSub.Default())
-				.addFeature(new Feature.AsynchronousHandlerInvocation().setExecutor(new ThreadPoolExecutor(minThreadCount(), maxThreadCount(), 100,
-						TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(100), MessageHandlerThreadFactory)))
+				.addFeature(new Feature.AsynchronousHandlerInvocation().setExecutor(
+								new ThreadPoolExecutor( minThreadCount(),
+														maxThreadCount(),
+														Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousHandlerInvocation_keepAliveTime),
+														TimeUnit.SECONDS,
+														new LinkedBlockingQueue<Runnable>(Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousHandlerInvocation_QueueMaxNumber)),
+														MessageHandlerThreadFactory)))
 				.addFeature(new Feature.AsynchronousMessageDispatch()
-						.setNumberOfMessageDispatchers(2)
-						.setDispatcherThreadFactory(MessageDispatchThreadFactory)
-						.setMessageQueue(new LinkedBlockingQueue<IMessagePublication>(2)))
-				.addPublicationErrorHandler(illustrativeHandler)
-				.setProperty(IBusConfiguration.Properties.BusId, "EventBus"));
+										.setNumberOfMessageDispatchers(Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousMessageDispatch_NumberOfMessageDispatchers))
+										.setDispatcherThreadFactory(MessageDispatchThreadFactory)
+										.setMessageQueue(
+														new LinkedBlockingQueue<IMessagePublication>(Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_MessageQueue))))
+				.addPublicationErrorHandler(eventBusIPublicationErrorHandler)
+				.setProperty(IBusConfiguration.Properties.BusId, "eventBusAsyncMethod"));
 		bus.subscribe(eventBusListener);
 		return Optional.of(this);
 	}

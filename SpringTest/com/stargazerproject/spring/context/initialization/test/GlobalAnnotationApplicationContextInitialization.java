@@ -386,6 +386,10 @@ public class GlobalAnnotationApplicationContextInitialization {
 		EventBusServerManage.class,
 		EventBusListenerSynchronously.class,
 		EventBusListenerAsynchronously.class,
+		EventBusIPublicationErrorHandler.class,
+		TransactionBusIPublicationErrorHandler.class,
+		TransactionBusListenerAsynchronously.class,
+		TransactionBusListenerSynchronously.class,
 
 
 
@@ -394,7 +398,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		TransactionBusResourcesShell.class,
 		TransactionBusAsyncMethodMBassadorCharacteristic.class,
 		TransactionBusBlockMethodMBassadorCharacteristic.class,
-		TransactionBusListener.class,
+		TransactionBusListenerAsynchronously.class,
 		TransactionBusServer.class,
 		TransactionBusServerListener.class,
 		TransactionBusServerManage.class,

@@ -15,6 +15,7 @@ import net.engio.mbassy.bus.MBassador;
 import net.engio.mbassy.bus.config.BusConfiguration;
 import net.engio.mbassy.bus.config.Feature;
 import net.engio.mbassy.bus.config.IBusConfiguration;
+import net.engio.mbassy.bus.error.IPublicationErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -43,6 +44,22 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 	@NeedInject(type="SystemParametersCache")
 	private static String Parameters_Module_Kernel_Bus_EventBus_MBassador_HandlerInvocation_MaxThreadCount;
 
+	/** @name 异步处理器中当线程的数量大于内核时，多余的空闲线程在终止之前等待新任务的最大时间。 **/
+	@NeedInject(type="SystemParametersCache")
+	private static String Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousHandlerInvocation_keepAliveTime;
+
+	/** @name 异步处理器队列的最大容量。 **/
+	@NeedInject(type="SystemParametersCache")
+	private static String Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousHandlerInvocation_QueueMaxNumber;
+
+	/** @name 消息调度器的线程数目 **/
+	@NeedInject(type="SystemParametersCache")
+	private static String Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousMessageDispatch_NumberOfMessageDispatchers;
+
+	/** @name 缓存队列的最大数目 **/
+	@NeedInject(type="SystemParametersCache")
+	private static String Parameters_Module_Kernel_Bus_EventBus_MBassador_MessageQueue;
+
 	@Autowired
 	@Qualifier("logRecord")
 	protected LogMethod log;
@@ -50,6 +67,10 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 	@Autowired
 	@Qualifier("eventBusListenerSynchronously")
 	private BusListener<Optional<Event>> eventBusListener;
+
+	@Autowired
+	@Qualifier("eventBusIPublicationErrorHandler")
+	private IPublicationErrorHandler eventBusIPublicationErrorHandler;
 
 	private MBassador bus;
 
@@ -87,14 +108,20 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 	public Optional<BusBlockMethod<Event>> characteristic() {
 		bus = new MBassador(new BusConfiguration()
 				.addFeature(Feature.SyncPubSub.Default())
-				.addFeature(new Feature.AsynchronousHandlerInvocation().setExecutor(new ThreadPoolExecutor(minThreadCount(), maxThreadCount(), 100,
-						TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), MessageHandlerThreadFactory)))
+				.addFeature(new Feature.AsynchronousHandlerInvocation().setExecutor(
+						new ThreadPoolExecutor( minThreadCount(),
+								maxThreadCount(),
+								Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousHandlerInvocation_keepAliveTime),
+								TimeUnit.SECONDS,
+								new LinkedBlockingQueue<Runnable>(Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousHandlerInvocation_QueueMaxNumber)),
+								MessageHandlerThreadFactory)))
 				.addFeature(new Feature.AsynchronousMessageDispatch()
-						.setNumberOfMessageDispatchers(2)
+						.setNumberOfMessageDispatchers(Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousMessageDispatch_NumberOfMessageDispatchers))
 						.setDispatcherThreadFactory(MessageDispatchThreadFactory)
-						.setMessageQueue(new LinkedBlockingQueue<IMessagePublication>(10)))
-				.addPublicationErrorHandler(publicationError ->  log.ERROR("eventBusBlockMethodMBassadorCharacteristic publicationError", publicationError.getMessage()))
-				.setProperty(IBusConfiguration.Properties.BusId, "EventBus"));
+						.setMessageQueue(
+								new LinkedBlockingQueue<IMessagePublication>(Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_MessageQueue))))
+				.addPublicationErrorHandler(eventBusIPublicationErrorHandler)
+				.setProperty(IBusConfiguration.Properties.BusId, "eventBusBlockMethod"));
 		bus.subscribe(eventBusListener);
 		return Optional.of(this);
 	}
