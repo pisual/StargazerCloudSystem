@@ -77,12 +77,6 @@ public class TransactionTest extends BaseJunitTest {
         transactionBusImpl.pushAsync(Optional.of(getNewTransaction()), Optional.of(TimeUnit.SECONDS), Optional.of(10));
     }
 
-    @Test
-    public void test_3_pushAsyncEvents(){
-        for(int i=0; i<1000; i++){
-            transactionBusImpl.pushAsync(Optional.of(getNewTransaction()), Optional.of(TimeUnit.SECONDS), Optional.of(10));
-        }
-    }
 
     @Test
     public void test_4_stopBus(){
