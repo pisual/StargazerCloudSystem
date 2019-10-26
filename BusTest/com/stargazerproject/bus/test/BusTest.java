@@ -54,101 +54,90 @@ public class BusTest extends BaseJunitTest {
     }
 
     @Test
-    public void test_2_1_PushEvent(){
-        try {
-            eventBusImpl.push(Optional.of(getNewEvent()), Optional.of(TimeUnit.MICROSECONDS), Optional.of(300));
-
-        } catch (BusEventTimeoutException e) {
-            e.printStackTrace();
-        }
+    public void test_2_1_0_PushEvent() throws BusEventTimeoutException {
+        eventBusImpl.push(Optional.of(getNewEvent()), Optional.of(TimeUnit.MILLISECONDS), Optional.of(2000));
     }
 
+    /**本测试方法具有破坏性，会破坏其他的测试方法，首先需要把处理线程塞满阻塞住的情况下才能测试等待超时，所以请单独测试此方法**/
     @Test
-    public void test_3_2_PushEvents(){
-        try {
-            for(int i=0; i<5; i++){
-                eventBusImpl.push(Optional.of(getNewEvent()), Optional.of(TimeUnit.MICROSECONDS), Optional.of(300));
+    public void test_9_9_1_PushEventWaitTimeOut() throws BusEventTimeoutException {
+
+        for(int i=0; i<10; i++) {
+        new Thread(() -> {
+            try {
+                eventBusImpl.push(Optional.of(getTimeOutMethodEvent_WhileWait()), Optional.of(TimeUnit.SECONDS), Optional.of(2000));
+            } catch (BusEventTimeoutException e) {
+                e.printStackTrace();
             }
-
-        } catch (BusEventTimeoutException e) {
-            e.printStackTrace();
+        }){}.start();
         }
-    }
-
-    @Test
-    public void test_3_3_pushAsyncEvent(){
-        eventBusImpl.pushAsync(Optional.of(getNewEvent()), Optional.of(TimeUnit.SECONDS), Optional.of(10));
-    }
-
-    @Test
-    public void test_3_4_pushAsyncEvents(){
-        for(int i=0; i<10; i++){
-            eventBusImpl.pushAsync(Optional.of(getNewEvent()), Optional.of(TimeUnit.SECONDS), Optional.of(10));
-        }
-    }
-
-    @Test
-    public void test_3_5_testEventsAsyncRunTimeout(){
-        Event event = getTimeOutMethodEvent();
-        BusObserver busObserver = eventBusImpl.pushAsync(Optional.of(event), Optional.of(TimeUnit.SECONDS), Optional.of(100)).get();
-
-        //判断是否执行完毕
-        while(busObserver.isComplete().get() != Boolean.TRUE){ }
-
-        EventResultAnalysisHandle eventResultAnalysisHandle = event.eventResult(Optional.of(eventResultAnalysis)).get();
-
-        //判断FallBack是否执行完毕
-        while(eventResultAnalysisHandle.getTheLastEventResultState().get() == EventResultState.WAIT){ }
-
-        //自行结果断言
-        assertEquals(eventResultAnalysisHandle.getTheLastEventResultState().get(), EventResultState.FAULT);
-        assertEquals(eventResultAnalysisHandle.getTheLastErrorMessage().get(), "com.netflix.hystrix.exception.HystrixTimeoutException");
-
-    }
-
-    @Test
-    public void test_3_6_testEventsRunTimeout(){
-        Event event = getTimeOutMethodEvent();
-        BusObserver busObserver = null;
 
         try {
-            busObserver = eventBusImpl.push(Optional.of(event), Optional.of(TimeUnit.SECONDS), Optional.of(1000)).get();
-        } catch (BusEventTimeoutException e) {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        //判断是否执行完毕
-        while(busObserver.isComplete().get() != Boolean.TRUE){ }
-
-        EventResultAnalysisHandle eventResultAnalysisHandle = event.eventResult(Optional.of(eventResultAnalysis)).get();
-
-        //判断FallBack是否执行完毕
-        while(eventResultAnalysisHandle.getTheLastEventResultState().get() == EventResultState.WAIT){ }
-
-        //自行结果断言
-        assertEquals(eventResultAnalysisHandle.getTheLastEventResultState().get(), EventResultState.FAULT);
-        assertEquals(eventResultAnalysisHandle.getTheLastErrorMessage().get(), "com.netflix.hystrix.exception.HystrixTimeoutException");
+        expection.expect(BusEventTimeoutException.class);
+        expection.expectMessage("Event没有在指定时间内开始任务 : BaseEvent Not Start at the specified time : " + EventResultState.WAIT);
+        BusObserver busObserver =  eventBusImpl.push(Optional.of(getTimeOutMethodEvent_WhileWait()), Optional.of(TimeUnit.MILLISECONDS), Optional.of(10)).get();
     }
 
     @Test
-    public void test_3_7_testEventsBlockMethodWaitTimeout() throws BusEventTimeoutException {
-
-        for(int i=0; i<20; i++){
-
-            new Thread(() -> {
-                try {
-                    eventBusImpl.push(Optional.of(getTimeOutMethodEvent_WhileWait()), Optional.of(TimeUnit.SECONDS), Optional.of(1000));
-                } catch (BusEventTimeoutException e) {
-                    e.printStackTrace();
-                }
-            }){}.start();
-        }
-            expection.expect(BusEventTimeoutException.class);
-            eventBusImpl.push(Optional.of(getTimeOutMethodEvent_WhileWait()), Optional.of(TimeUnit.SECONDS), Optional.of(1));
-
+    public void test_2_1_2_PushEventRunTimeOut() throws BusEventTimeoutException {
+        expection.expect(BusEventTimeoutException.class);
+        expection.expectMessage("Event没有在指定时间内完成任务 : BaseEvent Not Complete at the specified time : " + EventResultState.Run);
+        BusObserver busObserver =  eventBusImpl.push(Optional.of(getTimeOutMethodEvent_WhileWait_RunTimeOut()), Optional.of(TimeUnit.SECONDS), Optional.of(100)).get();
     }
 
 
+    @Test
+    public void test_3_1_pushAsyncEvent() throws BusEventTimeoutException {
+        BusObserver busObserver =  eventBusImpl.pushAsync(Optional.of(getNewEvent()), Optional.of(TimeUnit.MILLISECONDS), Optional.of(500)).get();
+        busObserver.waitFinish();
+    }
+
+    /**本测试方法具有破坏性，会破坏其他的测试方法，首先需要把处理线程塞满阻塞住的情况下才能测试等待超时，所以请单独测试此方法**/
+    @Test
+    public void test_9_9_0_pushAsyncEventWaitTimeOut() throws BusEventTimeoutException {
+
+        for(int i=0; i<10; i++) {
+            BusObserver busObserver =  eventBusImpl.pushAsync(Optional.of(getTimeOutMethodEvent_WhileWait()), Optional.of(TimeUnit.SECONDS), Optional.of(2000)).get();
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        expection.expect(BusEventTimeoutException.class);
+        expection.expectMessage("Event没有在指定时间内开始任务 : BaseEvent Not Start at the specified time : " + EventResultState.WAIT);
+        BusObserver busObserver =  eventBusImpl.pushAsync(Optional.of(getTimeOutMethodEvent_WhileWait()), Optional.of(TimeUnit.MILLISECONDS), Optional.of(10)).get();
+        busObserver.waitFinish();
+    }
+
+
+    @Test
+    public void test_3_3_PushAsyncEventRunTimeOut() throws BusEventTimeoutException {
+        expection.expect(BusEventTimeoutException.class);
+        expection.expectMessage("Event没有在指定时间内完成任务 : BaseEvent Not Complete at the specified time : " + EventResultState.Run);
+        BusObserver busObserver =  eventBusImpl.pushAsync(Optional.of(getTimeOutMethodEvent_WhileWait_RunTimeOut()), Optional.of(TimeUnit.SECONDS), Optional.of(100)).get();
+        busObserver.waitFinish();
+    }
+
+    @Test
+    public void test_3_4_PushAsyncEventRunHystrixTimeOut() throws BusEventTimeoutException {
+        Event event = getHystrixTimeOutMethodEvent();
+
+        BusObserver busObserver =  eventBusImpl.pushAsync(Optional.of(event), Optional.of(TimeUnit.SECONDS), Optional.of(100)).get();
+        busObserver.waitFinish();
+
+        EventResultAnalysisHandle eventResultAnalysisHandle = event.eventResult(Optional.of(eventResultAnalysis)).get();
+
+        assertEquals(eventResultAnalysisHandle.getTheLastEventResultState().get(), EventResultState.FAULT);
+        assertEquals(eventResultAnalysisHandle.getTheLastErrorMessage().get(), "com.netflix.hystrix.exception.HystrixTimeoutException");
+    }
 
     @Test
     public void test_4_stopBus(){
@@ -169,17 +158,27 @@ public class BusTest extends BaseJunitTest {
         /**Event注入需要测试的方法**/
         EventAssembleAnalysisHandle eventAssembleAnalysisHandle = event.eventAssemble(Optional.of(eventAssembleAnalysis)).get();
         eventAssembleAnalysisHandle.injectEventParameter(Optional.of(EventDate.Method.toString()), Optional.of("test_TimeOutMethod_WhileWait"));
-        eventAssembleAnalysisHandle.injectEventParameter(Optional.of(EventDate.RunTimeout.toString()), Optional.of("1"));
+        eventAssembleAnalysisHandle.injectEventParameter(Optional.of(EventDate.RunTimeout.toString()), Optional.of("100"));
         eventAssembleAnalysisHandle.injectEventParameter(Optional.of(EventDate.RunTimeoutUnit.toString()), Optional.of(TimeUnit.SECONDS.toString()));
         return event;
     }
 
-    private Event getTimeOutMethodEvent(){
+    private Event getTimeOutMethodEvent_WhileWait_RunTimeOut(){
+        Event event = super.initializationElement("standardEvent", Event.class);
+        /**Event注入需要测试的方法**/
+        EventAssembleAnalysisHandle eventAssembleAnalysisHandle = event.eventAssemble(Optional.of(eventAssembleAnalysis)).get();
+        eventAssembleAnalysisHandle.injectEventParameter(Optional.of(EventDate.Method.toString()), Optional.of("test_TimeOutMethod_WhileWait"));
+        eventAssembleAnalysisHandle.injectEventParameter(Optional.of(EventDate.RunTimeout.toString()), Optional.of("5"));
+        eventAssembleAnalysisHandle.injectEventParameter(Optional.of(EventDate.RunTimeoutUnit.toString()), Optional.of(TimeUnit.SECONDS.toString()));
+        return event;
+    }
+
+    private Event getHystrixTimeOutMethodEvent(){
         Event event = super.initializationElement("standardEvent", Event.class);
         /**Event注入需要测试的方法**/
         EventAssembleAnalysisHandle eventAssembleAnalysisHandle = event.eventAssemble(Optional.of(eventAssembleAnalysis)).get();
         eventAssembleAnalysisHandle.injectEventParameter(Optional.of(EventDate.Method.toString()), Optional.of("test_TimeOutMethod_WhileWait_HystrixTimeOut"));
-        eventAssembleAnalysisHandle.injectEventParameter(Optional.of(EventDate.RunTimeout.toString()), Optional.of("1"));
+        eventAssembleAnalysisHandle.injectEventParameter(Optional.of(EventDate.RunTimeout.toString()), Optional.of("100"));
         eventAssembleAnalysisHandle.injectEventParameter(Optional.of(EventDate.RunTimeoutUnit.toString()), Optional.of(TimeUnit.SECONDS.toString()));
         return event;
     }

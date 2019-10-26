@@ -1,7 +1,6 @@
 package com.stargazerproject.analysis.handle;
 
 import com.google.common.base.Optional;
-import com.stargazerproject.transaction.EventResultState;
 
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +22,8 @@ public interface EventExecuteAnalysisHandle {
 
     public Optional<Integer> waitTimeout();
 
-    public Optional<EventResultState> resultState();
+    public Optional<TimeUnit> runTimeoutUnit();
+
+    public Optional<Integer> runTimeout();
 
 }

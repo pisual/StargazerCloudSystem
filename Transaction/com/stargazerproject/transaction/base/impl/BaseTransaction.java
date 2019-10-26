@@ -31,8 +31,8 @@ public class BaseTransaction extends ID implements Transaction{
 	}
 
 	@Override
-	public void skipTransaction() {
-		transaction.skipTransaction();
+	public void skipTransaction(Optional<String> skipCause) {
+		transaction.skipTransaction(skipCause);
 	}
 
 	@Override

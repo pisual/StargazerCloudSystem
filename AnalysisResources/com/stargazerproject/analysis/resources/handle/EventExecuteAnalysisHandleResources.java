@@ -7,6 +7,8 @@ import com.stargazerproject.cache.Cache;
 import com.stargazerproject.cell.CellsTransaction;
 import com.stargazerproject.spring.container.impl.BeanContainer;
 import com.stargazerproject.transaction.EventResultState;
+import com.stargazerproject.transaction.EventState;
+import com.stargazerproject.transaction.date.EventDate;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,9 +24,12 @@ public class EventExecuteAnalysisHandleResources implements EventExecuteAnalysis
 
     private EventResultsExecuteAnalysisHandle eventResultsExecuteAnalysisHandle;
 
-    public EventExecuteAnalysisHandleResources(Optional<Cache<String, String>> cacheArg, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandleArg){
+    private EventState eventState;
+
+    public EventExecuteAnalysisHandleResources(Optional<Cache<String, String>> cacheArg, Optional<EventState> eventStateArg, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandleArg){
         cache = cacheArg.get();
         eventResultsExecuteAnalysisHandle = eventResultsExecuteAnalysisHandleArg.get();
+        eventState = eventStateArg.get();
     }
 
     /**
@@ -33,8 +38,10 @@ public class EventExecuteAnalysisHandleResources implements EventExecuteAnalysis
      * **/
     @Override
     public void run() {
+        eventState = EventState.RUN;
         CellsTransaction cellsTransaction = BeanContainer.instance().getBean(method(), CellsTransaction.class);
         cellsTransaction.method(Optional.of(cache), Optional.of(eventResultsExecuteAnalysisHandle));
+        eventState = EventState.COMPLETE;
     }
 
     /**
@@ -42,35 +49,50 @@ public class EventExecuteAnalysisHandleResources implements EventExecuteAnalysis
      * @illustrate 从参数缓存中获取Method（方法）名称
      * **/
     private Optional<String> method(){
-        return cache.get(Optional.of("Method"));
-    }
-
-
-    @Override
-    public Optional<EventResultState> resultState() {
-        String resultState = cache.get(Optional.of("EventResultState")).get();
-        return conversionResultState(resultState);
+        return cache.get(Optional.of(EventDate.Method.toString()));
     }
 
     @Override
     public Optional<TimeUnit> waitTimeoutUnit(){
-        String waitTimeoutUnit = cache.get(Optional.of("waitTimeoutUnit")).get();
-        switch (waitTimeoutUnit){
-            case "MICROSECONDS":
-                return Optional.of(TimeUnit.MICROSECONDS);
-            case "MILLISECONDS":
-                return Optional.of(TimeUnit.MICROSECONDS);
-            case "SECONDS":
-                return Optional.of(TimeUnit.SECONDS);
-            default:
-                throw new NullPointerException("waitTimeoutUnit Error");
-        }
+        String waitTimeoutUnit = cache.get(Optional.of(EventDate.WaitTimeoutUnit.toString())).get();
+        return conversionTimeUnit(waitTimeoutUnit);
     }
 
     @Override
     public Optional<Integer> waitTimeout(){
-        String waitTimeout = cache.get(Optional.of("waitTimeout")).get();
+        String waitTimeout = cache.get(Optional.of(EventDate.WaitTimeout.toString())).get();
         return Optional.of(Integer.parseInt(waitTimeout));
+    }
+
+    @Override
+    public Optional<TimeUnit> runTimeoutUnit() {
+        String waitTimeoutUnit = cache.get(Optional.of(EventDate.RunTimeoutUnit.toString())).get();
+        return conversionTimeUnit(waitTimeoutUnit);
+    }
+
+    @Override
+    public Optional<Integer> runTimeout() {
+        String waitTimeout = cache.get(Optional.of(EventDate.RunTimeout.toString())).get();
+        return Optional.of(Integer.parseInt(waitTimeout));
+    }
+
+    private Optional<TimeUnit> conversionTimeUnit(String waitTimeoutUnit){
+        switch (waitTimeoutUnit){
+            case "NANOSECONDS":
+                return Optional.of(TimeUnit.NANOSECONDS);
+            case "MICROSECONDS":
+                return Optional.of(TimeUnit.MICROSECONDS);
+            case "MILLISECONDS":
+                return Optional.of(TimeUnit.MILLISECONDS);
+            case "SECONDS":
+                return Optional.of(TimeUnit.SECONDS);
+            case "HOURS":
+                return Optional.of(TimeUnit.HOURS);
+            case "DAYS":
+                return Optional.of(TimeUnit.DAYS);
+            default:
+                throw new IllegalArgumentException("waitTimeoutUnit Error");
+        }
     }
 
     private Optional<EventResultState> conversionResultState(String result){
@@ -86,7 +108,7 @@ public class EventExecuteAnalysisHandleResources implements EventExecuteAnalysis
                 resultState = EventResultState.WAIT;
                 break;
             default:
-                throw new NullPointerException("EventResultState Error , EventResultState : " + result);
+                throw new IllegalArgumentException("EventResultState Error , EventResultState : " + result);
         }
         return Optional.of(resultState);
     }

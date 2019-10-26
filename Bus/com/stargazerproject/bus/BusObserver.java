@@ -1,6 +1,8 @@
 package com.stargazerproject.bus;
 
 import com.google.common.base.Optional;
+import com.stargazerproject.bus.exception.BusEventTimeoutException;
+import com.stargazerproject.transaction.Event;
 
 /**
  *  @name Bus的观测者
@@ -16,4 +18,6 @@ public interface BusObserver<T> {
 	public Optional<Boolean> hasError();
 
 	public Optional<Throwable> getError();
+
+	public Optional<BusObserver<Event>> waitFinish() throws BusEventTimeoutException;
 }

@@ -7,6 +7,7 @@ import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.analysis.resources.handle.EventExecuteAnalysisHandleResources;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
+import com.stargazerproject.transaction.EventState;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -18,8 +19,8 @@ import org.springframework.stereotype.Component;
 public class EventExecuteAnalysisShell implements EventExecuteAnalysis, BaseCharacteristic<EventExecuteAnalysis> {
 
     @Override
-    public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> cacheArg, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandleArg) {
-        return Optional.of(new EventExecuteAnalysisHandleResources(cacheArg, eventResultsExecuteAnalysisHandleArg));
+    public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> cacheArg, Optional<EventState> eventState, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandleArg) {
+        return Optional.of(new EventExecuteAnalysisHandleResources(cacheArg, eventState, eventResultsExecuteAnalysisHandleArg));
     }
 
     @Override

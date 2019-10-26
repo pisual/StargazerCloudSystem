@@ -48,13 +48,13 @@ public class Test_TimeOutMethod_WhileWait extends CellsTransactionImpl {
 	* @param : Optional<Cache<String, String>> cache 参数缓存
 	* **/
 	@Override
-	@HystrixCommand(commandKey = "test_GetCellsGroupIDModel",
+	@HystrixCommand(commandKey = "test_TimeOutMethod_WhileWait",
 	                fallbackMethod = "fallBack",
-	                groupKey="test_GetCellsGroupIDModel",
-	                threadPoolKey = "test_GetCellsGroupIDModel",
+	                groupKey="test_TimeOutMethod_WhileWait",
+	                threadPoolKey = "test_TimeOutMethod_WhileWait",
 			        ignoreExceptions = HystrixRuntimeException.class,
 	                commandProperties = {
-    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "200000")},
+    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "900000000")},
 					threadPoolProperties = {
 	@HystrixProperty(name = "coreSize", value = "5")
 					}

@@ -1,12 +1,15 @@
 package com.stargazerproject.bus.resources;
 
 import com.google.common.base.Optional;
+import com.stargazerproject.analysis.EventExecuteAnalysis;
+import com.stargazerproject.analysis.EventResultAnalysis;
+import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.bus.BusBlockMethod;
 import com.stargazerproject.bus.BusListener;
 import com.stargazerproject.bus.BusObserver;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
-import com.stargazerproject.bus.resources.shell.EventBusObserver;
+import com.stargazerproject.bus.resources.shell.EventBusObserverAsync;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.Event;
@@ -65,8 +68,16 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 	protected LogMethod log;
 
 	@Autowired
-	@Qualifier("eventBusListenerSynchronously")
+	@Qualifier("eventBusListenerAsynchronously")
 	private BusListener<Optional<Event>> eventBusListener;
+
+	@Autowired
+	@Qualifier("eventResultAnalysisImpl")
+	private EventResultAnalysis eventResultAnalysis;
+
+	@Autowired
+	@Qualifier("eventExecuteAnalysisImpl")
+	private EventExecuteAnalysis eventExecuteAnalysis;
 
 	@Autowired
 	@Qualifier("eventBusIPublicationErrorHandler")
@@ -127,23 +138,15 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 	}
 	
 	public Optional<BusObserver<Event>> push(Optional<Event> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException{
+		Optional<EventExecuteAnalysisHandle> eventExecuteAnalysisHandle = busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis));
 		IMessagePublication iMessagePublication = bus.publishAsync(busEvent, timeout.get(), timeUnit.get());
-		wait(iMessagePublication, timeUnit, timeout);
-		return Optional.of(new EventBusObserver(Optional.of(iMessagePublication)));
-	}
-
-	private void wait(IMessagePublication iMessagePublication, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException{
-		for(int i=0; i<timeout.get(); i++){
-			if(iMessagePublication.isRunning()){
-				return;
-			}
-			else{
-				sleep(timeUnit.get());
-				continue;
-			}
-		}
-		log.WARN(iMessagePublication, "Event没有在指定时间内开始执行任务 : BaseEvent Not start at the specified time");
-		throw new BusEventTimeoutException("Event没有在指定时间内开始执行任务 : BaseEvent Not completed at the specified time : " + iMessagePublication.toString());
+		BusObserver busObserver = new EventBusObserverAsync(Optional.of(iMessagePublication),
+															eventExecuteAnalysisHandle,
+															busEvent.get().eventResult(Optional.of(eventResultAnalysis)),
+															timeUnit,
+															timeout);
+		busObserver.waitFinish();
+		return Optional.of(busObserver);
 	}
 
 	private static int minThreadCount(){
@@ -153,29 +156,4 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 	private static int maxThreadCount(){
 		return Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_HandlerInvocation_MaxThreadCount);
 	}
-
-	private void sleep(TimeUnit timeUnit){
-		try {
-			switch (timeUnit) {
-				case SECONDS:
-					TimeUnit.SECONDS.sleep(1);
-					break;
-				case MICROSECONDS:
-					TimeUnit.MICROSECONDS.sleep(1);
-					break;
-				case MILLISECONDS:
-					TimeUnit.MILLISECONDS.sleep(1);
-					break;
-				case NANOSECONDS:
-					TimeUnit.NANOSECONDS.sleep(1);
-					break;
-				default:
-					log.WARN(timeUnit, "Other attributes are not supported, Will Use Default : SECONDS");
-					TimeUnit.SECONDS.sleep(1);
-			}
-		} catch (Exception e) {
-			log.ERROR(this, e.getMessage());
-		}
-	}
-
 }

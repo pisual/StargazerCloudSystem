@@ -140,8 +140,8 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	* @illustrate 跳过此事务，通过调用其名下的Event的skipEvent方法来主动放弃Event的执行
 	* **/
 	@Override
-	public void skipTransaction() {
-		eventsList.forEach(x -> x.skipEvent());
+	public void skipTransaction(Optional<String> skipCause) {
+		eventsList.forEach(x -> x.skipEvent(skipCause));
 	}
 	
 	@Override

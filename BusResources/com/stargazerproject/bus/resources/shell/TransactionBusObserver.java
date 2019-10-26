@@ -2,6 +2,8 @@ package com.stargazerproject.bus.resources.shell;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.bus.BusObserver;
+import com.stargazerproject.bus.exception.BusEventTimeoutException;
+import com.stargazerproject.transaction.Event;
 import com.stargazerproject.transaction.Transaction;
 import net.engio.mbassy.bus.IMessagePublication;
 
@@ -27,6 +29,11 @@ public class TransactionBusObserver implements BusObserver<Transaction>{
 
 	public Optional<Throwable> getError(){
 		return Optional.of(iMessagePublication.getError().getCause());
+	}
+
+	@Override
+	public Optional<BusObserver<Event>> waitFinish() throws BusEventTimeoutException {
+		return null;
 	}
 
 }

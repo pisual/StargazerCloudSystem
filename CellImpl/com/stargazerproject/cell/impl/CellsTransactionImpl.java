@@ -1,8 +1,6 @@
 package com.stargazerproject.cell.impl;
 
 import com.google.common.base.Optional;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.netflix.hystrix.exception.HystrixTimeoutException;
 import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.cache.Cache;
@@ -38,11 +36,9 @@ public abstract class CellsTransactionImpl implements CellsTransaction<String, S
 	 * @return <Cache<String, String>> 聚合根，不同的方法通过聚合根缓存共享数据
 	 * @param : <V> 缓存的Value值
 	 * **/
-	@Override
-	@HystrixCommand(fallbackMethod = "fallBack", groupKey="TestMethod", commandProperties = {
-    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "200")})
 	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandleArg) {
 		eventResultsExecuteAnalysisHandle = eventResultsExecuteAnalysisHandleArg.get();
+		eventResultsExecuteAnalysisHandle.EventResultState(Optional.of(EventResultState.Run));
 		Optional AggregateRootID = interactionCache.get().get(Optional.of(EventDate.AggregateRoot.toString()));
 		if(AggregateRootID.get() != "NULL"){
 			aggregationRootCacheInitialization(AggregateRootID);

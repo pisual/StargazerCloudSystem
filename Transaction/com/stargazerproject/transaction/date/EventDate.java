@@ -7,7 +7,6 @@ public enum EventDate {
     RunTimeoutUnit,
     AggregateRoot,
     ErrorMessage,
-    EventResultState,
     Method,
 
     EventResultState_$N$,

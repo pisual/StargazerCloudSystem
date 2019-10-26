@@ -43,7 +43,7 @@ public class EventResultsExecuteAnalysisHandleResources implements EventResultsE
 
     @Override
     public void resultMessage(Optional<String> key, Optional<String> message) {
-        resultCache.put(Optional.of("resultMessage_" + getRetryTime() + "_" + key), message);
+        resultCache.put(Optional.of("ResultMessage_" + getRetryTime() + "_" + key), message);
     }
 
 

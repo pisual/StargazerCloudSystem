@@ -25,7 +25,7 @@ public interface EventExecute {
 	 *  @ThreadSafeMethodsLevel skipEvent的线程安全级别为ThreadSafeLevel.ThreadCompatible，非线程安全，只能单线程单次使用
 	 * **/
 	@ThreadSafeMethodsLevel(threadSafeLevel = ThreadSafeLevel.ThreadCompatible)
-	public void skipEvent();
+	public void skipEvent(Optional<String> skipCause);
 	
 	
 }

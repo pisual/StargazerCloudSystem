@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.cache.Cache;
+import com.stargazerproject.transaction.EventState;
 
 /** 
  *  @name 事件运行器接口
@@ -15,6 +16,6 @@ import com.stargazerproject.cache.Cache;
  *  **/
 public interface EventExecuteAnalysis {
 	
-	public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle);
+	public Optional<EventExecuteAnalysisHandle> analysis(Optional<Cache<String, String>> interactionCache, Optional<EventState> eventState, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle);
 	
 }

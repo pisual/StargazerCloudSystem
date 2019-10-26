@@ -1,11 +1,13 @@
 package com.stargazerproject.bus.resources;
 
 import com.google.common.base.Optional;
+import com.stargazerproject.analysis.EventExecuteAnalysis;
+import com.stargazerproject.analysis.EventResultAnalysis;
 import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.bus.BusAsyncMethod;
 import com.stargazerproject.bus.BusListener;
 import com.stargazerproject.bus.BusObserver;
-import com.stargazerproject.bus.resources.shell.EventBusObserver;
+import com.stargazerproject.bus.resources.shell.EventBusObserverAsync;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.Event;
@@ -66,6 +68,14 @@ public class EventBusAsyncMethodMBassadorCharacteristic implements BusAsyncMetho
 	@Autowired
 	@Qualifier("eventBusListenerAsynchronously")
 	private BusListener<Optional<Event>> eventBusListener;
+
+	@Autowired
+	@Qualifier("eventResultAnalysisImpl")
+	private EventResultAnalysis eventResultAnalysis;
+
+	@Autowired
+	@Qualifier("eventExecuteAnalysisImpl")
+	private EventExecuteAnalysis eventExecuteAnalysis;
 
 	@Autowired
 	@Qualifier("eventBusIPublicationErrorHandler")
@@ -129,7 +139,11 @@ public class EventBusAsyncMethodMBassadorCharacteristic implements BusAsyncMetho
 	
 	public Optional<BusObserver<Event>> pushAsync(Optional<Event> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) {
 		IMessagePublication iMessagePublication = bus.publishAsync(busEvent, timeout.get(), timeUnit.get());
-		return Optional.of(new EventBusObserver(Optional.of(iMessagePublication)));
+		return Optional.of(new EventBusObserverAsync(Optional.of(iMessagePublication),
+												busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis)),
+												busEvent.get().eventResult(Optional.of(eventResultAnalysis)),
+												timeUnit,
+												timeout));
 	}
 
 	private static int minThreadCount(){

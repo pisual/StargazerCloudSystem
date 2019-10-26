@@ -47,10 +47,10 @@ public class Test_NowTimeModel extends CellsTransactionImpl {
 	* @param : Optional<Cache<String, String>> cache 参数缓存
 	* **/
 	@Override
-	@HystrixCommand(commandKey = "test_GetCellsGroupIDModel",
+	@HystrixCommand(commandKey = "test_NowTimeModel",
 	                fallbackMethod = "fallBack",
-	                groupKey="test_GetCellsGroupIDModel",
-	                threadPoolKey = "test_GetCellsGroupIDModel",
+	                groupKey="test_NowTimeModel",
+	                threadPoolKey = "test_NowTimeModel",
 			        ignoreExceptions = HystrixRuntimeException.class,
 	                commandProperties = {
     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})

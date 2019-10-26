@@ -5,14 +5,17 @@ import com.stargazerproject.analysis.*;
 import com.stargazerproject.analysis.handle.EventAssembleAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.EventResultAnalysisHandle;
+import com.stargazerproject.analysis.handle.EventResultsExecuteAnalysisHandle;
 import com.stargazerproject.annotation.description.NoSpringDepend;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.Event;
+import com.stargazerproject.transaction.EventResultState;
 import com.stargazerproject.transaction.EventResults;
 import com.stargazerproject.transaction.EventState;
 import com.stargazerproject.transaction.base.impl.ID;
+import com.stargazerproject.transaction.exception.EventSkipException;
 import com.stargazerproject.util.CloneUtil;
 import com.stargazerproject.util.JsonUtil;
 import com.stargazerproject.util.SequenceUtil;
@@ -116,14 +119,13 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 * **/
 	@Override
 	public Optional<EventExecuteAnalysisHandle> eventExecute(Optional<EventExecuteAnalysis> eventAnalysis) {
-		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(parametersCache), eventResults.resultsExecute(Optional.of(eventResultsExecuteAnalysis))).get();
+		EventExecuteAnalysisHandle eventExecuteAnalysisHandle = eventAnalysis.get().analysis(Optional.of(parametersCache), Optional.of(eventState), eventResults.resultsExecute(Optional.of(eventResultsExecuteAnalysis))).get();
 		if(EventState.WAIT == eventState){
-			eventState = EventState.RUN;
-			eventExecuteAnalysisHandle.run();
-			eventState = EventState.COMPLETE;
+
 		}
 		else if(EventState.PASS == eventState){
-			logMethod.INFO(this, "事件处于PASS状态，将快速失败此事务");
+			logMethod.INFO(this, "Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState + " ,事件处于PASS状态，将快速失败此事务");
+			throw new IllegalStateException("Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState + " ,事件处于PASS状态，将快速失败此事务");
 		}
 		else{
 			logMethod.ERROR(this, "Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState);
@@ -145,13 +147,16 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 	 *  @exception : 如果Event状态不为Wait（等待执行状态），将抛出IllegalStateException异常，并报告现在的Event状态
 	 * **/
 	@Override
-	public void skipEvent(){
+	public void skipEvent(Optional<String> skipCause){
 		if(eventState != EventState.WAIT){
 			logMethod.ERROR(this, "Evenr无法跳过，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState);
 			throw new IllegalStateException("Evenr无法跳过，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState);
 		}
 		else{
 			eventState = EventState.PASS;
+			EventResultsExecuteAnalysisHandle EventResultsExecuteAnalysisHandle = eventResults.resultsExecute(Optional.of(eventResultsExecuteAnalysis)).get();
+			EventResultsExecuteAnalysisHandle.errorMessage(Optional.of(new EventSkipException("Event Pass, Cause: " + skipCause.get())));
+			EventResultsExecuteAnalysisHandle.EventResultState(Optional.of(EventResultState.FAULT));
 		}
 	}
 	

@@ -28,7 +28,7 @@ public class EventBusListenerAsynchronously implements BusListener<Optional<Even
     @Override
     public void handler(Optional<Event> busEvent) {
         try {
-            busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis));
+            busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis)).get().run();
         }catch (Exception e){
             e.printStackTrace();
         }

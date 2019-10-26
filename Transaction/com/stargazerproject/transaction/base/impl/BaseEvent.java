@@ -40,8 +40,8 @@ public class BaseEvent extends ID implements Event{
 	}
 
 	@Override
-	public void skipEvent() {
-		event.skipEvent();
+	public void skipEvent(Optional<String> skipCause) {
+		event.skipEvent(skipCause);
 	}
 
 	@Override
