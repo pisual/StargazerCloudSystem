@@ -1,4 +1,8 @@
 package com.stargazerproject.microkernel.impl.test;
 
-public class SequenceTest {
+import com.stargazerproject.spring.context.initialization.test.BaseJunitTest;
+
+public class SequenceTest extends BaseJunitTest {
+
 }
+
