@@ -27,6 +27,6 @@ public class TransactionResultAnalysisShell implements TransactionResultAnalysis
 
     @Override
     public Optional<TransactionResultAnalysis> characteristic() {
-        return null;
+        return Optional.of(this);
     }
 }

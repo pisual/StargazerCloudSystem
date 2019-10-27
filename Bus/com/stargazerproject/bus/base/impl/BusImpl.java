@@ -3,22 +3,19 @@ package com.stargazerproject.bus.base.impl;
 import com.google.common.base.Optional;
 import com.stargazerproject.bus.Bus;
 import com.stargazerproject.bus.BusObserver;
-import com.stargazerproject.bus.exception.BusEventTimeoutException;
 
-import java.util.concurrent.TimeUnit;
-
-public abstract class BusImpl<T> implements Bus<T>{
+public abstract class BusImpl<T, E extends Exception> implements Bus<T, E>{
 	
-	protected Bus<T> bus;
+	protected Bus<T, E> bus;
 
 	@Override
-	public Optional<BusObserver<T>> push(Optional<T> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException{
-		return bus.push(busEvent, timeUnit, timeout);
+	public Optional<BusObserver<T, E>> push(Optional<T> busEvent) throws E{
+		return bus.push(busEvent);
 	}
 
 	@Override
-	public Optional<BusObserver<T>> pushAsync(Optional<T> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) {
-		return bus.pushAsync(busEvent, timeUnit, timeout);
+	public Optional<BusObserver<T, E>> pushAsync(Optional<T> busEvent) {
+		return bus.pushAsync(busEvent);
 	}
 
 	@Override

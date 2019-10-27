@@ -7,6 +7,6 @@ package com.stargazerproject.bus;
  *  @author Felixerio
  *  @version 1.0.0
  *  **/
-public interface Bus<T> extends BusBlockMethod<T>, BusControl, BusAsyncMethod<T> {
+public interface Bus<T, E extends Exception> extends BusBlockMethod<T, E>, BusControl, BusAsyncMethod<T, E> {
 
 }

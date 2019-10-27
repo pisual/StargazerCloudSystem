@@ -2,8 +2,8 @@ package com.stargazerproject.bus.resources.shell;
 
 import com.google.common.base.Optional;
 import com.stargazerproject.bus.Bus;
-import com.stargazerproject.bus.BusBlockMethod;
 import com.stargazerproject.bus.BusAsyncMethod;
+import com.stargazerproject.bus.BusBlockMethod;
 import com.stargazerproject.bus.BusObserver;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
@@ -14,42 +14,40 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.TimeUnit;
-
 @Component(value="eventBusResourcesShell")
 @Qualifier("eventBusResourcesShell")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class EventBusResourcesShell implements Bus<Event>, BaseCharacteristic<Bus<Event>>{
+public class EventBusResourcesShell implements Bus<Event, BusEventTimeoutException>, BaseCharacteristic<Bus<Event, BusEventTimeoutException>>{
 
 	@Autowired
 	@Qualifier("eventBusBlockMethodMBassadorCharacteristic")
-	private BaseCharacteristic<BusBlockMethod<Event>> eventBusBlockMethodMBassadorCharacteristic;
+	private BaseCharacteristic<BusBlockMethod<Event, BusEventTimeoutException>> eventBusBlockMethodMBassadorCharacteristic;
 
 	@Autowired
 	@Qualifier("eventBusAsyncMethodMBassadorCharacteristic")
-	private BaseCharacteristic<BusAsyncMethod<Event>> eventBusAsyncMethodMBassadorCharacteristic;
+	private BaseCharacteristic<BusAsyncMethod<Event, BusEventTimeoutException>> eventBusAsyncMethodMBassadorCharacteristic;
 
-	private BusBlockMethod<Event> busBlockMethod;
+	private BusBlockMethod<Event, BusEventTimeoutException> busBlockMethod;
 
-	private BusAsyncMethod<Event> busAsyncMethod;
+	private BusAsyncMethod<Event, BusEventTimeoutException> busAsyncMethod;
 
 	public EventBusResourcesShell() {}
 
 	@Override
-	public Optional<Bus<Event>> characteristic() {
+	public Optional<Bus<Event, BusEventTimeoutException>> characteristic() {
 		busBlockMethod = eventBusBlockMethodMBassadorCharacteristic.characteristic().get();
 		busAsyncMethod = eventBusAsyncMethodMBassadorCharacteristic.characteristic().get();
 		return Optional.of(this);
 	}
 
 	@Override
-	public Optional<BusObserver<Event>> push(Optional<Event> event, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException {
-		return busBlockMethod.push(event, timeUnit, timeout);
+	public Optional<BusObserver<Event, BusEventTimeoutException>> push(Optional<Event> event) throws BusEventTimeoutException {
+		return busBlockMethod.push(event);
 	}
 
 	@Override
-	public Optional<BusObserver<Event>> pushAsync(Optional<Event> event, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) {
-		return busAsyncMethod.pushAsync(event, timeUnit, timeout);
+	public Optional<BusObserver<Event, BusEventTimeoutException>> pushAsync(Optional<Event> event) {
+		return busAsyncMethod.pushAsync(event);
 	}
 
 	@Override

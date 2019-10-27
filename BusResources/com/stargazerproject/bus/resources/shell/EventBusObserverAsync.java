@@ -7,32 +7,22 @@ import com.stargazerproject.bus.BusObserver;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.transaction.Event;
 import com.stargazerproject.transaction.EventResultState;
-import net.engio.mbassy.bus.IMessagePublication;
 
 import java.util.concurrent.TimeUnit;
 
-public class EventBusObserverAsync implements BusObserver<Event>{
-
-	private Integer waitTimeout;
-
-	private TimeUnit waitTimeUnit;
-
-	private IMessagePublication iMessagePublication;
+public class EventBusObserverAsync implements BusObserver<Event, BusEventTimeoutException>{
 
 	private EventResultAnalysisHandle eventResultAnalysisHandle;
 
 	private EventExecuteAnalysisHandle eventExecuteAnalysisHandle;
 
-	public EventBusObserverAsync(Optional<IMessagePublication> iMessagePublicationArgs, Optional<EventExecuteAnalysisHandle> eventExecuteAnalysisHandleArg , Optional<EventResultAnalysisHandle> eventResultAnalysisHandleArg, Optional<TimeUnit> timeUnitArg, Optional<Integer> timeoutArg){
-		waitTimeout = timeoutArg.get();
-		waitTimeUnit = timeUnitArg.get();
-		iMessagePublication = iMessagePublicationArgs.get();
+	public EventBusObserverAsync(Optional<EventExecuteAnalysisHandle> eventExecuteAnalysisHandleArg , Optional<EventResultAnalysisHandle> eventResultAnalysisHandleArg){
 		eventResultAnalysisHandle = eventResultAnalysisHandleArg.get();
 		eventExecuteAnalysisHandle = eventExecuteAnalysisHandleArg.get();
 	}
 
 	@Override
-	public Optional<BusObserver<Event>> waitFinish() throws BusEventTimeoutException {
+	public Optional<BusObserver<Event, BusEventTimeoutException>> waitFinish() throws BusEventTimeoutException {
 		waitStart();
 		waitComplete(eventExecuteAnalysisHandle.runTimeoutUnit().get(), eventExecuteAnalysisHandle.runTimeout().get());
 		return Optional.of(this);
@@ -49,22 +39,34 @@ public class EventBusObserverAsync implements BusObserver<Event>{
 
 	@Override
 	public Optional<Boolean> isComplete(){
-		return Optional.of(iMessagePublication.isFinished());
+		if(eventResultAnalysisHandle.getTheLastEventResultState().get() == EventResultState.SUCCESS ||
+		  eventResultAnalysisHandle.getTheLastEventResultState().get() == EventResultState.FAULT){
+			return Optional.of(Boolean.TRUE);
+		}
+		else{
+			return Optional.of(Boolean.TRUE);
+		}
 	}
 
 	@Override
 	public Optional<Boolean> isRunning(){
-		return Optional.of(iMessagePublication.isRunning());
+		if(eventResultAnalysisHandle.getTheLastEventResultState().get() == EventResultState.Run){
+			return Optional.of(Boolean.TRUE);
+		}
+		else{
+			return Optional.of(Boolean.TRUE);
+		}
 	}
 
 	@Override
 	public Optional<Boolean> hasError(){
-		return Optional.of(iMessagePublication.hasError());
+		eventResultAnalysisHandle.getTheLastErrorMessage();
+		return Optional.of(eventResultAnalysisHandle.getTheLastErrorMessage().isPresent());
 	}
 
 	@Override
-	public Optional<Throwable> getError(){
-		return Optional.fromNullable(iMessagePublication.getError().getCause());
+	public Optional<String> getError(){
+		return eventResultAnalysisHandle.getTheLastErrorMessage();
 	}
 
 	private void waitComplete(TimeUnit runTimeUnit, Integer runTimeout) throws BusEventTimeoutException{
@@ -82,12 +84,14 @@ public class EventBusObserverAsync implements BusObserver<Event>{
 	}
 
 	private void waitStart() throws BusEventTimeoutException{
+		Integer waitTimeout = eventExecuteAnalysisHandle.waitTimeout().get();
+		TimeUnit  waitTimeoutUni = eventExecuteAnalysisHandle.waitTimeoutUnit().get();
 		for(int i=0; i<waitTimeout; i++){
 			if(eventResultAnalysisHandle.getTheLastEventResultState().get() != EventResultState.WAIT) {
 				return;
 			}
 			else{
-				sleep(waitTimeUnit);
+				sleep(waitTimeoutUni);
 				continue;
 			}
 		}

@@ -1,5 +1,6 @@
 package com.stargazerproject.bus.impl;
 
+import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -14,14 +15,14 @@ import com.stargazerproject.transaction.Event;
 @Component(value="eventBusImpl")
 @Qualifier("eventBusImpl")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class EventBus extends BusImpl<Event> implements StanderCharacteristicShell<Bus<Event>>{
+public class EventBus extends BusImpl<Event, BusEventTimeoutException> implements StanderCharacteristicShell<Bus<Event, BusEventTimeoutException>>{
 
 	public EventBus() {
 		super();
 		}
 
 	@Override
-	public void initialize(Optional<Bus<Event>> busArg) {
+	public void initialize(Optional<Bus<Event, BusEventTimeoutException>> busArg) {
 		bus = busArg.get();
 	}
 

@@ -8,6 +8,7 @@ import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.Event;
 
 import java.util.Collection;
+import java.util.concurrent.TimeUnit;
 
 /**
  *  @name Transaction Execute Analysis Handle 的具体实现
@@ -40,6 +41,26 @@ public class TransactionExecuteAnalysisHandleResoources implements TransactionEx
     @Override
     public void startTransaction() {
         eventList.forEach(event -> event.eventExecute(Optional.of(eventExecuteAnalysis)).get().run());
+    }
+
+    @Override
+    public Optional<TimeUnit> waitTimeoutUnit() {
+        return null;
+    }
+
+    @Override
+    public Optional<Integer> waitTimeout() {
+        return null;
+    }
+
+    @Override
+    public Optional<TimeUnit> runTimeoutUnit() {
+        return null;
+    }
+
+    @Override
+    public Optional<Integer> runTimeout() {
+        return null;
     }
 
 }

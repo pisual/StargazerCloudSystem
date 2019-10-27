@@ -6,7 +6,7 @@ import com.stargazerproject.analysis.handle.TransactionAssembleAnalysisHandle;
 import com.stargazerproject.bus.BusAsyncMethod;
 import com.stargazerproject.bus.BusBlockMethod;
 import com.stargazerproject.bus.BusObserver;
-import com.stargazerproject.bus.exception.BusEventTimeoutException;
+import com.stargazerproject.bus.exception.BusTransactionTimeoutException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.sequence.SequenceObserver;
@@ -32,11 +32,11 @@ public class SequenceTransactionCharacteristic implements SequenceTransaction<Tr
 
 	@Autowired
 	@Qualifier("transactionBus")
-	private BusBlockMethod<Transaction> transactionBus;
+	private BusBlockMethod<Transaction, BusTransactionTimeoutException> transactionBus;
 
 	@Autowired
 	@Qualifier("transactionBus")
-	private BusAsyncMethod<Transaction> transactionAsyncBus;
+	private BusAsyncMethod<Transaction, BusTransactionTimeoutException> transactionAsyncBus;
 
 	@Autowired
 	@Qualifier("transactionAssembleAnalysisImpl")
@@ -54,9 +54,9 @@ public class SequenceTransactionCharacteristic implements SequenceTransaction<Tr
 		TransactionAssembleAnalysisHandle transactionAssembleAnalysisHandle = getTransactionAssembleAnalysisHandle(transaction);
 
 		try {
-			Optional<BusObserver<Transaction>> busObserver = transactionBus.push(transaction, transactionAssembleAnalysisHandle.getTransactionTimeOutTimeUnit(), transactionAssembleAnalysisHandle.getTransactionTimeOut());
+			Optional<BusObserver<Transaction, BusTransactionTimeoutException>> busObserver = transactionBus.push(transaction);
 			return Optional.of(new SequenceObserverImpl(busObserver));
-		} catch (BusEventTimeoutException e) {
+		} catch (BusTransactionTimeoutException e) {
 			logMethod.WARN(transaction, e.getMessage());
 			throw new SequenceTimeOutException(e.getMessage());
 		}
@@ -65,7 +65,7 @@ public class SequenceTransactionCharacteristic implements SequenceTransaction<Tr
 	@Override
 	public Optional<SequenceObserver<Transaction>> startSequence(Optional<Transaction> transaction) {
 		TransactionAssembleAnalysisHandle transactionAssembleAnalysisHandle = getTransactionAssembleAnalysisHandle(transaction);
-		Optional<BusObserver<Transaction>> busObserver = transactionAsyncBus.pushAsync(transaction, transactionAssembleAnalysisHandle.getTransactionTimeOutTimeUnit(), transactionAssembleAnalysisHandle.getTransactionTimeOut());
+		Optional<BusObserver<Transaction, BusTransactionTimeoutException>> busObserver = transactionAsyncBus.pushAsync(transaction);
 		return Optional.of(new SequenceObserverImpl(busObserver));
 	}
 

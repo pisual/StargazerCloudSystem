@@ -1,11 +1,12 @@
 package com.stargazerproject.bus.resources;
 
 import com.google.common.base.Optional;
+import com.google.common.eventbus.AsyncEventBus;
+import com.google.common.eventbus.EventBus;
 import com.stargazerproject.analysis.EventExecuteAnalysis;
 import com.stargazerproject.analysis.EventResultAnalysis;
-import com.stargazerproject.analysis.handle.EventExecuteAnalysisHandle;
 import com.stargazerproject.annotation.description.NeedInject;
-import com.stargazerproject.bus.BusBlockMethod;
+import com.stargazerproject.bus.BusAsyncMethod;
 import com.stargazerproject.bus.BusListener;
 import com.stargazerproject.bus.BusObserver;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
@@ -13,11 +14,6 @@ import com.stargazerproject.bus.resources.shell.EventBusObserverAsync;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.Event;
-import net.engio.mbassy.bus.IMessagePublication;
-import net.engio.mbassy.bus.MBassador;
-import net.engio.mbassy.bus.config.BusConfiguration;
-import net.engio.mbassy.bus.config.Feature;
-import net.engio.mbassy.bus.config.IBusConfiguration;
 import net.engio.mbassy.bus.error.IPublicationErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,15 +25,15 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- *  @name eventBus BlockMethod MBassador
- *  @illustrate eventBus NoBlockMethod MBassador
+ *  @name eventBus NoBlockMethod RxJava版本
+ *  @illustrate eventBus NoBlockMethod RxJava版本
  *  @author Felixerio
  *  @version 1.0.0
  *  **/
-@Component(value="eventBusBlockMethodMBassadorCharacteristic")
-@Qualifier("eventBusBlockMethodMBassadorCharacteristic")
+@Component(value="eventBusAsyncMethodCharacteristic")
+@Qualifier("eventBusAsyncMethodCharacteristic")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMethod<Event, BusEventTimeoutException>, BaseCharacteristic<BusBlockMethod<Event, BusEventTimeoutException>>{
+public class EventBusAsyncMethodCharacteristic implements BusAsyncMethod<Event, BusEventTimeoutException>, BaseCharacteristic<BusAsyncMethod<Event, BusEventTimeoutException>>{
 
 	/** @name Bus处理线程的最小值 **/
 	@NeedInject(type="SystemParametersCache")
@@ -83,11 +79,7 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 	@Qualifier("eventBusIPublicationErrorHandler")
 	private IPublicationErrorHandler eventBusIPublicationErrorHandler;
 
-	private MBassador bus;
-
-	public EventBusBlockMethodMBassadorCharacteristic() {
-		super();
-		}
+	private EventBus eventBus;
 
 	protected static final ThreadFactory MessageHandlerThreadFactory = new ThreadFactory() {
 
@@ -102,49 +94,31 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 		}
 	};
 
-	protected static final ThreadFactory MessageDispatchThreadFactory = new ThreadFactory() {
-
-		private final AtomicInteger threadID = new AtomicInteger(0);
-
-		@Override
-		public Thread newThread(Runnable r) {
-			Thread thread = Executors.defaultThreadFactory().newThread(r);
-			thread.setDaemon(true);// do not prevent the JVM from exiting
-			thread.setName("Dispatcher-" + threadID.getAndIncrement());
-			return thread;
+	public EventBusAsyncMethodCharacteristic() {
+		super();
 		}
-	};
+
 
 	@Override
-	public Optional<BusBlockMethod<Event, BusEventTimeoutException>> characteristic() {
-		bus = new MBassador(new BusConfiguration()
-				.addFeature(Feature.SyncPubSub.Default())
-				.addFeature(new Feature.AsynchronousHandlerInvocation().setExecutor(
-						new ThreadPoolExecutor( minThreadCount(),
-								maxThreadCount(),
-								Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousHandlerInvocation_keepAliveTime),
-								TimeUnit.SECONDS,
-								new LinkedBlockingQueue<Runnable>(Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousHandlerInvocation_QueueMaxNumber)),
-								MessageHandlerThreadFactory)))
-				.addFeature(new Feature.AsynchronousMessageDispatch()
-						.setNumberOfMessageDispatchers(Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousMessageDispatch_NumberOfMessageDispatchers))
-						.setDispatcherThreadFactory(MessageDispatchThreadFactory)
-						.setMessageQueue(
-								new LinkedBlockingQueue<IMessagePublication>(Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_MessageQueue))))
-				.addPublicationErrorHandler(eventBusIPublicationErrorHandler)
-				.setProperty(IBusConfiguration.Properties.BusId, "eventBusBlockMethod"));
-		bus.subscribe(eventBusListener);
+	public Optional<BusAsyncMethod<Event, BusEventTimeoutException>> characteristic() {
+		eventBus = new AsyncEventBus(new ThreadPoolExecutor(
+															minThreadCount(),
+															maxThreadCount(),
+															keepAliveTime(),
+															TimeUnit.SECONDS,
+															new LinkedBlockingQueue<Runnable>(Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousHandlerInvocation_QueueMaxNumber)),
+															MessageHandlerThreadFactory,
+															(runnable, threadPoolExecutor)-> {}),
+										(throwable, subscriberExceptionContext) ->{}
+								);
+
 		return Optional.of(this);
 	}
 	
-	public Optional<BusObserver<Event, BusEventTimeoutException>> push(Optional<Event> busEvent) throws BusEventTimeoutException{
-		Optional<EventExecuteAnalysisHandle> eventExecuteAnalysisHandle = busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis));
-		IMessagePublication iMessagePublication = bus.publishAsync(busEvent);
-		BusObserver<Event, BusEventTimeoutException> busObserver = new EventBusObserverAsync(eventExecuteAnalysisHandle,
-															busEvent.get().eventResult(Optional.of(eventResultAnalysis))
-															);
-		busObserver.waitFinish();
-		return Optional.of(busObserver);
+	public Optional<BusObserver<Event, BusEventTimeoutException>> pushAsync(Optional<Event> busEvent) {
+		eventBus.post(busEvent.get());
+		return Optional.of(new EventBusObserverAsync(busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis)),
+													 busEvent.get().eventResult(Optional.of(eventResultAnalysis))));
 	}
 
 	private static int minThreadCount(){
@@ -153,5 +127,9 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 
 	private static int maxThreadCount(){
 		return Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_HandlerInvocation_MaxThreadCount);
+	}
+
+	private static int keepAliveTime(){
+		return Integer.parseInt(Parameters_Module_Kernel_Bus_EventBus_MBassador_AsynchronousHandlerInvocation_keepAliveTime);
 	}
 }

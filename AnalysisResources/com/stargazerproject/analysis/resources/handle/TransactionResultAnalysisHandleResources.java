@@ -6,6 +6,7 @@ import com.stargazerproject.analysis.handle.TransactionResultsResultAnalysisHand
 import com.stargazerproject.analysis.handle.TransactionResultAnalysisHandle;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.Event;
+import com.stargazerproject.transaction.TransactionResultState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -29,4 +30,13 @@ public class TransactionResultAnalysisHandleResources implements TransactionResu
         transactionResultsResultAnalysisHandle = transactionResultsResultAnalysisHandleArg.get();
     }
 
+    @Override
+    public Optional<TransactionResultState> getTheLastTransactionResultState() {
+        return null;
+    }
+
+    @Override
+    public Optional<String> getTheLastErrorMessage() {
+        return null;
+    }
 }

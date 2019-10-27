@@ -1,6 +1,7 @@
 package com.stargazerproject.bus.server.impl;
 
 import com.stargazerproject.bus.Bus;
+import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
 import com.stargazerproject.service.baseinterface.StanderServiceShell;
@@ -23,11 +24,11 @@ public class EventBusServer implements StanderServiceShell{
 	
 	@Autowired
 	@Qualifier("eventBusImpl")
-	private StanderCharacteristicShell<Bus<Event>> eventBus;
+	private StanderCharacteristicShell<Bus<Event, BusEventTimeoutException>> eventBus;
 	
 	@Autowired
 	@Qualifier("eventBusResourcesShell")
-	private BaseCharacteristic<Bus<Event>> eventBusResourcesShell;
+	private BaseCharacteristic<Bus<Event,BusEventTimeoutException>> eventBusResourcesShell;
 	
 	/** @construction 初始化构造 **/
 	private EventBusServer() {}

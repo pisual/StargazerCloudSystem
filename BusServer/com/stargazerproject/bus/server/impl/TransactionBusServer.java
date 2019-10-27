@@ -1,6 +1,7 @@
 package com.stargazerproject.bus.server.impl;
 
 import com.stargazerproject.bus.Bus;
+import com.stargazerproject.bus.exception.BusTransactionTimeoutException;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.interfaces.characteristic.shell.StanderCharacteristicShell;
 import com.stargazerproject.service.baseinterface.StanderServiceShell;
@@ -23,11 +24,11 @@ public class TransactionBusServer implements StanderServiceShell{
 
 	@Autowired
 	@Qualifier("transactionBus")
-	private StanderCharacteristicShell<Bus<Transaction>> transactionBus;
+	private StanderCharacteristicShell<Bus<Transaction, BusTransactionTimeoutException>> transactionBus;
 
 	@Autowired
 	@Qualifier("transactionBusResourcesShell")
-	private BaseCharacteristic<Bus<Transaction>> transactionBusResourcesShell;
+	private BaseCharacteristic<Bus<Transaction, BusTransactionTimeoutException>> transactionBusResourcesShell;
 
 	/** @construction 初始化构造 **/
 	private TransactionBusServer() {}

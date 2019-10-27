@@ -1,11 +1,13 @@
 package com.stargazerproject.bus.resources;
 
 import com.google.common.base.Optional;
+import com.stargazerproject.analysis.TransactionExecuteAnalysis;
+import com.stargazerproject.analysis.TransactionResultAnalysis;
 import com.stargazerproject.annotation.description.NeedInject;
 import com.stargazerproject.bus.BusBlockMethod;
 import com.stargazerproject.bus.BusListener;
 import com.stargazerproject.bus.BusObserver;
-import com.stargazerproject.bus.exception.BusEventTimeoutException;
+import com.stargazerproject.bus.exception.BusTransactionTimeoutException;
 import com.stargazerproject.bus.resources.shell.TransactionBusObserver;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
@@ -34,7 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component(value="transactionBusBlockMethodMBassadorCharacteristic")
 @Qualifier("transactionBusBlockMethodMBassadorCharacteristic")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class TransactionBusBlockMethodMBassadorCharacteristic implements BusBlockMethod<Transaction>, BaseCharacteristic<BusBlockMethod<Transaction>>{
+public class TransactionBusBlockMethodMBassadorCharacteristic implements BusBlockMethod<Transaction, BusTransactionTimeoutException>, BaseCharacteristic<BusBlockMethod<Transaction, BusTransactionTimeoutException>>{
 
 	/** @name Bus处理线程的最小值 **/
 	@NeedInject(type="SystemParametersCache")
@@ -67,6 +69,14 @@ public class TransactionBusBlockMethodMBassadorCharacteristic implements BusBloc
 	@Autowired
 	@Qualifier("transactionBusListener")
 	private BusListener<Optional<Transaction>> transactionBusListener;
+
+	@Autowired
+	@Qualifier("transactionResultAnalysisImpl")
+	private TransactionResultAnalysis transactionResultAnalysis;
+
+	@Autowired
+	@Qualifier("transactionExecuteAnalysisImpl")
+	private TransactionExecuteAnalysis transactionExecuteAnalysis;
 
 	@Autowired
 	@Qualifier("transactionBusIPublicationErrorHandler")
@@ -109,7 +119,7 @@ public class TransactionBusBlockMethodMBassadorCharacteristic implements BusBloc
 	};
 
 	@Override
-	public Optional<BusBlockMethod<Transaction>> characteristic() {
+	public Optional<BusBlockMethod<Transaction, BusTransactionTimeoutException>> characteristic() {
 		bus = new MBassador(new BusConfiguration()
 				.addFeature(Feature.SyncPubSub.Default())
 				.addFeature(new Feature.AsynchronousHandlerInvocation().setExecutor(
@@ -130,24 +140,11 @@ public class TransactionBusBlockMethodMBassadorCharacteristic implements BusBloc
 		return Optional.of(this);
 	}
 	
-	public Optional<BusObserver<Transaction>> push(Optional<Transaction> busEvent, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException{
-		IMessagePublication iMessagePublication = bus.publishAsync(busEvent, timeout.get(), timeUnit.get());
-		wait(iMessagePublication, timeUnit, timeout);
-		return Optional.of(new TransactionBusObserver(Optional.of(iMessagePublication)));
-	}
-
-	private void wait(IMessagePublication iMessagePublication, Optional<TimeUnit> timeUnit, Optional<Integer> timeout) throws BusEventTimeoutException{
-		for(int i=0; i<timeout.get(); i++){
-			if(iMessagePublication.isFinished()){
-				return;
-			}
-			else{
-				sleep(timeUnit.get());
-				continue;
-			}
-		}
-		log.WARN(iMessagePublication, "Event没有在指定时间内完成任务 : BaseEvent Not completed at the specified time");
-		throw new BusEventTimeoutException("Event没有在指定时间内完成任务 : BaseEvent Not completed at the specified time : " + iMessagePublication.toString());
+	public Optional<BusObserver<Transaction, BusTransactionTimeoutException>> push(Optional<Transaction> transaction) throws BusTransactionTimeoutException{
+		IMessagePublication iMessagePublication = bus.publishAsync(transaction);
+		BusObserver<Transaction, BusTransactionTimeoutException> BusObserver = new TransactionBusObserver(transaction.get().transactionExecute(Optional.of(transactionExecuteAnalysis)), transaction.get().transactionResult(Optional.of(transactionResultAnalysis)));
+		BusObserver.waitFinish();
+		return Optional.of(BusObserver);
 	}
 
 	private static int minThreadCount(){
@@ -157,29 +154,4 @@ public class TransactionBusBlockMethodMBassadorCharacteristic implements BusBloc
 	private static int maxThreadCount(){
 		return Integer.parseInt(Parameters_Module_Kernel_Bus_TransactionBus_MBassador_HandlerInvocation_MaxThreadCount);
 	}
-
-	private void sleep(TimeUnit timeUnit){
-		try {
-			switch (timeUnit) {
-				case SECONDS:
-					TimeUnit.SECONDS.sleep(1);
-					break;
-				case MICROSECONDS:
-					TimeUnit.MICROSECONDS.sleep(1);
-					break;
-				case MILLISECONDS:
-					TimeUnit.MILLISECONDS.sleep(1);
-					break;
-				case NANOSECONDS:
-					TimeUnit.NANOSECONDS.sleep(1);
-					break;
-				default:
-					log.WARN(timeUnit, "Other attributes are not supported, Will Use Default : SECONDS");
-					TimeUnit.SECONDS.sleep(1);
-			}
-		} catch (Exception e) {
-			log.ERROR(this, e.getMessage());
-		}
-	}
-
 }
