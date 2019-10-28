@@ -30,6 +30,7 @@ public class TransactionTest extends BaseJunitTest {
     public ExpectedException expection = ExpectedException.none();
 
 
+
 //    @Test
 //    public void test_0_initiation(){
 //        transactionBusImpl = initializationElement("transactionBus", Bus.class);
