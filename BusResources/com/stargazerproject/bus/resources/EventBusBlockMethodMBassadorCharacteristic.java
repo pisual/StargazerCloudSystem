@@ -9,7 +9,7 @@ import com.stargazerproject.bus.BusBlockMethod;
 import com.stargazerproject.bus.BusListener;
 import com.stargazerproject.bus.BusObserver;
 import com.stargazerproject.bus.exception.BusEventTimeoutException;
-import com.stargazerproject.bus.resources.shell.EventBusObserverAsync;
+import com.stargazerproject.bus.resources.shell.EventBusObserver;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
 import com.stargazerproject.transaction.Event;
@@ -140,7 +140,7 @@ public class EventBusBlockMethodMBassadorCharacteristic implements BusBlockMetho
 	public Optional<BusObserver<Event, BusEventTimeoutException>> push(Optional<Event> busEvent) throws BusEventTimeoutException{
 		Optional<EventExecuteAnalysisHandle> eventExecuteAnalysisHandle = busEvent.get().eventExecute(Optional.of(eventExecuteAnalysis));
 		IMessagePublication iMessagePublication = bus.publishAsync(busEvent);
-		BusObserver<Event, BusEventTimeoutException> busObserver = new EventBusObserverAsync(eventExecuteAnalysisHandle,
+		BusObserver<Event, BusEventTimeoutException> busObserver = new EventBusObserver(eventExecuteAnalysisHandle,
 															busEvent.get().eventResult(Optional.of(eventResultAnalysis))
 															);
 		busObserver.waitFinish();

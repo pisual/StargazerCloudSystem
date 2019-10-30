@@ -16,15 +16,16 @@ public class TransactionBusObserver implements BusObserver{
 
 	private TransactionExecuteAnalysisHandle transactionExecuteAnalysisHandle;
 
-	public TransactionBusObserver(Optional<TransactionExecuteAnalysisHandle> transactionExecuteAnalysisHandleArg, Optional<TransactionResultAnalysisHandle> transactionResultAnalysisHandleArg){
-		transactionResultAnalysisHandle = transactionResultAnalysisHandleArg.get();
+	public TransactionBusObserver(Optional<TransactionExecuteAnalysisHandle> transactionExecuteAnalysisHandleArg,
+								  Optional<TransactionResultAnalysisHandle>  transactionResultAnalysisHandleArg){
+		transactionResultAnalysisHandle =  transactionResultAnalysisHandleArg.get();
 		transactionExecuteAnalysisHandle = transactionExecuteAnalysisHandleArg.get();
 	}
 
 	@Override
 	public Optional<Boolean> isComplete(){
 		if(transactionResultAnalysisHandle.getTheLastTransactionResultState().get() == TransactionResultState.SUCCESS ||
-		   transactionResultAnalysisHandle.getTheLastTransactionResultState().get() == TransactionResultState.FAULT){
+			transactionResultAnalysisHandle.getTheLastTransactionResultState().get() == TransactionResultState.FAULT){
 			return Optional.of(Boolean.TRUE);
 		}
 		else{
@@ -54,8 +55,20 @@ public class TransactionBusObserver implements BusObserver{
 	}
 
 	@Override
+	public Optional<Boolean> testFinish(){
+		if(isComplete().get() == Boolean.TRUE){
+			return Optional.of(Boolean.TRUE);
+		}
+		else{
+			return Optional.of(Boolean.FALSE);
+		}
+	}
+
+	@Override
 	public Optional<BusObserver<Transaction, BusTransactionTimeoutException>> waitFinish() throws BusTransactionTimeoutException {
-		return null;
+		waitStart();
+		waitComplete(transactionExecuteAnalysisHandle.runTimeoutUnit().get(), transactionExecuteAnalysisHandle.runTimeout().get());
+		return Optional.of(this);
 	}
 
 	private void waitComplete(TimeUnit runTimeUnit, Integer runTimeout) throws BusTransactionTimeoutException{

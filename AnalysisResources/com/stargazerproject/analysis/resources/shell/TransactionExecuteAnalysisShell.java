@@ -3,9 +3,11 @@ package com.stargazerproject.analysis.resources.shell;
 import com.google.common.base.Optional;
 import com.stargazerproject.analysis.EventExecuteAnalysis;
 import com.stargazerproject.analysis.TransactionExecuteAnalysis;
-import com.stargazerproject.analysis.handle.TransactionResultsExecuteAnalysisHandle;
 import com.stargazerproject.analysis.handle.TransactionExecuteAnalysisHandle;
+import com.stargazerproject.analysis.handle.TransactionResultsExecuteAnalysisHandle;
 import com.stargazerproject.analysis.resources.handle.TransactionExecuteAnalysisHandleResoources;
+import com.stargazerproject.bus.Bus;
+import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Event;
@@ -26,9 +28,16 @@ public class TransactionExecuteAnalysisShell implements TransactionExecuteAnalys
     @Qualifier("eventExecuteAnalysisImpl")
     private EventExecuteAnalysis eventExecuteAnalysis;
 
+    /** @illustrate EventBus接口 **/
+    @Autowired
+    @Qualifier("eventBusImpl")
+    private static Bus<Event, BusEventTimeoutException> eventBus;
+
     @Override
-    public Optional<TransactionExecuteAnalysisHandle> analysis(Optional<Collection<Event>> eventList, Optional<Cache<String, String>> transactionInteractionCache, Optional<TransactionResultsExecuteAnalysisHandle> transactionResultsExecuteAnalysisHandle) {
-        return Optional.of(new TransactionExecuteAnalysisHandleResoources(eventList, transactionInteractionCache, transactionResultsExecuteAnalysisHandle, Optional.of(eventExecuteAnalysis)));
+    public Optional<TransactionExecuteAnalysisHandle> analysis(Optional<Collection<Event>> eventList,
+                                                               Optional<Cache<String, String>> transactionInteractionCache,
+                                                               Optional<TransactionResultsExecuteAnalysisHandle> transactionResultsExecuteAnalysisHandleArg) {
+        return Optional.of(new TransactionExecuteAnalysisHandleResoources(eventList, transactionInteractionCache, transactionResultsExecuteAnalysisHandleArg, Optional.of(eventBus)));
     }
 
     @Override

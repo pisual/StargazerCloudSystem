@@ -10,13 +10,13 @@ import com.stargazerproject.transaction.EventResultState;
 
 import java.util.concurrent.TimeUnit;
 
-public class EventBusObserverAsync implements BusObserver<Event, BusEventTimeoutException>{
+public class EventBusObserver implements BusObserver<Event, BusEventTimeoutException>{
 
 	private EventResultAnalysisHandle eventResultAnalysisHandle;
 
 	private EventExecuteAnalysisHandle eventExecuteAnalysisHandle;
 
-	public EventBusObserverAsync(Optional<EventExecuteAnalysisHandle> eventExecuteAnalysisHandleArg , Optional<EventResultAnalysisHandle> eventResultAnalysisHandleArg){
+	public EventBusObserver(Optional<EventExecuteAnalysisHandle> eventExecuteAnalysisHandleArg , Optional<EventResultAnalysisHandle> eventResultAnalysisHandleArg){
 		eventResultAnalysisHandle = eventResultAnalysisHandleArg.get();
 		eventExecuteAnalysisHandle = eventExecuteAnalysisHandleArg.get();
 	}
@@ -28,8 +28,9 @@ public class EventBusObserverAsync implements BusObserver<Event, BusEventTimeout
 		return Optional.of(this);
 	}
 
+	@Override
 	public Optional<Boolean> testFinish(){
-		if(isComplete().get() == Boolean.TRUE && eventResultAnalysisHandle.getTheLastEventResultState().get() != EventResultState.WAIT){
+		if(isComplete().get() == Boolean.TRUE){
 			return Optional.of(Boolean.TRUE);
 		}
 		else{

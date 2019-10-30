@@ -18,4 +18,6 @@ public interface BusObserver<T, E extends Exception> {
 	public Optional<String> getError();
 
 	public Optional<BusObserver<T, E>> waitFinish() throws E;
+
+	public Optional<Boolean> testFinish();
 }
