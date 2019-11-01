@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 /** 
  *  @name Cell生成ID序列组
@@ -53,10 +54,14 @@ public class Test_NowTimeModel extends CellsTransactionImpl {
 	                threadPoolKey = "test_NowTimeModel",
 			        ignoreExceptions = HystrixRuntimeException.class,
 	                commandProperties = {
-    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")})
+    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "200000")})
 	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandle) {
 		super.method(interactionCache, eventResultsExecuteAnalysisHandle);
 		log.INFO("test_NowTimeModel ","Test_NowTimeModel Complete , Time : " + LocalDateTime.now());
+		try {
+			TimeUnit.SECONDS.sleep(10);
+		} catch (InterruptedException e) {
+		}
 		success();
 	}
 	

@@ -10,15 +10,13 @@ import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.Event;
 import com.stargazerproject.transaction.TransactionResultState;
+import com.stargazerproject.transaction.TransactionState;
 import com.stargazerproject.transaction.date.TransactionDate;
 import com.stargazerproject.transaction.date.TransactionRunWayDate;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -47,27 +45,34 @@ public class TransactionExecuteAnalysisHandleResoources implements TransactionEx
 
     private ScheduledFuture<?> scheduledFuture;
 
+    private TransactionState transactionState;
+
     public TransactionExecuteAnalysisHandleResoources(Optional<Collection<Event>> eventListArg,
                                                       Optional<Cache<String, String>> transactionInteractionCacheArg,
+                                                      Optional<TransactionState> transactionStateArg,
                                                       Optional<TransactionResultsExecuteAnalysisHandle> transactionResultsExecuteAnalysisHandleArg,
                                                       Optional<Bus<Event, BusEventTimeoutException>> eventBusArg){
         eventBus = eventBusArg.get();
         eventList = eventListArg.get();
+        transactionState = transactionStateArg.get();
         cache = transactionInteractionCacheArg.get();
         transactionResultsExecuteAnalysisHandle = transactionResultsExecuteAnalysisHandleArg.get();
     }
 
     public void initScheduledFuture(List<BusObserver<Event, BusEventTimeoutException>> busObserverList){
+        scheduler = Executors.newScheduledThreadPool(1);
         scheduledFuture= scheduler.scheduleAtFixedRate(() ->{
 
             Boolean result = busObserverList.stream().map(busObserver -> busObserver.testFinish().get()).reduce(Boolean.TRUE,(acc, element) -> acc&element);
 
             if(result.equals(Boolean.TRUE)){
+                transactionState = TransactionState.COMPLETE;
                 scheduledFuture.cancel(true);
+                System.out.println("取消注册");
             }
             else{ }
 
-        }, 10, 10, TimeUnit.SECONDS);
+        }, 0, 100, TimeUnit.MICROSECONDS);
     }
 
     /**
@@ -76,24 +81,35 @@ public class TransactionExecuteAnalysisHandleResoources implements TransactionEx
      * **/
     @Override
     public void startTransaction() {
+        transactionState = TransactionState.LINEUP;
         TransactionRunWayDate transactionRunWayDate = transactionRunWayDate().get();
 
-        if(transactionRunWayDate.equals(TransactionRunWayDate.Parallel.toString())){
+        if(transactionRunWayDate == TransactionRunWayDate.Parallel){
+            transactionState = TransactionState.Run;
             List<BusObserver<Event, BusEventTimeoutException>> busObserverList =  eventList.parallelStream().map(event -> Optional.of(event)).map(OptionalEvent -> eventBus.pushAsync(OptionalEvent).get()).collect(Collectors.toList());
+            System.out.println("开始");
             initScheduledFuture(busObserverList);
+
             try {
                 scheduledFuture.get();
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
+            } catch (CancellationException e){
+
             }
+
+            System.out.println("结束");
         }
-        else if(transactionRunWayDate.equals(TransactionRunWayDate.Sequence.toString())){
+        else if(transactionRunWayDate == TransactionRunWayDate.Sequence){
         }
-        else if(transactionRunWayDate.equals(TransactionRunWayDate.AggregateRootSequence.toString())){
+        else if(transactionRunWayDate == TransactionRunWayDate.AggregateRootSequence){
         }
-        throw new IllegalArgumentException("TransactionRunWayDate参数错误，错误的参数为 : " + transactionRunWayDate);
+        else{
+            throw new IllegalArgumentException("TransactionRunWayDate参数错误，错误的参数为 : " + transactionRunWayDate);
+        }
     }
 
     @Override

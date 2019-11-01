@@ -86,7 +86,7 @@ public class BusTest extends BaseJunitTest {
     @Test
     public void test_2_1_2_PushEventRunTimeOut() throws BusEventTimeoutException {
         expection.expect(BusEventTimeoutException.class);
-        expection.expectMessage("Event没有在指定时间内完成任务 : BaseEvent Not Complete at the specified time : " + EventResultState.Run);
+        expection.expectMessage("Event没有在指定时间内完成任务 : BaseEvent Not Complete at the specified time : " + EventResultState.RUN);
         BusObserver busObserver =  eventBusImpl.push(Optional.of(getTimeOutMethodEvent_WhileWait_RunTimeOut())).get();
     }
 
@@ -121,7 +121,7 @@ public class BusTest extends BaseJunitTest {
     @Test
     public void test_3_3_PushAsyncEventRunTimeOut() throws BusEventTimeoutException {
         expection.expect(BusEventTimeoutException.class);
-        expection.expectMessage("Event没有在指定时间内完成任务 : BaseEvent Not Complete at the specified time : " + EventResultState.Run);
+        expection.expectMessage("Event没有在指定时间内完成任务 : BaseEvent Not Complete at the specified time : " + EventResultState.RUN);
         BusObserver<Event, BusEventTimeoutException> busObserver =  eventBusImpl.pushAsync(Optional.of(getTimeOutMethodEvent_WhileWait_RunTimeOut())).get();
         busObserver.waitFinish();
     }

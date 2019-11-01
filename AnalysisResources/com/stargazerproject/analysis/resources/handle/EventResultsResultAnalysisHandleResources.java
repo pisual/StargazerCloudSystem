@@ -24,8 +24,8 @@ public class EventResultsResultAnalysisHandleResources implements EventResultsRe
                 return Optional.of(EventResultState.SUCCESS);
             case "WAIT":
                 return Optional.of(EventResultState.WAIT);
-            case "Run":
-                return Optional.of(EventResultState.Run);
+            case "RUN":
+                return Optional.of(EventResultState.RUN);
             default:
                 throw new IllegalArgumentException("EventResultState 无法在本代码转换，请添加转换的类型, 错误的值为: " + eventResultState);
         }

@@ -7,7 +7,6 @@ import com.stargazerproject.cache.Cache;
 import com.stargazerproject.transaction.Event;
 
 import java.util.Collection;
-import java.util.concurrent.TimeUnit;
 
 public class TransactionAssembleAnalysisHandleResources implements TransactionAssembleAnalysisHandle {
 
@@ -24,6 +23,12 @@ public class TransactionAssembleAnalysisHandleResources implements TransactionAs
     }
 
     @Override
+    public TransactionAssembleAnalysisHandle injectTransactionParameter(Optional<String> Key, Optional<String> value) {
+        interactionCache.put(Key, value);
+        return this;
+    }
+
+    @Override
     public void assembleFromJson(Optional<String> jsonData) {
         System.out.println("等待书写assembleFromJson转换方法");
     }
@@ -31,15 +36,5 @@ public class TransactionAssembleAnalysisHandleResources implements TransactionAs
     @Override
     public void addEvent(Optional<Event> eventArg) {
         eventList.add(eventArg.get());
-    }
-
-    @Override
-    public Optional<Integer> getTransactionTimeOut() {
-        return null;
-    }
-
-    @Override
-    public Optional<TimeUnit> getTransactionTimeOutTimeUnit() {
-        return null;
     }
 }

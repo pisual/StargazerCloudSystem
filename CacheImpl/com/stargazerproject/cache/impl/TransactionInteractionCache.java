@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 							+ " \"WaitTimeout\" : \"500\","				/** @illustrate 等待超时时间（500 Or 其他数值） **/
 							+ " \"RunTimeoutUnit\" : \"MILLISECONDS\","	/** @illustrate 运行超时时间单位（TimeUnit类型，默认为MILLISECONDS **/
 							+ " \"RunTimeout\" : \"500\","				/** @illustrate 运行超时时间（500 Or 其他数值） **/
-							+ " \"RunWay\" : \"Sequence\"}")      		/** @illustrate 运行方式（Parallel（并使运行）， Sequence（序列运行）） **/
+							+ " \"RunWay\" : \"Parallel\"}")      		/** @illustrate 运行方式（Parallel（并使运行）， Sequence（序列运行）） **/
 @NoSpringDepend
 public final class TransactionInteractionCache extends BaseCacheImpl<String, String> implements StanderCharacteristicShell<Cache<String, String>>, BeforehandCharacteristicShell<Cache<String, String>> {
 

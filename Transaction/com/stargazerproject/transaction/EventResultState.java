@@ -14,5 +14,5 @@ public enum EventResultState {
     SUCCESS,
     FAULT,
     WAIT,
-    Run
+    RUN
 }

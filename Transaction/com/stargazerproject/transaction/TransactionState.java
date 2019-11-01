@@ -16,6 +16,7 @@ public enum TransactionState {
 	INIT,
 	WAIT,
 	LINEUP,
+	Run,
 	PASS,
 	COMPLETE,
 }

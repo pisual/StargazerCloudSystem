@@ -11,6 +11,7 @@ import com.stargazerproject.bus.exception.BusEventTimeoutException;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.transaction.Event;
+import com.stargazerproject.transaction.TransactionState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -31,13 +32,14 @@ public class TransactionExecuteAnalysisShell implements TransactionExecuteAnalys
     /** @illustrate EventBus接口 **/
     @Autowired
     @Qualifier("eventBusImpl")
-    private static Bus<Event, BusEventTimeoutException> eventBus;
+    private Bus<Event, BusEventTimeoutException> eventBus;
 
     @Override
     public Optional<TransactionExecuteAnalysisHandle> analysis(Optional<Collection<Event>> eventList,
                                                                Optional<Cache<String, String>> transactionInteractionCache,
+                                                               Optional<TransactionState> transactionState,
                                                                Optional<TransactionResultsExecuteAnalysisHandle> transactionResultsExecuteAnalysisHandleArg) {
-        return Optional.of(new TransactionExecuteAnalysisHandleResoources(eventList, transactionInteractionCache, transactionResultsExecuteAnalysisHandleArg, Optional.of(eventBus)));
+        return Optional.of(new TransactionExecuteAnalysisHandleResoources(eventList, transactionInteractionCache, transactionState, transactionResultsExecuteAnalysisHandleArg, Optional.of(eventBus)));
     }
 
     @Override

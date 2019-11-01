@@ -5,5 +5,5 @@ import com.stargazerproject.transaction.TransactionResultState;
 
 public interface TransactionResultAnalysisHandle {
     public Optional<TransactionResultState> getTheLastTransactionResultState();
-    public Optional<String> getTheLastErrorMessage();
+    public Optional<String>  getTheLastErrorMessage();
 }

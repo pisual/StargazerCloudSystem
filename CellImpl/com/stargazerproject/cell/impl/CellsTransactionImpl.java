@@ -38,7 +38,7 @@ public abstract class CellsTransactionImpl implements CellsTransaction<String, S
 	 * **/
 	public void method(Optional<Cache<String, String>> interactionCache, Optional<EventResultsExecuteAnalysisHandle> eventResultsExecuteAnalysisHandleArg) {
 		eventResultsExecuteAnalysisHandle = eventResultsExecuteAnalysisHandleArg.get();
-		eventResultsExecuteAnalysisHandle.EventResultState(Optional.of(EventResultState.Run));
+		eventResultsExecuteAnalysisHandle.EventResultState(Optional.of(EventResultState.RUN));
 		Optional AggregateRootID = interactionCache.get().get(Optional.of(EventDate.AggregateRoot.toString()));
 		if(AggregateRootID.get() != "NULL"){
 			aggregationRootCacheInitialization(AggregateRootID);

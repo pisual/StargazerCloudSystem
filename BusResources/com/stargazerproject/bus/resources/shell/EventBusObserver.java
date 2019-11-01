@@ -45,17 +45,17 @@ public class EventBusObserver implements BusObserver<Event, BusEventTimeoutExcep
 			return Optional.of(Boolean.TRUE);
 		}
 		else{
-			return Optional.of(Boolean.TRUE);
+			return Optional.of(Boolean.FALSE);
 		}
 	}
 
 	@Override
 	public Optional<Boolean> isRunning(){
-		if(eventResultAnalysisHandle.getTheLastEventResultState().get() == EventResultState.Run){
+		if(eventResultAnalysisHandle.getTheLastEventResultState().get() == EventResultState.RUN){
 			return Optional.of(Boolean.TRUE);
 		}
 		else{
-			return Optional.of(Boolean.TRUE);
+			return Optional.of(Boolean.FALSE);
 		}
 	}
 

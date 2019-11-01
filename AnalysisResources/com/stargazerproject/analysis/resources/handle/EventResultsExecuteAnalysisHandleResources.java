@@ -26,13 +26,12 @@ public class EventResultsExecuteAnalysisHandleResources implements EventResultsE
 
     @Override
     public void EventResultState(Optional<EventResultState> eventResultState) {
+        setCompleteTime();
+        resultCache.put(Optional.of("EventResultState_" + getRetryTime()), Optional.of(eventResultState.get().toString()));
 
         if(eventResultState.get().equals(EventResultState.FAULT.toString())){
             increaseRetryTime();
         }
-
-        setCompleteTime();
-        resultCache.put(Optional.of("EventResultState_" + getRetryTime()), Optional.of(eventResultState.get().toString()));
     }
 
     @Override

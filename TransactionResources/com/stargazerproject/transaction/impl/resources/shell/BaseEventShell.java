@@ -10,10 +10,7 @@ import com.stargazerproject.annotation.description.NoSpringDepend;
 import com.stargazerproject.cache.Cache;
 import com.stargazerproject.interfaces.characteristic.shell.BaseCharacteristic;
 import com.stargazerproject.log.LogMethod;
-import com.stargazerproject.transaction.Event;
-import com.stargazerproject.transaction.EventResultState;
-import com.stargazerproject.transaction.EventResults;
-import com.stargazerproject.transaction.EventState;
+import com.stargazerproject.transaction.*;
 import com.stargazerproject.transaction.base.impl.ID;
 import com.stargazerproject.transaction.exception.EventSkipException;
 import com.stargazerproject.util.CloneUtil;
@@ -127,9 +124,9 @@ public class BaseEventShell extends ID implements Event, BaseCharacteristic<Even
 			logMethod.INFO(this, "Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState + " ,事件处于PASS状态，将快速失败此事务");
 			throw new IllegalStateException("Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState + " ,事件处于PASS状态，将快速失败此事务");
 		}
-		else{
-			logMethod.ERROR(this, "Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState);
-			throw new IllegalStateException("Evenr无法启动，因为Event状态不为Wait（等待执行状态），现在Event的状态为：" + eventState);
+		else if(EventState.INIT == eventState || EventState.COMPLETE == eventState || EventState.RUN == eventState){
+			logMethod.ERROR(this, "Evenr无法启动，因为Event状态不正常，现在Event的状态为：" + eventState);
+			throw new IllegalStateException("Evenr无法启动，因为Event状态不正常，现在Event的状态为：" + eventState);
 		}
 		return Optional.of(eventExecuteAnalysisHandle);
 	}

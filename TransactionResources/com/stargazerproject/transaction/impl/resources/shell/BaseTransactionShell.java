@@ -111,16 +111,16 @@ public class BaseTransactionShell extends ID implements Transaction, BaseCharact
 	 * **/
 	@Override
 	public Optional<TransactionExecuteAnalysisHandle> transactionExecute(Optional<TransactionExecuteAnalysis> transactionExecuteAnalysis) {
-		TransactionExecuteAnalysisHandle ransactionExecuteAnalysisHandle = transactionExecuteAnalysis.get().analysis(Optional.of(eventsList), Optional.of(parametersCache), transactionResults.resultsExecute(Optional.of(transactionResultsExecuteAnalysis))).get();
+		TransactionExecuteAnalysisHandle ransactionExecuteAnalysisHandle = transactionExecuteAnalysis.get().analysis(Optional.of(eventsList), Optional.of(parametersCache), Optional.of(transactionState), transactionResults.resultsExecute(Optional.of(transactionResultsExecuteAnalysis))).get();
 		if(TransactionState.WAIT == transactionState){
-			transactionState = TransactionState.LINEUP;
+
 		}
 		else if(TransactionState.PASS == transactionState){
 			logMethod.INFO(this, "事务处于PASS状态，将快速失败此事务");
 		}
-		else{
-			logMethod.ERROR(this, "Transaction无法启动，因为Transaction无法启动状态不为Wait（等待执行状态），现在Transaction无法启动的状态为：" + transactionState);
-			throw new IllegalStateException("Transaction无法启动，因为Transaction无法启动状态不为Wait（等待执行状态），现在Transaction无法启动的状态为：" + transactionState);
+		else if(TransactionState.INIT == transactionState || TransactionState.LINEUP == transactionState || TransactionState.COMPLETE == transactionState || TransactionState.Run == transactionState){
+			logMethod.ERROR(this, "Transaction无法启动，因为Transaction无法启动状态不正确，现在Transaction无法启动的状态为：" + transactionState);
+			throw new IllegalStateException("Transaction无法启动，因为Transaction无法启动，状态不正确，现在Transaction无法启动的状态为：" + transactionState);
 		}
 		return Optional.of(ransactionExecuteAnalysisHandle);
 	}
