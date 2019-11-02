@@ -29,16 +29,6 @@ public class EventBusObserver implements BusObserver<Event, BusEventTimeoutExcep
 	}
 
 	@Override
-	public Optional<Boolean> testFinish(){
-		if(isComplete().get() == Boolean.TRUE){
-			return Optional.of(Boolean.TRUE);
-		}
-		else{
-			return Optional.of(Boolean.FALSE);
-		}
-	}
-
-	@Override
 	public Optional<Boolean> isComplete(){
 		if(eventResultAnalysisHandle.getTheLastEventResultState().get() == EventResultState.SUCCESS ||
 		  eventResultAnalysisHandle.getTheLastEventResultState().get() == EventResultState.FAULT){

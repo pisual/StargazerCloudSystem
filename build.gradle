@@ -303,6 +303,12 @@ sourceSets {
             srcDir 'ValidationTest'
             srcDir 'Cache'
             srcDir 'Mbassy'
+            srcDir 'Job'
+            srcDir 'JobConfiguration'
+            srcDir 'JobImpl'
+            srcDir 'JobResources'
+            srcDir 'JobServer'
+            srcDir 'JobTest'
 
         }
     }

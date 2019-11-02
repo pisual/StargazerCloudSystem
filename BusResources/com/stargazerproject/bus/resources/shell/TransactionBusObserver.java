@@ -55,16 +55,6 @@ public class TransactionBusObserver implements BusObserver{
 	}
 
 	@Override
-	public Optional<Boolean> testFinish(){
-		if(isComplete().get() == Boolean.TRUE){
-			return Optional.of(Boolean.TRUE);
-		}
-		else{
-			return Optional.of(Boolean.FALSE);
-		}
-	}
-
-	@Override
 	public Optional<BusObserver<Transaction, BusTransactionTimeoutException>> waitFinish() throws BusTransactionTimeoutException {
 		waitStart();
 		waitComplete(transactionExecuteAnalysisHandle.runTimeoutUnit().get(), transactionExecuteAnalysisHandle.runTimeout().get());

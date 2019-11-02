@@ -52,6 +52,11 @@ import com.stargazerproject.inject.resources.shell.InjectShell;
 import com.stargazerproject.inject.server.impl.InjectServer;
 import com.stargazerproject.inject.server.listener.impl.InjectServerListener;
 import com.stargazerproject.inject.server.manage.InjectServerManage;
+import com.stargazerproject.job.CycleJob;
+import com.stargazerproject.job.server.impl.CycleJobServer;
+import com.stargazerproject.job.server.listener.impl.CycleJobServerListener;
+import com.stargazerproject.job.server.manage.CycleJobServerManage;
+import com.stargazerproject.job.shell.CycleJobShell;
 import com.stargazerproject.log.configuration.GroupLogConfiguration;
 import com.stargazerproject.messagequeue.impl.TransactionMessageQueue;
 import com.stargazerproject.messagequeue.resources.TransactionMessageQueueAcquireCharacteristic;
@@ -153,6 +158,7 @@ public class GlobalAnnotationApplicationContextInitialization {
 		ParametersInjectAOPConfiguration.class,
 		TransactionParameters.class,
 		BusParameters.class,
+		JobParameters.class,
 
 		/**Depend ObjectParameterCache **/
 		ObjectParameterCache.class,
@@ -486,6 +492,12 @@ public class GlobalAnnotationApplicationContextInitialization {
 		TransactionTransmissionSerializables.class,
 		TransactionTransmissionSerializablesShell.class,
 
+		/**Depend Serializables**/
+		CycleJobShell.class,
+		CycleJob.class,
+		CycleJobServer.class,
+		CycleJobServerListener.class,
+		CycleJobServerManage.class,
 
 		/**测试用方法，实际需要动态注入**/
 		InitializationCellsGroupModel.class,

@@ -56,7 +56,7 @@ public class TransactionTest extends BaseJunitTest {
     @Test
     public void test_2_PushTransaction() throws BusTransactionTimeoutException {
         transactionBusImpl.push(Optional.of(getNewTransaction_NeverTimeOut()));
-        while(true){}
+        //while(true){}
     }
 
 //    @Test
